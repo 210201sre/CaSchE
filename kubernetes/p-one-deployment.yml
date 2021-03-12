@@ -52,5 +52,5 @@ spec:
             secretKeyRef:
               name: jona-credentials
               key: password
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always # IfNotPresent
           
