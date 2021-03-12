@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-one
+  namespace: jonathan-schmitz
+  labels:
+    app: project-one
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-one
+  template:
+    metadata:
+      labels:
+        app: project-one
+    spec:
+      volumes:
+      - name: config-js-p1
+        configMap:
+          name: fluent-conf
+      containers:
+      - name: fluentd
+        image: grafana/fluent-plugin-loki:latest
+        ports:
+        - containerPort: 24224
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: LOKI_URL
+          value: http://loki:3100
+        volumeMounts:
+        - name: config-js-p1
+          mountPath: /fluentd/etc/fluent.conf
+          subPath: fluent.conf
+      - name: p1-application
+        image: sentrurion/project-one:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: jona-credentials
+              key: url
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: jona-credentials
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: jona-credentials
+              key: password
+        imagePullPolicy: IfNotPresent
+          
