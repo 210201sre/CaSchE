@@ -292,11 +292,12 @@ public class CustomerService {
 	}
 
 	public boolean checkout(Key k) {
-		MDC.put("TopAction", "Checkout");
 		// the below line may not work properly
 		//if (cDAO.countByUid(k.getUid()) > 0) {
+		MDC.put("TopAction", "Checkout");
 		if(cDAO.findAllByUid(k.getUid()).size() > 0) {
 			List<CartItem> cis = displayCart(k);
+			MDC.put("TopAction", "Checkout");
 			Transaction t = new Transaction();
 			t.setUid(k.getUid());
 			t.setTotalcost(0.01);
@@ -326,7 +327,7 @@ public class CustomerService {
 					tDAO.delete(t);
 				}
 				emptyCart(k);
-				
+				MDC.put("TopAction", "Checkout");
 				return true;
 			} else {
 				throw new InvalidException(
