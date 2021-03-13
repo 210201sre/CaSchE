@@ -1,0 +1,561 @@
+{
+	"info": {
+		"_postman_id": "7e8a347b-e9c8-4161-af2e-8f0afb91a688",
+		"name": "projectone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "UserCommands",
+			"item": [
+				{
+					"name": "New User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fname\": \"Mark\",\r\n    \"lname\": \"Twain\",\r\n    \"uname\": \"word\",\r\n    \"pswrd\": \"password\",\r\n    \"email\": null,\r\n    \"phonenum\": null,\r\n    \"address\": null,\r\n    \"city\": null,\r\n    \"state\": null,\r\n    \"zip\": null,\r\n    \"accesslevel\": \"Customer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Employee)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"uname\": \"buyme\",\r\n        \"pswrd\": \"apizza\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/login",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uname\": \"password\",\r\n    \"pswrd\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/login",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/logout",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify User",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"connection": true
+						}
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uid\": 1,\r\n    \"fname\": \"Fred\",\r\n    \"lname\": \"Johnson\",\r\n    \"uname\": \"password\",\r\n    \"pswrd\": \"password\",\r\n    \"email\": null,\r\n    \"phonenum\": null,\r\n    \"address\": null,\r\n    \"city\": null,\r\n    \"state\": null,\r\n    \"zip\": null,\r\n    \"accesslevel\": \"Admin\",\r\n    \"sid\": 3102282090179749969\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"iid\":3,\r\n    \"quantity\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Cart Item",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uid\":1,\r\n    \"iid\":1,\r\n    \"quantity\" : 2,\r\n    \"cid\" : 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart/all",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"cart",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Display Cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/checkout",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Display Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/transaction",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Display Transaction Contents",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tid\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/transaction/contents",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"transaction",
+								"contents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Display Backorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/backorder",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"user",
+								"backorder"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EmployeeCommands",
+			"item": [
+				{
+					"name": "Emp Display Directory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/staff/directory",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"staff",
+								"directory"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdminCommands",
+			"item": [
+				{
+					"name": "Adm Display Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"yello\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/user",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"manager",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adm Display Coupons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/coupon",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"manager",
+								"coupon"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adm Add Coupon",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cname\" : \"5% OFF\",\r\n    \"percentage\" : 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/coupon",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"manager",
+								"coupon"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adm Delete Coupon",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cid\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/coupon",
+							"host": [
+								"a62d60162057149549617360016d2e38-542496291",
+								"us-east-1",
+								"elb",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"js-inv-sales",
+								"manager",
+								"coupon"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
