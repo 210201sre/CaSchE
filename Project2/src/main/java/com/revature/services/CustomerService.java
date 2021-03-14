@@ -185,7 +185,7 @@ public class CustomerService {
 	public User resetUnPw(String uname, String pswrd, Key k){
 		MDC.put("Action", "Reset Username Password");
 		userDAO.findByUname(uname).orElseThrow(
-				() -> new UserNotFoundException(String.format("SELECT: username: %s is taken exists.", uname)));
+				() -> new UserNotFoundException(String.format("SELECT: username: %s is taken.", uname)));
 		User u = userDAO.findBySid(k.getSid()).orElseThrow(
 				() -> new UserNotFoundException(String.format("SELECT: User %d no longer exists.", k.getUid())));
 		u.setUname(uname);
