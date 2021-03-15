@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.exceptions.InvalidException;
 import com.revature.models.BackorderProto;
 import com.revature.models.CartItem;
 import com.revature.models.CartItemProto;
@@ -63,8 +65,11 @@ public class CustomerController {
 
 	@PostMapping
 	public ResponseEntity<String> newUser(@RequestBody User u){
-		
-		return custSvc.addUsr(u);
+		try {
+			return custSvc.addUsr(u);
+		} catch(Exception e) {
+			return InvalidException.thrown("PSQLException: Invalid data inputed.", e);
+		}
 	}
 	
 	@PatchMapping

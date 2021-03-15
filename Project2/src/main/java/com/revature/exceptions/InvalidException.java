@@ -8,17 +8,17 @@ import org.springframework.http.ResponseEntity;
 public abstract class InvalidException {
 	private static final Logger log = LoggerFactory.getLogger(InvalidException.class);
 	
-	public static ResponseEntity<String> thrown(String message, RuntimeException err) {
+	public static ResponseEntity<String> thrown(String message, Exception err) {
 		logException(message, err);
 		return ResponseEntity.status(400).body(message);
 	}
 	
-	public static ResponseEntity<String> thrown(String message, RuntimeException err, int statusCode) {
+	public static ResponseEntity<String> thrown(String message, Exception err, int statusCode) {
 		logException(message, err);
 		return ResponseEntity.status(statusCode).body(message);
 	}
 	// Double Check this method
-	private static void logException(String message, RuntimeException err) {
+	private static void logException(String message, Exception err) {
 		MDC.put("Exception", "Invalid");
 		if (MDC.get("Start") != null) {
 			String start = MDC.get("Start");
