@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.revature.exceptions.InvalidException;
@@ -57,13 +58,17 @@ public class CustomerService {
 
 	private String key = "projectzero";
 
-	public User login(String username, String password) {
+	//TODO
+	//// EVERY DAO METHOD CALL MUST BE WITHIN A TRY - CATCH (PSQLException e) BLOCK ////
+	//TODO	
+	
+	public ResponseEntity<String> login(String username, String password) {
 		MDC.put("Action", "Login");
 		HttpSession s = req.getSession(false);
 		if (s != null && s.getAttribute(key) != null) {
 			Key k = (Key) s.getAttribute(key);
 			if (userDAO.existsById(k.getUid())) {
-				throw new InvalidException(String.format("LOGIN: User %d already logged in on this device.", k.getUid()));
+				return InvalidException.thrown(String.format("LOGIN: User %d already logged in on this device.", k.getUid()), new RuntimeException());
 			}
 		}
 		User u = userDAO.findByUname(username).orElseThrow(() -> new UserNotFoundException(
@@ -80,68 +85,80 @@ public class CustomerService {
 				sid = r.nextLong();
 			}
 			if ((limit.size() >= Long.MAX_VALUE - 1)) {
-				throw new InvalidException("LOGIN: DATABASE LIMIT: Unable to generate a secure connection.");
+				return InvalidException.thrown("LOGIN: DATABASE LIMIT: Unable to generate a secure connection.", new RuntimeException());
 			}
 			u.setSid(sid);
 			Key k = new Key(u.getSid(), u.getUid());
 			session.setAttribute(key, k);
 			userDAO.save(u);
 
-			return u;
+			return ResponseEntity.ok().body("Logged In");
 		} else {
-			throw new UserNotFoundException(String.format("No User with username:%s password:%s", username, password));
+			//throw new UserNotFoundException(String.format("No User with username:%s password:%s", username, password));
+			return InvalidException.thrown(String.format("No User with username:%s password:%s", username, password), new RuntimeException());
 		}
 	}
 
-	public void logout(Key k) {
+	public ResponseEntity<String> logout(Key k) {
 		MDC.put("Action", "Logout");
 		HttpSession session = req.getSession(false);
 		if (session == null) {
-			throw new InvalidException("User not logged in.");
+			return InvalidException.thrown("User not logged in.", new RuntimeException());
 		} else if (!userDAO.findBySid(((Key) session.getAttribute(key)).getSid()).isPresent()) {
 			session.invalidate();
-			throw new InvalidException("Invalid session.");
+			return InvalidException.thrown("Invalid session.", new RuntimeException());
+		} else if (!userDAO.findById(k.getUid()).isPresent()) {
+			session.invalidate();
+			return InvalidException.thrown("User does not exist.", new RuntimeException());
 		}
 		User u = userDAO.findById(k.getUid()).get();
 		u.setSid(null);
 		userDAO.save(u);
 		session.invalidate();
-		
+		return ResponseEntity.ok().body("Logged Out");
 	}
 
-	public User addUsr(User u) {
+	public ResponseEntity<String> addUsr(User u) {
 		MDC.put("Action", "New User");
 		if (userDAO.findByUname(u.getUname()).isPresent()) {
-			throw new InvalidException(String.format("INSERT: Username %s already exists.", u.getUname()));
+			return InvalidException.thrown(String.format("INSERT: Username %s already exists.", u.getUname()), new RuntimeException());
 		}		
 		if (u.getUid() != null || u.getSid() != null) {
-			throw new InvalidException(
-					String.format("INSERT: Invalid ID(s) (%d:%d) passed during insertion.", u.getUid(), u.getSid()));
+			return InvalidException.thrown(String.format("INSERT: Invalid ID(s) (%d:%d) passed during insertion.", u.getUid(), u.getSid()), new RuntimeException());
 		}
 		if (!u.getAccesslevel().equals("Customer")) {
-			throw new InvalidException(String.format("INSERT: Invalid access. User: %s",u.toString()));
+			return InvalidException.thrown(String.format("INSERT: Invalid access. User: %s",u.toString()), new RuntimeException());
 		}
-		return userDAO.save(u);
+		userDAO.save(u);
+		return ResponseEntity.accepted().body("User Account Created");
 	}
 
 	// Handle session verification in Controller if possible, and pass to methods.
 	// This will save on lines of duplicate code. Otherwise create a seperate method
 	// in this service file.
-	public User getMyInfo(Key k) {
+	public ResponseEntity<User> getMyInfo(Key k) {
 		MDC.put("Action", "User Info");
-		return userDAO.findById(k.getUid()).orElseThrow(
-				() -> new UserNotFoundException(String.format("SELECT: User %d no longer exists.", k.getUid())));
+		Optional<User> u2 = userDAO.findById(k.getUid());
+		if(u2.isPresent()) {
+			return ResponseEntity.ok().body(u2.get());
+		}
+		else {
+			// throw TODO check status code
+			InvalidException.thrown("User does not exist.", new RuntimeException());
+			return ResponseEntity.status(400).body(null);
+		}
+//		return userDAO.findById(k.getUid()).orElseThrow(
+//				() -> new UserNotFoundException(String.format("SELECT: User %d no longer exists.", k.getUid())));
 		// technically, if validation passed, then user is guaranteed to exist. Unless
 		// deleted in between validation and info gathering
 	}
 
 //	public int modUser(User u, Key k) {
-	public User modUser(User u, Key k) {
+	public ResponseEntity<String> modUser(User u, Key k) {
 		MDC.put("Action", "Modify User");
 		if (u.getUid() == k.getUid()) {
-			//TODO
 			 User u2 = userDAO.findById(u.getUid()).get();
-			 System.out.println(u);
+			 //System.out.println(u);
 			 if (u.getFname() != u2.getFname() && u.getFname() != "") {
 				 u2.setFname(u.getFname());
 			 }
@@ -175,31 +192,44 @@ public class CustomerService {
 			// return userDAO.save(u2);
 			// return userDAO.update(u1.get..., ...);
 //			return userDAO.update(k.getUid(), u.getFname(), u.getLname(), u.getEmail(), u.getPhonenum(), u.getAddress(), u.getCity(), u.getState(), u.getZip());
-			return userDAO.save(u2);
+			 userDAO.save(u2);
+			 return ResponseEntity.ok().body("User Updated");
 		} else {
-			throw new InvalidException(
-					String.format("UPDATE: Invalid User (%d!%d) modification.", u.getUid(), k.getUid()));
+			return InvalidException.thrown(String.format("UPDATE: Invalid User (%d!%d) modification.", u.getUid(), k.getUid()), new RuntimeException());
 		}
 	}
 
-	public User resetUnPw(String uname, String pswrd, Key k){
+	public ResponseEntity<String> resetUnPw(String uname, String pswrd, Key k){
 		MDC.put("Action", "Reset Username Password");
-		userDAO.findByUname(uname).orElseThrow(
-				() -> new UserNotFoundException(String.format("SELECT: username: %s is taken.", uname)));
-		User u = userDAO.findBySid(k.getSid()).orElseThrow(
-				() -> new UserNotFoundException(String.format("SELECT: User %d no longer exists.", k.getUid())));
+		if(!userDAO.findByUname(uname).isPresent()) {			
+			return InvalidException.thrown(String.format("SELECT: username: %s is taken.", uname), new RuntimeException());
+		}
+		Optional<User> u2 = userDAO.findBySid(k.getSid());
+		if(!u2.isPresent()) {
+			return InvalidException.thrown(String.format("SELECT: User %d no longer exists.", k.getUid()), new RuntimeException());
+		}
+		User u = u2.get();
 		u.setUname(uname);
 		u.setPswrd(pswrd);
-		return userDAO.save(u);
+		userDAO.save(u);
+		return ResponseEntity.ok().body("User credentials successfully changed.");
 	}
 	
 	// Handle userDAO.existsById(k.getUid()) in controller if possible
-	public boolean delUser(Key k) {
+	// TODO
+	public ResponseEntity<String> delUser(Key k) {
 		MDC.put("Action", "Delete User");
-		// if (u.getUid() == k.getUid() && userDAO.existsById(k.getUid())) {
-//		if (u.getUid() == k.getUid()) {
-			userDAO.deleteById(k.getUid());
-			return true;
+		Optional<User> u2 = userDAO.findById(k.getUid());
+		if (!u2.isPresent()) {
+			return InvalidException.thrown("User does not exist.", new RuntimeException());
+		}
+		User u = u2.get();
+		if (u.getSid() != k.getSid()) {
+			return InvalidException.thrown("Invalid Session", new RuntimeException());
+		}
+		userDAO.deleteById(u.getUid());
+		return ResponseEntity.ok().body("User account has been deleted.");
+
 //		} else {
 //			log.error("DELETE: User {} does not exist.", k.getUid());
 //			return false;
@@ -208,62 +238,66 @@ public class CustomerService {
 	}
 
 	// CART SERVICE METHODS
-	public CartItem addToMyCart(CartItemProto cip, Key k) {
+	public ResponseEntity<String> addToMyCart(CartItemProto cip, Key k) {
 		MDC.put("Action", "Add to Cart");
 		cip.setUid(k.getUid());
 		if (cip.getUid() < 1 || cip.getCid() < 0 || k.getSid() == null) {
-			throw new InvalidException(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
-					cip.getUid(), cip.getCid(), k.getSid()));
+			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
+					cip.getUid(), cip.getCid(), k.getSid()), new RuntimeException());
 		} else {
 			if (cip.getUid() == k.getUid()) {
 				if (iDAO.existsById(cip.getIid())) {
-					return buildCartItem(cDAO.save(cip));
+					cDAO.save(cip);
+					//buildCartItem(cDAO.save(cip));
+					return ResponseEntity.accepted().body("Item added to cart.");
 				} else {
 //					log.error("SELECT: Item {} does not exist.", cip.getIid());
 //					return new CartItem();
-					throw new InvalidException(String.format("SELECT: Item %d does not exist.", cip.getIid()));
+					return InvalidException.thrown(String.format("SELECT: Item %d does not exist.", cip.getIid()), new RuntimeException());
 				}
 			} else {
 //				log.error("INSERT: User {} mismatch {}", cip.getUid(), k.getUid());
 //				return new CartItem();
-				throw new InvalidException(String.format("INSERT: User %d mismatch %d", cip.getUid(), k.getUid()));
+				return InvalidException.thrown(String.format("INSERT: User %d mismatch %d", cip.getUid(), k.getUid()), new RuntimeException());
 			}
 		}
 	}
 
-	public CartItem modMyCart(CartItemProto cip, Key k) {
+	public ResponseEntity<String> modMyCart(CartItemProto cip, Key k) {
 		MDC.put("Action", "Modify Cart Item");
 		if (cip.getUid() < 1 || (!coupDAO.existsById(cip.getCid()) && cip.getCid()!= 0 ) || k.getSid() == null) {
-			throw new InvalidException(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
-					cip.getUid(), cip.getCid(), k.getSid()));
+			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
+					cip.getUid(), cip.getCid(), k.getSid()), new RuntimeException());
 		} else {
 			if (cip.getUid() == k.getUid()) {
 				if (cDAO.findByUidAndIid(cip.getUid(), cip.getIid()).isPresent()) {
-					return buildCartItem(cDAO.save(cip));
+					cDAO.save(cip);
+					//buildCartItem(cDAO.save(cip));
+					return ResponseEntity.ok().body("Cart item modified");
 				} else {
 //					log.error("SELECT: Item {} does not exist.", cip.getIid());
 //					return new CartItem();
-					throw new InvalidException(String.format("SELECT: Item %d does not exist in cart.", cip.getIid()));
+					return InvalidException.thrown(String.format("SELECT: Item %d does not exist in cart.", cip.getIid()), new RuntimeException());
 				}
 			} else {
 //				log.error("UPDATE: User {} mismatch {}", cip.getUid(), k.getUid());
 //				return new CartItem();
-				throw new InvalidException(String.format("UPDATE: User %d mismatch %d", cip.getUid(), k.getUid()));
+				return InvalidException.thrown(String.format("UPDATE: User %d mismatch %d", cip.getUid(), k.getUid()), new RuntimeException());
 			}
 		}
 	}
 
-	public boolean delMyCartItem(CartItemProto cip, Key k) {
+	public ResponseEntity<String> delMyCartItem(CartItemProto cip, Key k) {
 		MDC.put("Action", "Delete Cart Item");
 		if (cip.getUid() == k.getUid()) {
 			cDAO.delete(cip);
-			return true;
+			return ResponseEntity.ok().body("Cart item deleted.");
 		} else {
-			throw new InvalidException(String.format("UPDATE: User %d mismatch %d", cip.getUid(), k.getUid()));
+			return InvalidException.thrown(String.format("UPDATE: User %d mismatch %d", cip.getUid(), k.getUid()), new RuntimeException());
 		}
 	}
 
-	public boolean emptyCart(Key k) {
+	public ResponseEntity<String> emptyCart(Key k) {
 		MDC.put("Action", "Empty Cart");
 		if (cDAO.countByUid(k.getUid()) > 0) {
 			//log.info("count was {}",cDAO.countByUid(k.getUid()));
@@ -272,9 +306,9 @@ public class CustomerService {
 				cDAO.delete(p);
 			}
 			//cDAO.deleteByUid(k.getUid());
-			return true;
+			return ResponseEntity.ok().body("Cart has been emptied.");
 		} else {
-			throw new InvalidException(String.format("DELETE: User %d cart is empty.", k.getUid()));
+			return InvalidException.thrown(String.format("DELETE: User %d cart is empty.", k.getUid()), new RuntimeException());
 		}
 	}
 
@@ -291,9 +325,8 @@ public class CustomerService {
 		return cis;
 	}
 
-	public boolean checkout(Key k) {
+	public ResponseEntity<String> checkout(Key k) {
 		String start=""; if (MDC.get("Start")!=null){ start = MDC.get("Start");}
-		
 		
 		// the below line may not work properly
 		//if (cDAO.countByUid(k.getUid()) > 0) {
@@ -331,13 +364,12 @@ public class CustomerService {
 				}
 				emptyCart(k);
 				MDC.put("TopAction", "Checkout"); if(!start.equals("")){MDC.put("Start",start);}
-				return true;
+				return ResponseEntity.ok().body("Checkout Complete");
 			} else {
-				throw new InvalidException(
-						String.format("CHECKOUT: Failed to get transaction ID for user %d.", k.getUid()));
+				return InvalidException.thrown(String.format("CHECKOUT: Failed to get transaction ID for user %d.", k.getUid()), new RuntimeException());
 			}
 		} else {
-			throw new InvalidException(String.format("CHECKOUT: User %d cart is empty.", k.getUid()));
+			return InvalidException.thrown(String.format("CHECKOUT: User %d cart is empty.", k.getUid()), new RuntimeException());
 		}
 	}
 
@@ -347,10 +379,12 @@ public class CustomerService {
 		return tDAO.findAllByUid(k.getUid());
 	}
 
-	public List<CartItem> displayTransactionItems(Transaction t, Key k) {
+	public ResponseEntity<List<CartItem>> displayTransactionItems(Transaction t, Key k) {
 		MDC.put("Action", "Display Transaction Items");
 		if (t.getTid() > 0 && k.getUid() == t.getUid()) {
-			throw new InvalidException(String.format("SELECT: User %d does not match requested Transaction %d", k.getUid(),t.getUid()));
+			InvalidException.thrown(String.format("SELECT: User %d does not match requested Transaction %d", k.getUid(),t.getUid()), new RuntimeException());
+			//send body as new ArrayList<>() if this method gets called in another function
+			return ResponseEntity.status(400).body(null);
 		}
 		List<TuiProto> cips = tuiDAO.findAllByTid(t.getTid());
 		List<CartItem> cis = new ArrayList<>();
@@ -360,7 +394,7 @@ public class CustomerService {
 				cis.add(ci);
 			}
 		}
-		return cis;
+		return ResponseEntity.ok().body(cis);
 	}
 
 	public List<BackorderProto> displayBackorders(Key k) {
@@ -379,7 +413,8 @@ public class CustomerService {
 		} else {
 //			log.error("SELECT: Item {} does not exist.", cip.getIid());
 //			return new CartItem();
-			throw new InvalidException(String.format("SELECT: Item %d does not exist.", cip.getIid()));
+			InvalidException.thrown(String.format("SELECT: Item %d does not exist.", cip.getIid()), new RuntimeException());
+			return new CartItem();
 		}
 		return ci;
 	}
@@ -394,8 +429,8 @@ public class CustomerService {
 			ci.setI(i.get());
 		} else {
 //			log.error("SELECT: Item {} does not exist.", cip.getIid());
-//			return new CartItem();
-			throw new InvalidException(String.format("SELECT: Item %d does not exist.", tp.getIid()));
+			InvalidException.thrown(String.format("SELECT: Item %d does not exist.", tp.getIid()), new RuntimeException());
+			return new CartItem();
 		}
 		return ci;
 	}

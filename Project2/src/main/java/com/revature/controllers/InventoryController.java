@@ -54,46 +54,46 @@ public class InventoryController {
 	//User Specific Services
 	//Item Routing
 	@PostMapping("/item")
-	public ResponseEntity<Item> newItem(@RequestBody Item i) {
+	public ResponseEntity<String> newItem(@RequestBody Item i) {
 		
-		return ResponseEntity.accepted().body(iSvc.addItem(usrSvc.validateAdmin(usrSvc.logdin()), i));
+		return iSvc.addItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 	}
 	
 	@PatchMapping("/item")
-	public ResponseEntity<Item> modItem(@RequestBody Item i) {
+	public ResponseEntity<String> modItem(@RequestBody Item i) {
 		
-		return ResponseEntity.accepted().body(iSvc.modItem(usrSvc.validateAdmin(usrSvc.logdin()), i));
+		return iSvc.modItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 	}
 	
 	@PatchMapping("/item/restock")
-	public ResponseEntity<Item> restockItem(@RequestBody Item i) {
+	public ResponseEntity<String> restockItem(@RequestBody Item i) {
 		
-		return ResponseEntity.accepted().body(iSvc.restockItem(usrSvc.validateEmployee(usrSvc.logdin()), i, i.getQuantity()));
+		return iSvc.restockItem(usrSvc.validateEmployee(usrSvc.logdin()), i, i.getQuantity());
 	}
 	
 	@DeleteMapping("/item")
-	public ResponseEntity<Boolean> delItem(@RequestBody Item i) {
+	public ResponseEntity<String> delItem(@RequestBody Item i) {
 		
-		return ResponseEntity.accepted().body(iSvc.delItem(usrSvc.validateAdmin(usrSvc.logdin()), i));
+		return iSvc.delItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 	}
 	
 	//Manufacturer Routing
 	@PostMapping("/manufacturer")
-	public ResponseEntity<Manufacturer> newManufacturer(@RequestBody Manufacturer m) {
+	public ResponseEntity<String> newManufacturer(@RequestBody Manufacturer m) {
 		
-		return ResponseEntity.accepted().body(iSvc.addSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m));
+		return iSvc.addSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 	}
 	
 	@PatchMapping("/manufacturer")
-	public ResponseEntity<Manufacturer> modManufacturer(@RequestBody Manufacturer m) {
+	public ResponseEntity<String> modManufacturer(@RequestBody Manufacturer m) {
 		
-		return ResponseEntity.accepted().body(iSvc.modSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m));
+		return iSvc.modSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 	}
 	
 	@DeleteMapping("/manufacturer")
-	public ResponseEntity<Boolean> removeManufacturer(@RequestBody Manufacturer m) {
+	public ResponseEntity<String> removeManufacturer(@RequestBody Manufacturer m) {
 		
-		return ResponseEntity.accepted().body(iSvc.delSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m));
+		return iSvc.delSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 	}
 	
 	

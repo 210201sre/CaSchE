@@ -37,15 +37,14 @@ public class CustomerController {
 
 	
 	@PostMapping("/login")
-	public ResponseEntity<User> login(@RequestBody Credentials cred) {
+	public ResponseEntity<String> login(@RequestBody Credentials cred) {
 		
-		return ResponseEntity.ok(custSvc.login(cred.getUname(), cred.getPswrd()));
+		return custSvc.login(cred.getUname(), cred.getPswrd());
 	}
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout() {
-		custSvc.logout(usrSvc.logdin());
+	public ResponseEntity<String> logout() {
 		
-		return ResponseEntity.accepted().build();
+		return custSvc.logout(usrSvc.logdin());
 	}
 	
 //	@ValidateCustomer
@@ -59,56 +58,56 @@ public class CustomerController {
 
 // custSvc.doSomething(usrSvc.validateCustomer(logdin()), ...)
 		// Get user's session data in CustomerService
-		return ResponseEntity.ok(custSvc.getMyInfo(usrSvc.logdin()));
+		return custSvc.getMyInfo(usrSvc.logdin());
 	}
 
 	@PostMapping
-	public ResponseEntity<User> newUser(@RequestBody User u){
+	public ResponseEntity<String> newUser(@RequestBody User u){
 		
-		return ResponseEntity.accepted().body(custSvc.addUsr(u));
+		return custSvc.addUsr(u);
 	}
 	
 	@PatchMapping
 //	public ResponseEntity<Integer> modUser(@RequestBody User u) {
-	public ResponseEntity<User> modUser(@RequestBody User u) {
+	public ResponseEntity<String> modUser(@RequestBody User u) {
 		
-		return ResponseEntity.accepted().body(custSvc.modUser(u, usrSvc.logdin()));
+		return custSvc.modUser(u, usrSvc.logdin());
 	}
 	
 	@PatchMapping("/resetlogin")
-	public ResponseEntity<User> resetUnPw(@RequestBody Credentials c) {
+	public ResponseEntity<String> resetUnPw(@RequestBody Credentials c) {
 		
-		return ResponseEntity.accepted().body(custSvc.resetUnPw(c.getUname(), c.getPswrd(), usrSvc.logdin()));
+		return custSvc.resetUnPw(c.getUname(), c.getPswrd(), usrSvc.logdin());
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Boolean> removeUser() {
+	public ResponseEntity<String> removeUser() {
 		
-		return ResponseEntity.accepted().body(custSvc.delUser(usrSvc.logdin()));
+		return custSvc.delUser(usrSvc.logdin());
 	}
 	
 	@PostMapping("/cart")
-	public ResponseEntity<CartItem> addToCart(@RequestBody CartItemProto cip) {
+	public ResponseEntity<String> addToCart(@RequestBody CartItemProto cip) {
 		
-		return ResponseEntity.accepted().body(custSvc.addToMyCart(cip, usrSvc.logdin()));
+		return custSvc.addToMyCart(cip, usrSvc.logdin());
 	}
 	
 	@PatchMapping("/cart")
-	public ResponseEntity<CartItem> modCartItem(@RequestBody CartItemProto cip) {
+	public ResponseEntity<String> modCartItem(@RequestBody CartItemProto cip) {
 		
-		return ResponseEntity.accepted().body(custSvc.modMyCart(cip, usrSvc.logdin()));
+		return custSvc.modMyCart(cip, usrSvc.logdin());
 	}
 	
 	@DeleteMapping("/cart")
-	public ResponseEntity<Boolean> removeCartItem(@RequestBody CartItemProto cip) {
+	public ResponseEntity<String> removeCartItem(@RequestBody CartItemProto cip) {
 		
-		return ResponseEntity.accepted().body(custSvc.delMyCartItem(cip, usrSvc.logdin()));
+		return custSvc.delMyCartItem(cip, usrSvc.logdin());
 	}
 	
 	@DeleteMapping("/cart/all")
-	public ResponseEntity<Boolean> emptyCart() {
+	public ResponseEntity<String> emptyCart() {
 		
-		return ResponseEntity.accepted().body(custSvc.emptyCart(usrSvc.logdin()));
+		return custSvc.emptyCart(usrSvc.logdin());
 	}
 	
 	@GetMapping("/cart")
@@ -118,9 +117,9 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/checkout")
-	public ResponseEntity<Boolean> checkout() {
+	public ResponseEntity<String> checkout() {
 		
-		return ResponseEntity.ok(custSvc.checkout(usrSvc.logdin())); 
+		return custSvc.checkout(usrSvc.logdin()); 
 	}
 	
 	@GetMapping("/transaction")
@@ -132,7 +131,7 @@ public class CustomerController {
 	@GetMapping("/transaction/contents")
 	public ResponseEntity<List<CartItem>> showTransactionItems(@RequestBody Transaction t) {
 		
-		return ResponseEntity.ok(custSvc.displayTransactionItems(t, usrSvc.logdin()));
+		return custSvc.displayTransactionItems(t, usrSvc.logdin());
 	}
 	
 	@GetMapping("/backorder")

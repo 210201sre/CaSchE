@@ -38,18 +38,18 @@ public class EmployeeController {
 	@GetMapping("/user/transaction")
 	public ResponseEntity<List<Transaction>> showUserTransactions(@RequestBody User u) {
 		
-		return ResponseEntity.ok(aSvc.displayUserTransactions(usrSvc.validateEmployee(usrSvc.logdin()), u));
+		return aSvc.displayUserTransactions(usrSvc.validateEmployee(usrSvc.logdin()), u);
 	}
 	
 	@GetMapping("/user/transaction/item")
 	public ResponseEntity<List<CartItem>> showUserTransactionItems(@RequestBody Transaction t) {
 		
-		return ResponseEntity.ok(aSvc.displayUserTransactionItems(usrSvc.validateEmployee(usrSvc.logdin()), t));
+		return aSvc.displayUserTransactionItems(usrSvc.validateEmployee(usrSvc.logdin()), t);
 	}
 	
 	@PatchMapping("/user/transaction/item")
-	public ResponseEntity<CartItem> modifyUserTransactionItem(@RequestBody TuiProto tp) {
+	public ResponseEntity<String> modifyUserTransactionItem(@RequestBody TuiProto tp) {
 		
-		return ResponseEntity.accepted().body(aSvc.modUserTransactionItem(usrSvc.validateEmployee(usrSvc.logdin()), tp));
+		return aSvc.modUserTransactionItem(usrSvc.validateEmployee(usrSvc.logdin()), tp);
 	}
 }

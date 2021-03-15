@@ -3,6 +3,7 @@ package com.revature.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.revature.exceptions.InvalidException;
@@ -36,74 +37,79 @@ public class ItemService {
 		return iDAO.findAll();
 	}
 	
-	public Item addItem(Key k, Item i) {
+	public ResponseEntity<String> addItem(Key k, Item i) {
 		if(i.getIid() != 0) {
-			throw new InvalidException(String.format("INSERT: Invalid item id %d.", i.getIid()));
+			return InvalidException.thrown(String.format("INSERT: Invalid item id %d.", i.getIid()), new RuntimeException());
 		}
-		return iDAO.save(i);
+		iDAO.save(i);
+		return ResponseEntity.accepted().body("Item added.");
 	}
 	
-	public Item modItem(Key k, Item i) {
+	public ResponseEntity<String> modItem(Key k, Item i) {
 		if(!iDAO.existsById(i.getIid())) {
-			throw new InvalidException(String.format("UPDATE: Item %d does not exist.", i.getIid()));
+			return InvalidException.thrown(String.format("UPDATE: Item %d does not exist.", i.getIid()), new RuntimeException());
 		}
-		return iDAO.save(i);
+		iDAO.save(i);
+		return ResponseEntity.ok().body("Item updated.");
 	}
 	
-	public boolean delItem(Key k, Item i) {
+	public ResponseEntity<String> delItem(Key k, Item i) {
 		if(!iDAO.existsById(i.getIid())) {
-			throw new InvalidException(String.format("DELETE: Item %d does not exist.", i.getIid()));
+			return InvalidException.thrown(String.format("DELETE: Item %d does not exist.", i.getIid()), new RuntimeException());
 		}
 		if(cDAO.existsByIid(i.getIid())
 				|| boDAO.existsByIid(i.getIid())
 				|| tuiDAO.existsByIid(i.getIid())) {
-			throw new InvalidException(String.format("DELETE: Item %d is present in a cart/backorder/transaction.", i.getIid()));
+			return InvalidException.thrown(String.format("DELETE: Item %d is present in a cart/backorder/transaction.", i.getIid()), new RuntimeException());
 		}
 		iDAO.delete(i);	
-		return true;
+		return ResponseEntity.ok().body("Item Deleted");
 	}
 	
-	public Item restockItem(Key k, Item i, long amount) {
+	public ResponseEntity<String> restockItem(Key k, Item i, long amount) {
 		if(!iDAO.existsById(i.getIid())) {
-			throw new InvalidException(String.format("UPDATE: Item %d does not exist.", i.getIid()));
+			return InvalidException.thrown(String.format("UPDATE: Item %d does not exist.", i.getIid()), new RuntimeException());
 		}
 		if(amount < 1) {
-			throw new InvalidException("UPDATE: Restock amount must be greater than 0.");
+			return InvalidException.thrown("UPDATE: Restock amount must be greater than 0.", new RuntimeException());
 		}
 		i = iDAO.findById(i.getIid()).get();
 		i.setQuantity(i.getQuantity()+amount);
-		return iDAO.save(i);
+		iDAO.save(i);
+		return ResponseEntity.ok().body("Item Restocked");
 	}
 
-	public Manufacturer addSupplier(Key k, Manufacturer m) {
+	public ResponseEntity<String> addSupplier(Key k, Manufacturer m) {
 		if (m.getMid() != 0) {
-			throw new InvalidException (String.format("INSERT: Invalid ID %d passed during Manufacturer insertion.", m.getMid()));
+			return InvalidException.thrown(String.format("INSERT: Invalid ID %d passed during Manufacturer insertion.", m.getMid()), new RuntimeException());
 		}
-		return mDAO.save(m);
+		mDAO.save(m);
+		return ResponseEntity.accepted().body("Supplier Added");
 	}
 	
-	public Manufacturer modSupplier(Key k, Manufacturer m) {
+	public ResponseEntity<String> modSupplier(Key k, Manufacturer m) {
 		if (m.getMid() < 1) {
-			throw new InvalidException (String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()));
+			return InvalidException.thrown(String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()), new RuntimeException());
 		}
-		return mDAO.save(m);
+		mDAO.save(m);
+		return ResponseEntity.ok().body("Supplier information modified.");
 	}
 	
-	public boolean delSupplier(Key k, Manufacturer m) {
+	public ResponseEntity<String> delSupplier(Key k, Manufacturer m) {
 		if (m.getMid() < 1) {
-			throw new InvalidException (String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()));
+			return InvalidException.thrown(String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()), new RuntimeException());
 		}
 		List<Item> is = iDAO.findAllByMid(m.getMid());
 		if (is != null && !is.isEmpty()) {
 			for(Item i : is) {
 				if (tuiDAO.existsById(i.getIid()) || cDAO.existsByIid(i.getIid()) || boDAO.existsByIid(i.getIid())) {
-					throw new InvalidException(String.format("DELETE: Manufacturer item %s exists in cart/transaction/backorder.%nCannot remove manufacturer %s.", i.getUnitname(), m.getMname()));
+					return InvalidException.thrown(String.format("DELETE: Manufacturer item %s exists in cart/transaction/backorder.%nCannot remove manufacturer %s.", i.getUnitname(), m.getMname()), new RuntimeException());
 				}
 			}
 		}
 		iDAO.deleteByMid(m.getMid());
 		mDAO.deleteById(m.getMid());
-		return true;
+		return ResponseEntity.ok().body("Supplier Deleted");
 	}
 
 	public List<Item> displaySupplierItems(long mid) {

@@ -29,21 +29,21 @@ public class AdminController {
 	private ChkUsrSvc usrSvc;
 
 	@PostMapping("/user")
-	public ResponseEntity<User> createUser(@RequestBody User u) {
+	public ResponseEntity<String> createUser(@RequestBody User u) {
 		
-		return ResponseEntity.accepted().body(aSvc.addUser(usrSvc.validateAdmin(usrSvc.logdin()), u));
+		return aSvc.addUser(usrSvc.validateAdmin(usrSvc.logdin()), u);
 	}
 	
 	@PatchMapping("/user")
-	public ResponseEntity<User> modifyUser(@RequestBody User u) {
+	public ResponseEntity<String> modifyUser(@RequestBody User u) {
 		
-		return ResponseEntity.accepted().body(aSvc.updateUserAtRequestByUser(usrSvc.validateAdmin(usrSvc.logdin()), u));
+		return aSvc.updateUserAtRequestByUser(usrSvc.validateAdmin(usrSvc.logdin()), u);
 	}
 	
 	@DeleteMapping("/user")
-	public ResponseEntity<Boolean> removeUser(@RequestBody User u) {
+	public ResponseEntity<String> removeUser(@RequestBody User u) {
 		
-		return ResponseEntity.accepted().body(aSvc.delCustomer(usrSvc.validateAdmin(usrSvc.logdin()), u));
+		return aSvc.delCustomer(usrSvc.validateAdmin(usrSvc.logdin()), u);
 	}
 
 	@GetMapping("/user")
@@ -53,27 +53,27 @@ public class AdminController {
 	}
 	
 	@PatchMapping("/user/hire")
-	public ResponseEntity<User> hireUser(@RequestBody User u) {
+	public ResponseEntity<String> hireUser(@RequestBody User u) {
 		
-		return ResponseEntity.accepted().body(aSvc.hireCustomer(usrSvc.validateAdmin(usrSvc.logdin()), u));
+		return aSvc.hireCustomer(usrSvc.validateAdmin(usrSvc.logdin()), u);
 	}
 	
 	@PatchMapping("/user/release")
-	public ResponseEntity<User> releaseUser(@RequestBody User u) {
+	public ResponseEntity<String> releaseUser(@RequestBody User u) {
 		
-		return ResponseEntity.accepted().body(aSvc.releaseEmployee(usrSvc.validateAdmin(usrSvc.logdin()), u));
+		return aSvc.releaseEmployee(usrSvc.validateAdmin(usrSvc.logdin()), u);
 	}
 
 	@DeleteMapping("/user/transaction")
-	public ResponseEntity<Boolean> removeTransaction(@RequestBody Transaction t) {
+	public ResponseEntity<String> removeTransaction(@RequestBody Transaction t) {
 		
-		return ResponseEntity.accepted().body(aSvc.delUserTransaction(usrSvc.validateAdmin(usrSvc.logdin()), t));
+		return aSvc.delUserTransaction(usrSvc.validateAdmin(usrSvc.logdin()), t);
 	}
 	
 	@DeleteMapping("/user/transaction/item")
-	public ResponseEntity<Boolean> removeUserTransactionItem(@RequestBody TuiProto tp) {
+	public ResponseEntity<String> removeUserTransactionItem(@RequestBody TuiProto tp) {
 		
-		return ResponseEntity.accepted().body(aSvc.delUserTransactionItem(usrSvc.validateAdmin(usrSvc.logdin()), tp));
+		return aSvc.delUserTransactionItem(usrSvc.validateAdmin(usrSvc.logdin()), tp);
 	}
 	
 	@GetMapping("/coupon")
@@ -83,20 +83,20 @@ public class AdminController {
 	}
 	
 	@PostMapping("/coupon")
-	public ResponseEntity<Coupon> createCoupon(@RequestBody Coupon c) {
+	public ResponseEntity<String> createCoupon(@RequestBody Coupon c) {
 		
-		return ResponseEntity.accepted().body(aSvc.addCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c));
+		return aSvc.addCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c);
 	}
 	
 	@PatchMapping("/coupon")
-	public ResponseEntity<Coupon> modifyCoupon(@RequestBody Coupon c) {
+	public ResponseEntity<String> modifyCoupon(@RequestBody Coupon c) {
 		
-		return ResponseEntity.accepted().body(aSvc.modCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c));
+		return aSvc.modCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c);
 	}
 	
 	@DeleteMapping("/coupon")
-	public ResponseEntity<Boolean> removeCoupon(@RequestBody Coupon c) {
+	public ResponseEntity<String> removeCoupon(@RequestBody Coupon c) {
 		
-		return ResponseEntity.accepted().body(aSvc.delCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c));
+		return aSvc.delCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c);
 	}
 }
