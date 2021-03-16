@@ -46,12 +46,12 @@ public class InventoryController {
 		try {
 			return ResponseEntity.ok(iSvc.itemSupplier(i));
 		} catch(IllegalArgumentException e) {
-            InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return ResponseEntity.status(400).body(null);
-        } catch(Exception e) {
-            InvalidException.thrown("Invalid data sent", e);
-            return ResponseEntity.status(400).body(null);
-        }
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return ResponseEntity.status(400).body(null);
+		} catch(Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return ResponseEntity.status(400).body(null);
+		}
 		
 	}
 	
@@ -60,12 +60,12 @@ public class InventoryController {
 		try {
 			return ResponseEntity.ok(iSvc.displaySupplierItems(m));
 		} catch(IllegalArgumentException e) {
-            InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return ResponseEntity.status(400).body(null);
-        } catch(Exception e) {
-            InvalidException.thrown("Invalid data sent", e);
-            return ResponseEntity.status(400).body(null);
-        }
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return ResponseEntity.status(400).body(null);
+		} catch(Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return ResponseEntity.status(400).body(null);
+		}
 		
 	}
 
@@ -74,12 +74,12 @@ public class InventoryController {
 		try {
 			return ResponseEntity.ok(iSvc.displaySuppliers());
 		} catch(IllegalArgumentException e) {
-            InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return ResponseEntity.status(400).body(null);
-        } catch(Exception e) {
-            InvalidException.thrown("Invalid data sent", e);
-            return ResponseEntity.status(400).body(null);;
-        }
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return ResponseEntity.status(400).body(null);
+		} catch(Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return ResponseEntity.status(400).body(null);;
+		}
 		
 	}
 	
@@ -90,10 +90,10 @@ public class InventoryController {
 		try {
 			return iSvc.addItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 		} catch(IllegalArgumentException e) {
-            return InvalidException.thrown("SQLException: Invalid data inputed.", e);
-        } catch(Exception e) {
-            return InvalidException.thrown("Invalid data sent", e);
-        }	
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch(Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}	
 	}
 	
 	@PatchMapping("/item")
@@ -101,13 +101,11 @@ public class InventoryController {
 		try {
 			return iSvc.modItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 		} catch(IllegalArgumentException e) {
-            return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
 
-        } catch(Exception e) {
-            return InvalidException.thrown("Invalid data sent", e);
-            
-        }
-		
+		} catch(Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);            
+		}	
 	}
 	
 	@PatchMapping("/item/restock")
@@ -115,13 +113,12 @@ public class InventoryController {
 		try {
 			return iSvc.restockItem(usrSvc.validateEmployee(usrSvc.logdin()), i, i.getQuantity());
 		} catch(IllegalArgumentException e) {
-            return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
             
-        } catch(Exception e) {
-            return InvalidException.thrown("Invalid data sent", e);
+		} catch(Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
             
-        }
-		
+		}	
 	}
 	
 	@DeleteMapping("/item")
@@ -129,12 +126,12 @@ public class InventoryController {
 		try {
 			return iSvc.delItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 		} catch(IllegalArgumentException e) {
-            return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
             
-        } catch(Exception e) {
-            return InvalidException.thrown("Invalid data sent", e);
+		} catch(Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
             
-        }
+		}
 		
 	}
 	
@@ -144,12 +141,12 @@ public class InventoryController {
 		try {
 			return iSvc.addSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 		} catch(IllegalArgumentException e) {
-            return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
             
-        } catch(Exception e) {
-            return InvalidException.thrown("Invalid data sent", e);
+		} catch(Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
             
-        }
+		}
 		
 	}
 	
@@ -158,12 +155,12 @@ public class InventoryController {
 		try {
 			return iSvc.modSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 		} catch(IllegalArgumentException e) {
-            return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
             
-        } catch(Exception e) {
-            return InvalidException.thrown("Invalid data sent", e);
+		} catch(Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
             
-        }
+		}
 		
 	}
 	
@@ -172,11 +169,11 @@ public class InventoryController {
 		try {
 			return iSvc.delSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 		} catch(IllegalArgumentException e) {
-            return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
             
-        } catch(Exception e) {
-            return InvalidException.thrown("Invalid data sent", e);
+		} catch(Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
             
-        } 	
+		} 	
 	}
 }
