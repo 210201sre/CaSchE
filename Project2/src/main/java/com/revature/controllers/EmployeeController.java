@@ -31,25 +31,57 @@ public class EmployeeController {
 	
 	@GetMapping("/directory")
 	public ResponseEntity<List<User>> showStaffDirectory() {
+		try {
+			return ResponseEntity.ok(eSvc.displayInternalDirectory(usrSvc.validateEmployee(usrSvc.logdin())));
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return ResponseEntity.ok(eSvc.displayInternalDirectory(usrSvc.validateEmployee(usrSvc.logdin())));
 	}
 	
 	@GetMapping("/user/transaction")
 	public ResponseEntity<List<Transaction>> showUserTransactions(@RequestBody User u) {
+		try {
+			return aSvc.displayUserTransactions(usrSvc.validateEmployee(usrSvc.logdin()), u);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return aSvc.displayUserTransactions(usrSvc.validateEmployee(usrSvc.logdin()), u);
 	}
 	
 	@GetMapping("/user/transaction/item")
 	public ResponseEntity<List<CartItem>> showUserTransactionItems(@RequestBody Transaction t) {
+		try {
+			return aSvc.displayUserTransactionItems(usrSvc.validateEmployee(usrSvc.logdin()), t);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return aSvc.displayUserTransactionItems(usrSvc.validateEmployee(usrSvc.logdin()), t);
 	}
 	
 	@PatchMapping("/user/transaction/item")
 	public ResponseEntity<String> modifyUserTransactionItem(@RequestBody TuiProto tp) {
+		try {
+			return aSvc.modUserTransactionItem(usrSvc.validateEmployee(usrSvc.logdin()), tp);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return aSvc.modUserTransactionItem(usrSvc.validateEmployee(usrSvc.logdin()), tp);
 	}
 }

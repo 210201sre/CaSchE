@@ -29,72 +29,156 @@ public class InventoryController {
 	
 	@GetMapping
 	public ResponseEntity<List<Item>> showItems(){
+		try {
+			return ResponseEntity.ok(iSvc.displayInventory());
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return ResponseEntity.ok(iSvc.displayInventory());
 	}
 	
 	@GetMapping("/manufacturer/{mid}")
 	public ResponseEntity<Manufacturer> showManufacturer(@PathVariable("mid") long i){
+		try {
+			return ResponseEntity.ok(iSvc.itemSupplier(i));
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return ResponseEntity.ok(iSvc.itemSupplier(i));
 	}
 	
 	@GetMapping("/{mid}")
 	public ResponseEntity<List<Item>> showManufacturerItems(@PathVariable("mid") long m) {
+		try {
+			return ResponseEntity.ok(iSvc.displaySupplierItems(m));
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return ResponseEntity.ok(iSvc.displaySupplierItems(m));
 	}
 
 	@GetMapping("/manufacturer")
 	public ResponseEntity<List<Manufacturer>> showManufacturers() {
+		try {
+			return ResponseEntity.ok(iSvc.displaySuppliers());
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return ResponseEntity.ok(iSvc.displaySuppliers());
 	}
 	
 	//User Specific Services
 	//Item Routing
 	@PostMapping("/item")
 	public ResponseEntity<String> newItem(@RequestBody Item i) {
-		
-		return iSvc.addItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
+		try {
+			return iSvc.addItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }	
 	}
 	
 	@PatchMapping("/item")
 	public ResponseEntity<String> modItem(@RequestBody Item i) {
+		try {
+			return iSvc.modItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return iSvc.modItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 	}
 	
 	@PatchMapping("/item/restock")
 	public ResponseEntity<String> restockItem(@RequestBody Item i) {
+		try {
+			return iSvc.restockItem(usrSvc.validateEmployee(usrSvc.logdin()), i, i.getQuantity());
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return iSvc.restockItem(usrSvc.validateEmployee(usrSvc.logdin()), i, i.getQuantity());
 	}
 	
 	@DeleteMapping("/item")
 	public ResponseEntity<String> delItem(@RequestBody Item i) {
+		try {
+			return iSvc.delItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return iSvc.delItem(usrSvc.validateAdmin(usrSvc.logdin()), i);
 	}
 	
 	//Manufacturer Routing
 	@PostMapping("/manufacturer")
 	public ResponseEntity<String> newManufacturer(@RequestBody Manufacturer m) {
+		try {
+			return iSvc.addSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return iSvc.addSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 	}
 	
 	@PatchMapping("/manufacturer")
 	public ResponseEntity<String> modManufacturer(@RequestBody Manufacturer m) {
+		try {
+			return iSvc.modSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        }
 		
-		return iSvc.modSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
 	}
 	
 	@DeleteMapping("/manufacturer")
 	public ResponseEntity<String> removeManufacturer(@RequestBody Manufacturer m) {
-		
-		return iSvc.delSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
+		try {
+			return iSvc.delSupplier(usrSvc.validateAdmin(usrSvc.logdin()), m);
+		} catch(IllegalArgumentException e) {
+            InvalidException.thrown("SQLException: Invalid data inputed.", e);
+            return null;
+        } catch(Exception e) {
+            InvalidException.thrown("Invalid data sent", e);
+            return null
+        } 	
 	}
-	
-	
 }
