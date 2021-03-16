@@ -60,10 +60,10 @@ public class CustomerController {
 			return custSvc.getMyInfo(usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		} catch (Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		}
 	}
 
@@ -161,10 +161,10 @@ public class CustomerController {
 			return ResponseEntity.ok(custSvc.displayCart(usrSvc.logdin()));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		} catch (Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		}
 	}
 
@@ -185,10 +185,10 @@ public class CustomerController {
 			return ResponseEntity.ok(custSvc.displayTransactions(usrSvc.logdin()));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		} catch (Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		}
 	}
 
@@ -198,10 +198,10 @@ public class CustomerController {
 			return custSvc.displayTransactionItems(t, usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		} catch (Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		}
 	}
 
@@ -211,10 +211,10 @@ public class CustomerController {
 			return ResponseEntity.ok(custSvc.displayBackorders(usrSvc.logdin()));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		} catch (Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		}
 	}
 }

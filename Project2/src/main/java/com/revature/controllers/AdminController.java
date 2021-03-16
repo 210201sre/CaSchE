@@ -68,10 +68,10 @@ public class AdminController {
 			return ResponseEntity.ok(aSvc.displayAllUsers(usrSvc.validateAdmin(usrSvc.logdin())));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		} catch (Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		}
 	}
 
@@ -125,10 +125,10 @@ public class AdminController {
 			return ResponseEntity.ok(aSvc.displayCoupons(usrSvc.validateAdmin(usrSvc.logdin())));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		} catch (Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return null;
+			return ResponseEntity.status(400).body(null);	// Check for specific 4XX status
 		}
 	}
 
