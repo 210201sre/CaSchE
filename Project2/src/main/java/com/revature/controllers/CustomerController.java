@@ -1,6 +1,5 @@
 package com.revature.controllers;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,121 +26,195 @@ import com.revature.services.CustomerService;
 @RestController
 @RequestMapping("/user")
 public class CustomerController {
-	
-	//@Autowired
-	//private HttpServletRequest req;
+
 	@Autowired
 	private ChkUsrSvc usrSvc;
 	@Autowired
 	private CustomerService custSvc;
-	//@Autowired
-	//private AdminService admSvc;
 
-	
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody Credentials cred) {
-		
-		return custSvc.login(cred.getUname(), cred.getPswrd());
+		try {
+			return custSvc.login(cred.getUname(), cred.getPswrd());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
+
 	@PostMapping("/logout")
 	public ResponseEntity<String> logout() {
-		
-		return custSvc.logout(usrSvc.logdin());
+		try {
+			return custSvc.logout(usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
-//	@ValidateCustomer
+
 	@GetMapping
 	public ResponseEntity<User> myInfo() {
-		
-		// Call following if method requires access validation
-//		Key k = usrSvc.logdin();
-//		usrSvc.validateCustomer(k);
-//		return ResponseEntity.ok(custService.getMyInfo(k));
-
-// custSvc.doSomething(usrSvc.validateCustomer(logdin()), ...)
-		// Get user's session data in CustomerService
-		return custSvc.getMyInfo(usrSvc.logdin());
+		try {
+			return custSvc.getMyInfo(usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return null;
+		} catch (Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return null;
+		}
 	}
 
 	@PostMapping
-	public ResponseEntity<String> newUser(@RequestBody User u){
+	public ResponseEntity<String> newUser(@RequestBody User u) {
 		try {
 			return custSvc.addUsr(u);
-		} catch(Exception e) {
-			return InvalidException.thrown("PSQLException: Invalid data inputed.", e);
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent.", e);
 		}
 	}
-	
+
 	@PatchMapping
-//	public ResponseEntity<Integer> modUser(@RequestBody User u) {
 	public ResponseEntity<String> modUser(@RequestBody User u) {
-		
-		return custSvc.modUser(u, usrSvc.logdin());
+		try {
+			return custSvc.modUser(u, usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
+
 	@PatchMapping("/resetlogin")
 	public ResponseEntity<String> resetUnPw(@RequestBody Credentials c) {
-		
-		return custSvc.resetUnPw(c.getUname(), c.getPswrd(), usrSvc.logdin());
+		try {
+			return custSvc.resetUnPw(c.getUname(), c.getPswrd(), usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
 
 	@DeleteMapping
 	public ResponseEntity<String> removeUser() {
-		
-		return custSvc.delUser(usrSvc.logdin());
+		try {
+			return custSvc.delUser(usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
+
 	@PostMapping("/cart")
 	public ResponseEntity<String> addToCart(@RequestBody CartItemProto cip) {
-		
-		return custSvc.addToMyCart(cip, usrSvc.logdin());
+		try {
+			return custSvc.addToMyCart(cip, usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
+
 	@PatchMapping("/cart")
 	public ResponseEntity<String> modCartItem(@RequestBody CartItemProto cip) {
-		
-		return custSvc.modMyCart(cip, usrSvc.logdin());
+		try {
+			return custSvc.modMyCart(cip, usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
+
 	@DeleteMapping("/cart")
 	public ResponseEntity<String> removeCartItem(@RequestBody CartItemProto cip) {
-		
-		return custSvc.delMyCartItem(cip, usrSvc.logdin());
+		try {
+			return custSvc.delMyCartItem(cip, usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
+
 	@DeleteMapping("/cart/all")
 	public ResponseEntity<String> emptyCart() {
-		
-		return custSvc.emptyCart(usrSvc.logdin());
+		try {
+			return custSvc.emptyCart(usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
+
 	@GetMapping("/cart")
 	public ResponseEntity<List<CartItem>> showCart() {
-		
-		return ResponseEntity.ok(custSvc.displayCart(usrSvc.logdin()));
+		try {
+			return ResponseEntity.ok(custSvc.displayCart(usrSvc.logdin()));
+		} catch (IllegalArgumentException e) {
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return null;
+		} catch (Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return null;
+		}
 	}
-	
+
 	@PutMapping("/checkout")
 	public ResponseEntity<String> checkout() {
-		
-		return custSvc.checkout(usrSvc.logdin()); 
+		try {
+			return custSvc.checkout(usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+		} catch (Exception e) {
+			return InvalidException.thrown("Invalid data sent", e);
+		}
 	}
-	
+
 	@GetMapping("/transaction")
 	public ResponseEntity<List<Transaction>> showTransactions() {
-		
-		return ResponseEntity.ok(custSvc.displayTransactions(usrSvc.logdin()));
+		try {
+			return ResponseEntity.ok(custSvc.displayTransactions(usrSvc.logdin()));
+		} catch (IllegalArgumentException e) {
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return null;
+		} catch (Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return null;
+		}
 	}
-	
+
 	@GetMapping("/transaction/contents")
 	public ResponseEntity<List<CartItem>> showTransactionItems(@RequestBody Transaction t) {
-		
-		return custSvc.displayTransactionItems(t, usrSvc.logdin());
+		try {
+			return custSvc.displayTransactionItems(t, usrSvc.logdin());
+		} catch (IllegalArgumentException e) {
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return null;
+		} catch (Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return null;
+		}
 	}
-	
+
 	@GetMapping("/backorder")
 	public ResponseEntity<List<BackorderProto>> showBackorders() {
-		
-		return ResponseEntity.ok(custSvc.displayBackorders(usrSvc.logdin()));
+		try {
+			return ResponseEntity.ok(custSvc.displayBackorders(usrSvc.logdin()));
+		} catch (IllegalArgumentException e) {
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return null;
+		} catch (Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return null;
+		}
 	}
 }

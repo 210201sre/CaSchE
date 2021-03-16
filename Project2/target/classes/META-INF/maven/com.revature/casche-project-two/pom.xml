@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.revature</groupId>
-	<artifactId>project-one</artifactId>
+	<artifactId>casche-project-two</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Project1</name>
 	<description>Demo project for Spring Boot</description>
@@ -77,7 +77,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>project-one</finalName>
+		<finalName>casche-project-two</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
