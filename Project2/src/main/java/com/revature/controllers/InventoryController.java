@@ -78,7 +78,7 @@ public class InventoryController {
 			return ResponseEntity.status(400).body(null);
 		} catch(Exception e) {
 			InvalidException.thrown("Invalid data sent", e);
-			return ResponseEntity.status(400).body(null);;
+			return ResponseEntity.status(400).body(null);
 		}
 		
 	}
