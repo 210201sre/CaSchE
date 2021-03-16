@@ -35,10 +35,10 @@ public class EmployeeController {
 			return ResponseEntity.ok(eSvc.displayInternalDirectory(usrSvc.validateEmployee(usrSvc.logdin())));
 		} catch(IllegalArgumentException e) {
             InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return null;
+            return ResponseEntity.status(400).body(null);
         } catch(Exception e) {
             InvalidException.thrown("Invalid data sent", e);
-            return null
+            return ResponseEntity.status(400).body(null);
         }
 		
 	}
@@ -49,10 +49,10 @@ public class EmployeeController {
 			return aSvc.displayUserTransactions(usrSvc.validateEmployee(usrSvc.logdin()), u);
 		} catch(IllegalArgumentException e) {
             InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return null;
+            return ResponseEntity.status(400).body(null);
         } catch(Exception e) {
             InvalidException.thrown("Invalid data sent", e);
-            return null
+            return ResponseEntity.status(400).body(null);
         }
 		
 	}
@@ -63,10 +63,10 @@ public class EmployeeController {
 			return aSvc.displayUserTransactionItems(usrSvc.validateEmployee(usrSvc.logdin()), t);
 		} catch(IllegalArgumentException e) {
             InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return null;
+            return ResponseEntity.status(400).body(null);
         } catch(Exception e) {
             InvalidException.thrown("Invalid data sent", e);
-            return null
+            return ResponseEntity.status(400).body(null);
         }
 		
 	}
@@ -77,11 +77,10 @@ public class EmployeeController {
 			return aSvc.modUserTransactionItem(usrSvc.validateEmployee(usrSvc.logdin()), tp);
 		} catch(IllegalArgumentException e) {
             InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return null;
+            return ResponseEntity.status(400).body(null);
         } catch(Exception e) {
             InvalidException.thrown("Invalid data sent", e);
-            return null
-        }
-		
+            return ResponseEntity.status(400).body(null);
+        }		
 	}
 }
