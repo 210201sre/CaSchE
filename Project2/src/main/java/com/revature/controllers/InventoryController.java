@@ -32,12 +32,12 @@ public class InventoryController {
 		try {
 			return ResponseEntity.ok(iSvc.displayInventory());
 		} catch(IllegalArgumentException e) {
-            InvalidException.thrown("SQLException: Invalid data inputed.", e);
-            return ResponseEntity.status(400).body(null);
-        } catch(Exception e) {
-            InvalidException.thrown("Invalid data sent", e);
-            return ResponseEntity.status(400).body(null);
-        }
+			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+			return ResponseEntity.status(400).body(null);
+		} catch(Exception e) {
+			InvalidException.thrown("Invalid data sent", e);
+			return ResponseEntity.status(400).body(null);
+		} //edited this method, hopefully it is aligned 
 		
 	}
 	
