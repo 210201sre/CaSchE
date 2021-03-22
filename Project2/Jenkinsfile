@@ -1,0 +1,111 @@
+pipeline {
+
+    agent {
+        kubernetes {
+          label 'build-agent'
+          defaultContainer 'jnlp'
+          yaml """
+          apiVersion: v1
+          kind: Pod
+          metadata:
+          labels:
+            component: ci
+          spec:
+            containers:
+            - name: jnlp
+              image: odavid/jenkins-slave:latest
+              workingDir: /home/jenkins
+              env:
+              - name: DOCKER_HOST
+                value: tcp://localhost:2375
+              resources:
+                requests:
+                  memory: "500Mi"
+                  cpu: "0.3"
+                limits:
+                  memory: "800Mi"
+                  cpu: "0.5"
+            - name: dind-daemon
+              image: docker:18-dind
+              workingDir: /var/lib/docker
+              securityContext:
+                privileged: true
+              volumeMounts:
+              - name: docker-storage
+                mountPath: /var/lib/docker
+              resources:
+                requests:
+                  memory: "300Mi"
+                  cpu: "0.3"
+                limits:
+                  memory: "500Mi"
+                  cpu: "0.5"
+            - name: kubectl
+              image: jshimko/kube-tools-aws:latest
+              command:
+              - cat
+              tty: true
+            volumes:
+            - name: docker-storage
+              emptyDir: {}
+          """
+        }
+    }
+
+    environment {
+        DOCKER_IMAGE_NAME = "sentrurion/project2"
+        MAVEN_IMAGE_NAME = "casche-project-two"
+    }
+
+    stages {
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+                sh 'docker build -t sentrurion/casche-project-two:latest .'
+                //sh 'echo other shell commands'
+                script {
+                    app = docker.image(DOCKER_IMAGE_NAME)
+                }
+
+            }
+        }
+
+        // stage('Sonar Quality Analysis') {
+        //     steps {
+        //         withSonarQubeEnv(credentialsId: 'sonar-token-2', installationName: 'sonarcloud') {
+        //             sh './mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+        //         }
+        //     }
+        // }
+
+        // stage('Wait for Quality Analysis') {
+        //     steps {
+        //         script {
+        //             timeout(time: 30, unit: 'MINUTES') {
+        //                 qualitygate = waitForQualityGate abortPipeline: true
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage('Push Docker Image') {
+        //     //when {
+        //         //doesn't work for ?pipeline?
+        //         //branch 'master'
+        //     //}
+        //     steps {
+        //         script {
+        //             docker.withRegistry('https://registry.hub.docker.com', 'ds-token') {
+        //                 app.push("latest") //image tags
+        //                 app.push("${env.BUILD_NUMBER}")
+        //                 app.push("$env.GIT_COMMIT}")
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage('')
+
+    }
+}
