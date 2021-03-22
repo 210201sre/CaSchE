@@ -59,8 +59,8 @@ pipeline {
 
     stages {
         stage('Build') {
-            dir("Project2") {
-                steps {
+            steps {
+                dir("Project2") {
                     sh 'ls'
                     sh 'echo'
                     sh 'mvn clean package'
