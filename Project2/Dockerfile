@@ -11,7 +11,7 @@ FROM openjdk:11
 
 EXPOSE 8080
 
-ARG JARFILE = target/casche-project-two.jar
+ARG JARFILE=target/casche-project-two.jar
 ADD ${JARFILE} app.jar
 # COPY --from=BUILDER target/casche-project-two.jar app.jar
 
