@@ -63,7 +63,7 @@ pipeline {
             steps {
                 sh 'ls'
                 sh 'echo'
-                sh 'cd Project2/'
+                sh 'cd Project2'
                 sh 'ls'
                 sh 'echo'
                 sh 'mvn clean package'
