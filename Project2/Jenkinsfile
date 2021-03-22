@@ -63,8 +63,7 @@ pipeline {
                 dir("Project2") {
                     sh 'ls'
                     sh 'echo'
-                    sh 'chmod -x mvnw'
-                    sh './mvnw clean package'
+                    sh 'chmod -x mvnw && ./mvnw clean package'
                     sh 'docker build -t sentrurion/casche-project-two:latest .'
                     //sh 'echo other shell commands'
                     script {
