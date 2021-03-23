@@ -103,7 +103,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("Employee Released");
 	}
 
-	public List<User> displayAllUsers(Key k) {
+	public List<User> displayAllUsers(Key k) { //******
 		MDC.put("Action", "Adm Display Users");
 		return userDAO.findAll();
 	}
