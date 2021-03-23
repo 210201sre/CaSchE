@@ -91,21 +91,21 @@ pipeline {
         //     }
         // }
 
-        // stage('Push Docker Image') {
+        stage('Push Docker Image') {
         //     //when {
         //         //doesn't work for ?pipeline?
         //         //branch 'master'
         //     //}
-        //     steps {
-        //         script {
-        //             docker.withRegistry('https://registry.hub.docker.com', 'ds-token') {
-        //                 app.push("latest") //image tags
-        //                 app.push("${env.BUILD_NUMBER}")
-        //                 app.push("$env.GIT_COMMIT}")
-        //             }
-        //         }
-        //     }
-        // }
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'ds-token') {
+                        app.push("latest") //image tags
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("$env.GIT_COMMIT}")
+                    }
+                }
+            }
+        }
 
         // stage('')
 
