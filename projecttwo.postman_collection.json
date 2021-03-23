@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "7e8a347b-e9c8-4161-af2e-8f0afb91a688",
-		"name": "projectone",
+		"_postman_id": "f6014b89-ac6b-42cd-9523-2183e39bc7c5",
+		"name": "projecttwo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -23,7 +23,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -32,7 +32,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user"
 							]
 						}
@@ -54,7 +54,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/login",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/login",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -63,7 +63,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"login"
 							]
@@ -86,7 +86,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/login",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/login",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -95,7 +95,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"login"
 							]
@@ -109,7 +109,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/logout",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/logout",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -118,7 +118,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"logout"
 							]
@@ -132,16 +132,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user",
+							"raw": "62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user",
 							"host": [
-								"a62d60162057149549617360016d2e38-542496291",
+								"62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
 								"elb",
 								"amazonaws",
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user"
 							]
 						}
@@ -168,7 +168,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -177,7 +177,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user"
 							]
 						}
@@ -199,7 +199,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/cart",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -208,7 +208,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"cart"
 							]
@@ -231,7 +231,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/cart",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -240,7 +240,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"cart"
 							]
@@ -254,7 +254,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart/all",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/cart/all",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -263,7 +263,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"cart",
 								"all"
@@ -278,7 +278,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/cart",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/cart",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -287,7 +287,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"cart"
 							]
@@ -301,7 +301,7 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/checkout",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/checkout",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -310,7 +310,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"checkout"
 							]
@@ -324,7 +324,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/transaction",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/transaction",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -333,7 +333,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"transaction"
 							]
@@ -359,7 +359,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/transaction/contents",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/transaction/contents",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -368,7 +368,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"transaction",
 								"contents"
@@ -383,7 +383,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/user/backorder",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/user/backorder",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -392,7 +392,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"user",
 								"backorder"
 							]
@@ -411,7 +411,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/staff/directory",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/staff/directory",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -420,7 +420,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"staff",
 								"directory"
 							]
@@ -451,7 +451,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/user",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/manager/user",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -460,7 +460,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"manager",
 								"user"
 							]
@@ -474,7 +474,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/coupon",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/manager/coupon",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -483,7 +483,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"manager",
 								"coupon"
 							]
@@ -506,7 +506,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/coupon",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/manager/coupon",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -515,7 +515,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"manager",
 								"coupon"
 							]
@@ -538,7 +538,7 @@
 							}
 						},
 						"url": {
-							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/js-inv-sales/manager/coupon",
+							"raw": "a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com/isms/manager/coupon",
 							"host": [
 								"a62d60162057149549617360016d2e38-542496291",
 								"us-east-1",
@@ -547,7 +547,7 @@
 								"com"
 							],
 							"path": [
-								"js-inv-sales",
+								"isms",
 								"manager",
 								"coupon"
 							]

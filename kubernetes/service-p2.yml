@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: project-one
-  namespace: jonathan-schmitz
+  name: project-two
+  namespace: casche
 spec:
   selector:
-    app: project-one
+    app: project-two
   ports:
   - name: http
     protocol: TCP

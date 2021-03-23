@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: project-one
-  namespace: jonathan-schmitz
+  name: project-two
+  namespace: casche
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -11,7 +11,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /js-inv-sales/?(.*)
+      - path: /isms/?(.*)
         backend:
-          serviceName: project-one
+          serviceName: project-two
           servicePort: 8080
