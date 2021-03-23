@@ -136,6 +136,16 @@ public class AdminServiceTests {
 		Assertions.assertEquals(sro, adminService.hireCustomer(k1, b0));
 	}
 	
+	@Test
+	void releaseEmployee() {
+		User b = new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Customer", null);
+		Optional<User> b1 = Optional.of(new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Employee", null));	
+		ResponseEntity<String> res = new ResponseEntity<String>("Employee Released", HttpStatus.OK);
+		Mockito.when(userDAO.findById(b.getUid())).thenReturn(b1);
+		Mockito.when(userDAO.save(b)).thenReturn(b);
+		Assertions.assertEquals(res, adminService.releaseEmployee(k1, b));
+	}
+	
 	
 	
 }
