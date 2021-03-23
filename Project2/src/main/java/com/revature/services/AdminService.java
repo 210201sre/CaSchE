@@ -292,7 +292,7 @@ public class AdminService /* extends EmployeeService */ {
 		return coupDAO.findAll();
 	}
 
-	public ResponseEntity<String> addCoupon(Key k, Coupon c) {
+	public ResponseEntity<String> addCoupon(Key k, Coupon c) { //*************
 		MDC.put("Action", "Adm Add Coupon");
 		if (c.getCid() != 0) {
 			return InvalidException.thrown(String.format("INSERT: Invalid coupon id %d.", c.getCid()),
@@ -302,7 +302,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.accepted().body("Coupon Added");
 	}
 
-	public ResponseEntity<String> modCoupon(Key k, Coupon c) {
+	public ResponseEntity<String> modCoupon(Key k, Coupon c) { //************
 		MDC.put("Action", "Adm Modify Coupon");
 		if (!coupDAO.existsById(c.getCid())) {
 			return InvalidException.thrown(String.format("UPDATE: Coupon %d does not exist.", c.getCid()),
