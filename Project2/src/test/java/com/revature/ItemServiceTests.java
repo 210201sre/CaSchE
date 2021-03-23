@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.revature.models.Item;
 import com.revature.models.Manufacturer;
 import com.revature.repositories.ItemDAO;
 import com.revature.repositories.ManufacturerDAO;
@@ -43,5 +44,26 @@ public class ItemServiceTests {
 		Manufacturer m1 = new Manufacturer(426, null, null, null, null, null, null, null, null);
 		Mockito.doReturn(m1).when(mDAO).findById(426);
 		Assertions.assertEquals(m1, iServ.itemSupplier(426));
+	}
+	
+	@Test 
+	void displaySupplierItems() {
+		Item i1 = new Item(2, "Peaches", null, 0, 0, 0, null, 0, 16);
+		Item i2 = new Item(3, "Limes", null, 0, 0, 0, null, 0, 16);
+		List<Item> allI = new ArrayList<Item>();
+		allI.add(i1); allI.add(i2);
+		Mockito.doReturn(allI).when(iDAO).findAllByMid(16);
+		Assertions.assertEquals(allI, iServ.displaySupplierItems(16));
+	}
+	
+	@Test
+	void displayInventory() {
+		Item i1 = new Item(2, "Peaches", null, 0, 0, 0, null, 0, 16);
+		Item i2 = new Item(3, "Limes", null, 0, 0, 0, null, 0, 16);
+		Item i3 = new Item(4, "Shrimp", null, 0, 0, 0, null, 0, 17);
+		List<Item> allI = new ArrayList<Item>();
+		allI.add(i1); allI.add(i2); allI.add(i3);
+		Mockito.doReturn(allI).when(iDAO).findAll();
+		Assertions.assertEquals(allI, iServ.displayInventory());
 	}
 }

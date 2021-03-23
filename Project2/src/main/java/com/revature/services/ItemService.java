@@ -32,7 +32,7 @@ public class ItemService {
 //	@Autowired
 //	private AdminService aSvc;
 
-	public List<Item> displayInventory() {
+	public List<Item> displayInventory() { //*********
 		
 		return iDAO.findAll();
 	}
@@ -112,12 +112,12 @@ public class ItemService {
 		return ResponseEntity.ok().body("Supplier Deleted");
 	}
 
-	public List<Item> displaySupplierItems(long mid) {
+	public List<Item> displaySupplierItems(long mid) { //******
 		
 		return iDAO.findAllByMid(mid);
 	}
 	
-	public Manufacturer itemSupplier(long mid) {
+	public Manufacturer itemSupplier(long mid) { //*******
 
 		return mDAO.findById(mid);
 	}

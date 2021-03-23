@@ -435,7 +435,7 @@ public class CustomerService {
 		return ci;
 	}
 
-	private double calculateTotal(List<CartItem> cis) {
+	private double calculateTotal(List<CartItem> cis) { //**********
 		double total = 0.0;
 		double coupon = 00.00;
 		double tax = 00.00;
