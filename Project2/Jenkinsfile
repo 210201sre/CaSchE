@@ -53,7 +53,7 @@ pipeline {
     // }
 
     environment {
-        DOCKER_IMAGE_NAME = "sentrurion/project2"
+        DOCKER_IMAGE_NAME = "sentrurion/casche-project-two"
         MAVEN_IMAGE_NAME = "casche-project-two"
     }
 
@@ -64,7 +64,7 @@ pipeline {
                     sh 'ls'
                     sh 'echo'
                     sh 'chmod +x mvnw && ./mvnw clean package'
-                    sh 'docker build -t sentrurion/casche-project-two:latest .'
+                    sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
                     script {
                         app = docker.image(DOCKER_IMAGE_NAME)
