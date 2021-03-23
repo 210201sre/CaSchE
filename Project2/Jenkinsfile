@@ -63,7 +63,7 @@ pipeline {
                 dir("Project2") {
                     sh 'ls'
                     sh 'echo "========================================================================"'
-                    sh 'java --version'
+                    sh 'which java'
                     sh 'chmod +x mvnw && ./mvnw clean package'
                     sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
