@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -26,6 +23,7 @@ import com.revature.models.Key;
 import com.revature.models.User;
 import com.revature.repositories.BackorderDAO;
 import com.revature.repositories.CouponDAO;
+import com.revature.repositories.ItemDAO;
 import com.revature.repositories.TuiDAO;
 import com.revature.repositories.UserDAO;
 import com.revature.services.AdminService;
@@ -45,6 +43,8 @@ public class AdminServiceTests {
 	BackorderDAO boDAO;
 	@Mock
 	TuiDAO tuiDAO;
+	@Mock
+	ItemDAO iDAO;
 	
 	@InjectMocks
 	AdminService adminService;
@@ -146,6 +146,13 @@ public class AdminServiceTests {
 		Assertions.assertEquals(res, adminService.releaseEmployee(k1, b));
 	}
 	
+	@Test
+	void setNewQuantities() {
+		Item it = new Item(6000, "Carrots", "Veggie", 16, 0, 0, null, 0, 0);
+		Mockito.when(iDAO.existsById(it.getIid())).thenReturn(true);
+		Mockito.when(iDAO.save(it)).thenReturn(it);
+		Assertions.assertEquals(true, adminService.setNewQuantities(it, (long) 9));
+	}
 	
 	
 }

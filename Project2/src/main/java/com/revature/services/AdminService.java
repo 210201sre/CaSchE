@@ -83,7 +83,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("Customer Hired");
 	}
 
-	public ResponseEntity<String> releaseEmployee(Key k, User u) {
+	public ResponseEntity<String> releaseEmployee(Key k, User u) { //*************
 		MDC.put("Action", "Adm Release Employee");
 		Optional<User> u2 = userDAO.findById(u.getUid());
 		if (u2.isPresent()) { 
@@ -358,7 +358,7 @@ public class AdminService /* extends EmployeeService */ {
 
 	// MUST NOT THROW ERROR, WILL DISRUPT CHECKOUT PROCESS
 	// ADMIN MUST HANDLE LOGGED ISSUE VIA BACKORDER TABLE
-	private boolean setNewQuantities(Item i, long amountSold) {
+	public boolean setNewQuantities(Item i, long amountSold) {
 		if (iDAO.existsById(i.getIid())) {
 			i.setQuantity(i.getQuantity() - amountSold);
 			i.setTotalpurchases(i.getTotalpurchases() + amountSold);
