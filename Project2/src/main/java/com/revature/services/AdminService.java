@@ -287,7 +287,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("Transaction Item Deleted");
 	}
 
-	public List<Coupon> displayCoupons(Key k) {
+	public List<Coupon> displayCoupons(Key k) { //*********
 		MDC.put("Action", "Adm Display Coupons");
 		return coupDAO.findAll();
 	}
@@ -346,7 +346,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ci;
 	}
 
-	private double calculateTotal(List<CartItem> cis) {
+	public double calculateTotal(List<CartItem> cis) { //************
 		double total = 0.0;
 		double coupon = 00.00;
 		double tax = 00.00;
