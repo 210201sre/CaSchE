@@ -122,7 +122,7 @@ public class ItemService {
 		return mDAO.findById(mid);
 	}
 	
-	public List<Manufacturer> displaySuppliers() {
+	public List<Manufacturer> displaySuppliers() { //********
 		
 		return mDAO.findAll();
 	}
