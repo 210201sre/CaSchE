@@ -63,7 +63,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.accepted().body("User Created");
 	}
 
-	public ResponseEntity<String> hireCustomer(Key k, User u) {
+	public ResponseEntity<String> hireCustomer(Key k, User u) { //*******
 		MDC.put("Action", "Adm Hire Customer");
 		Optional<User> u2 = userDAO.findById(u.getUid());
 		if (u2.isPresent()) {
@@ -86,8 +86,8 @@ public class AdminService /* extends EmployeeService */ {
 	public ResponseEntity<String> releaseEmployee(Key k, User u) {
 		MDC.put("Action", "Adm Release Employee");
 		Optional<User> u2 = userDAO.findById(u.getUid());
-		if (u2.isPresent()) {
-			if (!u2.get().getAccesslevel().equals("Customer")) {
+		if (u2.isPresent()) { 
+			if (u2.get().getAccesslevel().equals("Customer")) { //originally was if (!u2.get().getAccesslevel().equals("Customer")), might've been and error
 				return InvalidException.thrown(
 						String.format("UPDATE: User %d is not an employee to release.", u.getUid()),
 						new RuntimeException());
