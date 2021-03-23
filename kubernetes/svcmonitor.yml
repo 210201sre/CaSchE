@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: project-two
+  namespace: casche
+  labels:
+    app: project-two
+    release: prometheus
+spec:
+  endpoints:
+  - path: isms/actuator/prometheus
+    interval: 15s
+    port: http
+  namespaceSelector:
+    matchNames:
+    - casche
+  selector:
+    matchLabels:
+      app: project-two
+
