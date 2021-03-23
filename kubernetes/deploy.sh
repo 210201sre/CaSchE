@@ -6,7 +6,9 @@ kubectl config use-context sre;
 kubectl create -n casche configmap fluent-conf --from-file fluent.conf
 kubectl apply -n casche -f loki-external.yml
 kubectl apply -n casche -f service-p2.yml
-kubectl apply -n casche -f ingress-p2.yml
+# kubectl apply -n casche -f ingress-p2.yml
 kubectl apply -n casche -f deployment-p2.yml
+
+kubectl -n casche rollout restart deployment
 
 kubectl get -n casche all
