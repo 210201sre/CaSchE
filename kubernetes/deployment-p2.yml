@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: project-one
-  namespace: jonathan-schmitz
+  name: project-two
+  namespace: casche
   labels:
-    app: project-one
+    app: project-two
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: project-one
+      app: project-two
   template:
     metadata:
       labels:
-        app: project-one
+        app: project-two
     spec:
       volumes:
-      - name: config-js-p1
+      - name: config-casche-p1
         configMap:
           name: fluent-conf
       containers:
@@ -33,24 +33,24 @@ spec:
           mountPath: /fluentd/etc/fluent.conf
           subPath: fluent.conf
       - name: p1-application
-        image: sentrurion/project-one:latest
+        image: sentrurion/casche-project-two:latest
         ports:
         - containerPort: 8080
         env:
         - name: DB_URL
           valueFrom:
             secretKeyRef:
-              name: jona-credentials
+              name: casche-credentials
               key: url
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
-              name: jona-credentials
+              name: casche-credentials
               key: username
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: jona-credentials
+              name: casche-credentials
               key: password
         imagePullPolicy: Always # IfNotPresent
           
