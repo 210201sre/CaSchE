@@ -53,7 +53,7 @@ pipeline {
     // }
 
     environment {
-        DOCKER_IMAGE_NAME = "sentrurion/project2"
+        DOCKER_IMAGE_NAME = "sentrurion/casche-project-two"
         MAVEN_IMAGE_NAME = "casche-project-two"
     }
 
@@ -62,9 +62,10 @@ pipeline {
             steps {
                 dir("Project2") {
                     sh 'ls'
-                    sh 'echo'
+                    sh 'echo "========================================================================"'
+                    sh 'which java'
                     sh 'chmod +x mvnw && ./mvnw clean package'
-                    sh 'docker build -t sentrurion/casche-project-two:latest .'
+                    sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
                     script {
                         app = docker.image(DOCKER_IMAGE_NAME)
@@ -73,41 +74,102 @@ pipeline {
             }
         }
 
-        // stage('Sonar Quality Analysis') {
-        //     steps {
-        //         withSonarQubeEnv(credentialsId: 'sonar-token-2', installationName: 'sonarcloud') {
-        //             sh './mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
-        //         }
-        //     }
-        // }
+        stage('Sonar Quality Analysis') {
+            steps {
+                dir("Project2") {
+                    withSonarQubeEnv(credentialsId: 'sonar-token-2', installationName: 'sonarcloud') {
+                        sh './mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+                    }
+                }
+            }
+        }
 
-        // stage('Wait for Quality Analysis') {
-        //     steps {
-        //         script {
-        //             timeout(time: 30, unit: 'MINUTES') {
-        //                 qualitygate = waitForQualityGate abortPipeline: true
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Wait for Quality Analysis') {
+            steps {
+                script {
+                    timeout(time: 30, unit: 'MINUTES') {
+                        qualitygate = waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
+        }
 
-        // stage('Push Docker Image') {
+        stage('Push Docker Image') {
         //     //when {
         //         //doesn't work for ?pipeline?
         //         //branch 'master'
         //     //}
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dj-token') {
+                        app.push("latest") //image tags
+                        app.push("${env.BUILD_NUMBER}")
+                        //app.push("$env.GIT_COMMIT}") // this format does not seem to be acceptable by dockerhub (too long?)
+                    }
+                }
+            }
+        }
+
+        // stage('')
+
+
+        // stage('Canary Deployment') {
+        //     environment {
+        //         CANARY_REPLICAS = 1
+        //         // represents the number of canary instances that will be created
+        //         // the service that is configured in the cluster already will include this
+        //         // canary instance when it routes traffic
+
+        //         // ex: if our original deployment had 4 replicas and 1 canary replica
+
+        //         // the canary will receive 20% of the total traffic (1 out of 5)
+        //     }
         //     steps {
-        //         script {
-        //             docker.withRegistry('https://registry.hub.docker.com', 'ds-token') {
-        //                 app.push("latest") //image tags
-        //                 app.push("${env.BUILD_NUMBER}")
-        //                 app.push("$env.GIT_COMMIT}")
-        //             }
-        //         }
+        //         kubernetesDeploy(
+        //             // this is the ID of the kubeconfig credentials on jenkins
+        //             kubeconfigId: 'kubeconfig-sre',
+        //             // allows our kubernetes manifestes to interpolate information from our environment variables
+        //             enableConfigSubstitution: true,
+                    
+        //             configs: 'manifests/canary-deployment.yml'
+        //         )
         //     }
         // }
 
-        // stage('')
+        // stage('Production Deployment') {
+        //     environment {
+        //         CANARY_Replicas = 0
+        //     }
+
+
+        //     steps {
+        //         // create a button press
+        //         input 'Deploy to Production?'
+        //         // response = input 'prompt text'
+        //         // if (response = 'NO') {
+
+        //         // }
+
+        //         // Effectively a yes/no prompt in Jenkins
+        //         // milestone(1) // would come from a separate plugin in Jenkins
+        //         // would help with many builds happening before the previous one finishes
+        //         // If a new version/build passes an older version/build, discard the older one
+
+        //         // Scale down the canary
+        //         kubernetesDeploy(
+        //             kubeconfigId: 'kubeconfig-sre',
+        //             enableConfigSubstitution: true,
+        //             configs: 'manifests/canary-deployment.yml'
+        //         )
+
+        //         kubernetesDeploy(
+        //             kubeconfigId: 'kubeconfig-sre',
+        //             enableConfigSubstitution: true,
+        //             configs: 'manifests/production-deployment.yml'
+        //         )
+
+        //     }
+        // }
 
     }
 }

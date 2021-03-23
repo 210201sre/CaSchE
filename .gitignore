@@ -3,3 +3,4 @@ Project2/target/
 Project2/.factorypath
 # Attempting to ignore additional files / directories
 **/.sonarlint
+**/logs/
