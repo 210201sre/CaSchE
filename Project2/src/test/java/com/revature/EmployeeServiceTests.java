@@ -35,16 +35,12 @@ public class EmployeeServiceTests {
 		User u1 = new User(); User u2 = new User(); User u3 = new User();
 		User u4 = new User(); User u5 = new User(); User u6 = new User();
 		List<User> dirEmp = new ArrayList<User>(); dirEmp.add(u1); dirEmp.add(u3); dirEmp.add(u5);
-		List<User> dirAdm = new ArrayList<User>(); dirAdm.add(u2); dirAdm.add(u4); dirAdm.add(u6);	
-		
-		Optional<List<User>> dirEmpO= Optional.of(new ArrayList<User>()); 
-		Optional<List<User>> dirAdmO= Optional.of(new ArrayList<User>()); 
-		
+		List<User> dirAdm = new ArrayList<User>(); dirAdm.add(u2); dirAdm.add(u4); dirAdm.add(u6);		
+		Optional<List<User>> dirEmpO; Optional<List<User>> dirAdmO;
+		dirEmpO= Optional.of(dirEmp); dirAdmO= Optional.of(dirAdm);	
 		Mockito.when(userDAO.findAllByAccesslevel("Employee")).thenReturn(dirEmpO);
 		Mockito.when(userDAO.findAllByAccesslevel("Admin")).thenReturn(dirAdmO);
-		
 		List<User> dir1 = Stream.concat(dirEmp.stream(), dirAdm.stream()).collect(Collectors.toList());
-		
 		List<User> dir2 = new ArrayList<>();
 		for (User u : dir1) {
 			u.setPswrd(null);
