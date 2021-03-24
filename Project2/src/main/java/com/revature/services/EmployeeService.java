@@ -26,7 +26,7 @@ public class EmployeeService /*extends CustomerService*/ {
 		List<User> dir1 = userDAO.findAllByAccesslevel("Employee").orElseThrow(() -> new UserNotFoundException("SELECT: No Employees found."));
 		List<User> dir2 = userDAO.findAllByAccesslevel("Admin").orElseThrow(() -> new UserNotFoundException("SELECT: No Admins found."));
 		dir1 = Stream.concat(dir1.stream(), dir2.stream()).collect(Collectors.toList());
-		if (dir1.isEmpty()) {
+		if (dir1.isEmpty()&&dir2.isEmpty()) {
 			InvalidException.thrown("SELECT: Internal directory is empty.", new UserNotFoundException());
 			return new ArrayList<>();
 		}
