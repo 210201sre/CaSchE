@@ -8,6 +8,7 @@ kubectl apply -n casche -f loki-external.yml
 kubectl apply -n casche -f service-p2.yml
 # kubectl apply -n casche -f ingress-p2.yml
 kubectl apply -n casche -f deployment-p2.yml
+kubectl apply -n casche -f svcmonitor.yml
 
 kubectl -n casche rollout restart deployment
 
