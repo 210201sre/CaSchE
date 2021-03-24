@@ -9,29 +9,25 @@ metadata:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: mynamespace-user-full-access
+  name: order
   namespace: casche
 rules:
-- apiGroups: ["", "extensions", "apps"]
-  resources: ["*"]
-  verbs: ["*"]
-- apiGroups: ["batch"]
-  resources:
-  - jobs
-  - cronjobs
-  verbs: ["*"]
+- apiGroups: ["chaos"]
+  resources: ["pods"]
+  verbs: ["get"]
 
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: mynamespace-user-view
-  namespace: mynamespace
+  name: order
+  namespace: casche
 subjects:
 - kind: ServiceAccount
-  name: mynamespace-user
-  namespace: mynamespace
+  name: order
+  namespace: casche
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: mynamespace-user-full-access
+  name: order
+  namespace: casche
