@@ -71,8 +71,11 @@ public class CustomerService {
 				return InvalidException.thrown(String.format("LOGIN: User %d already logged in on this device.", k.getUid()), new RuntimeException());
 			}
 		}
-		User u = userDAO.findByUname(username).orElseThrow(() -> new UserNotFoundException(
-				String.format(String.format("LOGIN: No User with username:%s password:%s", username, password))));
+		Optional<User> u2 = userDAO.findByUname(username);
+		if (!u2.isPresent()) {
+			return InvalidException.thrown(String.format("LOGIN: No User with username:%s password:%s", username, password), new UserNotFoundException());
+		}
+		User u = u2.get();
 		if (u.getPswrd().equals(password)) {
 			HttpSession session = req.getSession();
 			Random r = new Random();
