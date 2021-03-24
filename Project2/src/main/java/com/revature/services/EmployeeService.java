@@ -2,6 +2,7 @@ package com.revature.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,8 +24,21 @@ public class EmployeeService /*extends CustomerService*/ {
 	
 	public List<User> displayInternalDirectory(Key k) {
 		MDC.put("Action", "Emp Display Directory");
-		List<User> dir1 = userDAO.findAllByAccesslevel("Employee").orElseThrow(() -> new UserNotFoundException("SELECT: No Employees found."));
-		List<User> dir2 = userDAO.findAllByAccesslevel("Admin").orElseThrow(() -> new UserNotFoundException("SELECT: No Admins found."));
+		Optional<List<User>> adir1 = userDAO.findAllByAccesslevel("Employee");
+		Optional<List<User>> adir2 = userDAO.findAllByAccesslevel("Admin");
+		List<User> dir1;
+		List<User> dir2;
+		if(adir1.isPresent()) {
+			dir1 = adir1.get();
+		} else {
+			dir1 = new ArrayList<>();
+		}
+		if(adir2.isPresent()) {
+			dir2 = adir2.get();
+		} else {
+			dir2 = new ArrayList<>();
+		}
+		
 		dir1 = Stream.concat(dir1.stream(), dir2.stream()).collect(Collectors.toList());
 		if (dir1.isEmpty()&&dir2.isEmpty()) {
 			InvalidException.thrown("SELECT: Internal directory is empty.", new UserNotFoundException());
