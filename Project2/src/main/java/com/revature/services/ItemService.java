@@ -45,7 +45,7 @@ public class ItemService {
 		return ResponseEntity.accepted().body("Item added.");
 	}
 	
-	public ResponseEntity<String> modItem(Key k, Item i) {
+	public ResponseEntity<String> modItem(Key k, Item i) { //**************************************
 		if(!iDAO.existsById(i.getIid())) {
 			return InvalidException.thrown(String.format("UPDATE: Item %d does not exist.", i.getIid()), new RuntimeException());
 		}
@@ -53,7 +53,7 @@ public class ItemService {
 		return ResponseEntity.ok().body("Item updated.");
 	}
 	
-	public ResponseEntity<String> delItem(Key k, Item i) {
+	public ResponseEntity<String> delItem(Key k, Item i) { //*******************************************
 		if(!iDAO.existsById(i.getIid())) {
 			return InvalidException.thrown(String.format("DELETE: Item %d does not exist.", i.getIid()), new RuntimeException());
 		}
@@ -66,7 +66,7 @@ public class ItemService {
 		return ResponseEntity.ok().body("Item Deleted");
 	}
 	
-	public ResponseEntity<String> restockItem(Key k, Item i, long amount) {
+	public ResponseEntity<String> restockItem(Key k, Item i, long amount) { //****************************
 		if(!iDAO.existsById(i.getIid())) {
 			return InvalidException.thrown(String.format("UPDATE: Item %d does not exist.", i.getIid()), new RuntimeException());
 		}
@@ -79,7 +79,7 @@ public class ItemService {
 		return ResponseEntity.ok().body("Item Restocked");
 	}
 
-	public ResponseEntity<String> addSupplier(Key k, Manufacturer m) {
+	public ResponseEntity<String> addSupplier(Key k, Manufacturer m) { //************************************
 		if (m.getMid() != 0) {
 			return InvalidException.thrown(String.format("INSERT: Invalid ID %d passed during Manufacturer insertion.", m.getMid()), new RuntimeException());
 		}
@@ -95,7 +95,7 @@ public class ItemService {
 		return ResponseEntity.ok().body("Supplier information modified.");
 	}
 	
-	public ResponseEntity<String> delSupplier(Key k, Manufacturer m) {
+	public ResponseEntity<String> delSupplier(Key k, Manufacturer m) { //****************************
 		if (m.getMid() < 1) {
 			return InvalidException.thrown(String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()), new RuntimeException());
 		}
