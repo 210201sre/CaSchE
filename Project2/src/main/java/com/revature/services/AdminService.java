@@ -192,7 +192,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("User Deleted");
 	}
 
-	public ResponseEntity<List<Transaction>> displayUserTransactions(Key k, User u) {
+	public ResponseEntity<List<Transaction>> displayUserTransactions(Key k, User u) { //********************
 		MDC.put("Action", "Adm Display Transactions");
 		if (!userDAO.existsById(u.getUid())) {
 			InvalidException.thrown(String.format("SELECT: User %d does not exist.", u.getUid()),
@@ -328,9 +328,9 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("Coupon Deleted");
 	}
 
-	private CartItem buildTui(TuiProto tp) {// converts to CartItem and adds item as object
-		CartItem ci = new CartItem();
-		ci.setCartQuantity(tp.getCid());
+	public CartItem buildTui(TuiProto tp) { //***********************
+		CartItem ci = new CartItem(); // converts to CartItem and adds item as object
+		ci.setCid(tp.getCid());
 		ci.setUtid(tp.getTid());
 		ci.setCartQuantity(tp.getQuantity());
 		Optional<Item> i = iDAO.findById(tp.getIid());
@@ -358,7 +358,7 @@ public class AdminService /* extends EmployeeService */ {
 
 	// MUST NOT THROW ERROR, WILL DISRUPT CHECKOUT PROCESS
 	// ADMIN MUST HANDLE LOGGED ISSUE VIA BACKORDER TABLE
-	public boolean setNewQuantities(Item i, long amountSold) {
+	public boolean setNewQuantities(Item i, long amountSold) { //***********
 		if (iDAO.existsById(i.getIid())) {
 			i.setQuantity(i.getQuantity() - amountSold);
 			i.setTotalpurchases(i.getTotalpurchases() + amountSold);

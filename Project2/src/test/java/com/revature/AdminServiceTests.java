@@ -20,10 +20,13 @@ import com.revature.models.CartItem;
 import com.revature.models.Coupon;
 import com.revature.models.Item;
 import com.revature.models.Key;
+import com.revature.models.Transaction;
+import com.revature.models.TuiProto;
 import com.revature.models.User;
 import com.revature.repositories.BackorderDAO;
 import com.revature.repositories.CouponDAO;
 import com.revature.repositories.ItemDAO;
+import com.revature.repositories.TransactionDAO;
 import com.revature.repositories.TuiDAO;
 import com.revature.repositories.UserDAO;
 import com.revature.services.AdminService;
@@ -45,6 +48,8 @@ public class AdminServiceTests {
 	TuiDAO tuiDAO;
 	@Mock
 	ItemDAO iDAO;
+	@Mock
+	TransactionDAO tDAO;
 	
 	@InjectMocks
 	AdminService adminService;
@@ -153,6 +158,44 @@ public class AdminServiceTests {
 		Mockito.when(iDAO.save(it)).thenReturn(it);
 		Assertions.assertEquals(true, adminService.setNewQuantities(it, (long) 9));
 	}
+	
+	@Test
+	void buildTui() {
+		TuiProto tp = new TuiProto(1000, 2000, 3000, 4000);
+		Optional<Item> i1 = Optional.ofNullable(new Item(456, "Cateloupe", "Fruit", 1, 3.20, 1, null, 4.00, 6));
+		Mockito.when(iDAO.findById(tp.getIid())).thenReturn(i1);
+		CartItem cartItem = new CartItem( 1000, 3000, 4000, i1.get());
+		Assertions.assertEquals(cartItem, adminService.buildTui(tp));
+	}
+	
+//	@Test
+//	void displayUserTransactionItems() {
+//		TuiProto tp1 = new TuiProto(1000,1000,1000,1000);
+//		TuiProto tp2 = new TuiProto(2000,2000,2000,2000);
+//		Transaction t = new Transaction();
+//		List<TuiProto> tProto = new ArrayList<TuiProto>(); tProto.add(tp1); tProto.add(tp2);
+//		Mockito.when(tDAO.existsById(t.getTid())).thenReturn(true);
+//		Mockito.when(tDAO.findAllByTid(t.getTid())).thenReturn(tProto);
+//		
+//		Item i1 = new Item(456, "Cateloupe", "Fruit", 1, 3.20, 1, null, 4.00, 6);
+//		Item i2 = new Item(6000, "Carrots", "Veggie", 16, 0, 0, null, 0, 0);
+//		CartItem ci1 = new CartItem(1,2,3,i1); CartItem ci2 = new CartItem(4,5,6,i2);
+//		
+//	}
+	
+	@Test 
+	void displayUserTransactions() {
+		User b = new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Customer", null);
+		Mockito.when(userDAO.existsById(b.getUid())).thenReturn(true);
+		Transaction t1 = new Transaction(); Transaction t2 = new Transaction(); Transaction t3 = new Transaction();
+		t1.setUid(999); t2.setUid(999); t3.setUid(999);
+		List<Transaction> lt = new ArrayList<Transaction>(); lt.add(t1); lt.add(t2); lt.add(t3);
+		ResponseEntity<List<Transaction>> relt = new ResponseEntity<List<Transaction>>(lt, HttpStatus.OK);
+		Mockito.when(tDAO.findAllByUid(b.getUid())).thenReturn(lt);
+		Assertions.assertEquals(relt, adminService.displayUserTransactions(k1, b));
+	}
+	
+	
 	
 	
 }

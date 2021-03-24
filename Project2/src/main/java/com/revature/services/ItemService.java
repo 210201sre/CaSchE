@@ -37,7 +37,7 @@ public class ItemService {
 		return iDAO.findAll();
 	}
 	
-	public ResponseEntity<String> addItem(Key k, Item i) {
+	public ResponseEntity<String> addItem(Key k, Item i) { //*******************************
 		if(i.getIid() != 0) {
 			return InvalidException.thrown(String.format("INSERT: Invalid item id %d.", i.getIid()), new RuntimeException());
 		}
