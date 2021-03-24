@@ -63,7 +63,7 @@ pipeline {
                 dir("Project2") {
                     sh 'ls'
                     sh 'echo "========================================================================"'
-                    sh 'which java'
+                    sh 'java -version'
                     sh 'chmod +x mvnw && ./mvnw clean package'
                     sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
@@ -95,10 +95,6 @@ pipeline {
         }
 
         stage('Push Docker Image') {
-        //     //when {
-        //         //doesn't work for ?pipeline?
-        //         //branch 'master'
-        //     //}
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dj-token') {
