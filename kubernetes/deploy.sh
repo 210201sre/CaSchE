@@ -13,3 +13,5 @@ kubectl apply -n casche -f svcmonitor.yml
 kubectl -n casche rollout restart deployment
 
 kubectl get -n casche all
+kubectl get -n casche ing
+kubectl get -n casche secrets
