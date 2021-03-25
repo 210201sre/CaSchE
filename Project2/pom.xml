@@ -142,6 +142,9 @@
 					<excludes>
 						<exclude>**/models/**</exclude>
 						<exclude>**/controllers/**</exclude>
+						<exclude>**/exceptions/**</exclude>
+						<exclude>**/filters/**</exclude>
+						<exclude>**/repositories/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
