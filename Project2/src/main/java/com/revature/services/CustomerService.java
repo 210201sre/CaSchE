@@ -33,11 +33,16 @@ import com.revature.repositories.TransactionDAO;
 import com.revature.repositories.TuiDAO;
 import com.revature.repositories.UserDAO;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.FunctionTimer;
+import io.micrometer.core.instrument.Timer;
+
 @Service
 public class CustomerService {
 
 	private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
-
+	
 	@Autowired
 	private HttpServletRequest req;
 
@@ -58,9 +63,27 @@ public class CustomerService {
 
 	private String key = "projectzero";
 
-	//TODO
 	//// EVERY DAO METHOD CALL MUST BE WITHIN A TRY - CATCH (PSQLException e) BLOCK ////
-	//TODO	
+	
+	private Counter successLoginCounter;
+	private Counter failLoginCounter;
+	
+	private MeterRegistry meterRegistry;
+	
+	@Autowired
+	public CustomerService(MeterRegistry meterRegistry) {
+		this.meterRegistry = meterRegistry;
+		initLoginCounters();
+	}
+	
+	private void initLoginCounters() {
+		successLoginCounter = Counter.builder("login.sucesses").tag("type", "success")
+				.description("The number of successful login attempts").register(meterRegistry);
+		successLoginDuration = Duration.
+		failLoginCounter = Counter.builder("login.failures").tag("type", "faile")
+				.description("The number of failed login attempts").register(meterRegistry);
+		
+	}
 	
 	public ResponseEntity<String> login(String username, String password) {
 		MDC.put("Action", "Login");
@@ -73,6 +96,7 @@ public class CustomerService {
 		}
 		Optional<User> u2 = userDAO.findByUname(username);
 		if (!u2.isPresent()) {
+			failLoginCounter.increment();
 			return InvalidException.thrown(String.format("LOGIN: No User with username:%s password:%s", username, password), new UserNotFoundException());
 		}
 		User u = u2.get();
@@ -97,7 +121,6 @@ public class CustomerService {
 
 			return ResponseEntity.ok().body("Logged In");
 		} else {
-			//throw new UserNotFoundException(String.format("No User with username:%s password:%s", username, password));
 			return InvalidException.thrown(String.format("No User with username:%s password:%s", username, password), new RuntimeException());
 		}
 	}
@@ -137,7 +160,7 @@ public class CustomerService {
 	}
 
 	// Handle session verification in Controller if possible, and pass to methods.
-	// This will save on lines of duplicate code. Otherwise create a seperate method
+	// This will save on lines of duplicate code. Otherwise create a separate method
 	// in this service file.
 	public ResponseEntity<User> getMyInfo(Key k) { //*****************************
 		MDC.put("Action", "User Info");
@@ -146,7 +169,6 @@ public class CustomerService {
 			return ResponseEntity.ok().body(u2.get());
 		}
 		else {
-			// throw TODO check status code
 			InvalidException.thrown("User does not exist.", new RuntimeException());
 			return ResponseEntity.status(400).body(null);
 		}
@@ -156,12 +178,10 @@ public class CustomerService {
 		// deleted in between validation and info gathering
 	}
 
-//	public int modUser(User u, Key k) {
 	public ResponseEntity<String> modUser(User u, Key k) {
 		MDC.put("Action", "Modify User");
 		if (u.getUid() == k.getUid()) {
 			 User u2 = userDAO.findById(u.getUid()).get();
-			 //System.out.println(u);
 			 if (u.getFname() != u2.getFname() && u.getFname() != "") {
 				 u2.setFname(u.getFname());
 			 }
@@ -219,7 +239,6 @@ public class CustomerService {
 	}
 	
 	// Handle userDAO.existsById(k.getUid()) in controller if possible
-	// TODO
 	public ResponseEntity<String> delUser(Key k) { //******************
 		MDC.put("Action", "Delete User");
 		Optional<User> u2 = userDAO.findById(k.getUid());
