@@ -100,7 +100,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dj-token') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'casche-dj-token') {
                         app.push("latest") //image tags
                         app.push("${env.BUILD_NUMBER}")
                         //app.push("$env.GIT_COMMIT}") // this format does not seem to be acceptable by dockerhub (too long?)

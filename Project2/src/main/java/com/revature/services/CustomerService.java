@@ -60,6 +60,8 @@ public class CustomerService {
 	private CouponDAO coupDAO;
 
 	private String key = "projectzero";
+	private String action = "Action";
+	private Random r = new Random();
 
 	//// EVERY DAO METHOD CALL MUST BE WITHIN A TRY - CATCH (PSQLException e) BLOCK ////
 	
@@ -98,7 +100,7 @@ public class CustomerService {
 	}
 	
 	public ResponseEntity<String> login(String username, String password) {
-		MDC.put("Action", "Login");
+		MDC.put(action, "Login");
 		HttpSession s = req.getSession(false);
 		if (s != null && s.getAttribute(key) != null) {
 			Key k = (Key) s.getAttribute(key);
@@ -114,7 +116,6 @@ public class CustomerService {
 		User u = u2.get();
 		if (u.getPswrd().equals(password)) {
 			HttpSession session = req.getSession();
-			Random r = new Random();
 			long sid = r.nextLong();
 			List<Long> limit = new ArrayList<>();
 			while (userDAO.findBySid(sid).isPresent() && limit.size() < Long.MAX_VALUE - 1) {
@@ -140,7 +141,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> logout(Key k) {
-		MDC.put("Action", "Logout");
+		MDC.put(action, "Logout");
 		HttpSession session = req.getSession(false);
 		if (session == null) {
 			return InvalidException.thrown("User not logged in.", new RuntimeException());
@@ -159,7 +160,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> addUsr(User u) { //************************************
-		MDC.put("Action", "New User");
+		MDC.put(action, "New User");
 		if (userDAO.findByUname(u.getUname()).isPresent()) {
 			return InvalidException.thrown(String.format("INSERT: Username %s already exists.", u.getUname()), new RuntimeException());
 		}		
@@ -177,7 +178,7 @@ public class CustomerService {
 	// This will save on lines of duplicate code. Otherwise create a separate method
 	// in this service file.
 	public ResponseEntity<User> getMyInfo(Key k) { //*****************************
-		MDC.put("Action", "User Info");
+		MDC.put(action, "User Info");
 		Optional<User> u2 = userDAO.findById(k.getUid());
 		if(u2.isPresent()) {
 			return ResponseEntity.ok().body(u2.get());
@@ -193,7 +194,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> modUser(User u, Key k) {
-		MDC.put("Action", "Modify User");
+		MDC.put(action, "Modify User");
 		if (u.getUid() == k.getUid()) {
 			 User u2 = userDAO.findById(u.getUid()).get();
 			 if (u.getFname() != u2.getFname() && u.getFname() != "") {
@@ -229,7 +230,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> resetUnPw(String uname, String pswrd, Key k){ //*************************************
-		MDC.put("Action", "Reset Username Password");
+		MDC.put(action, "Reset Username Password");
 		if(!userDAO.findByUname(uname).isPresent()) {			
 			return InvalidException.thrown(String.format("SELECT: username: %s is taken.", uname), new RuntimeException());
 		}
@@ -246,7 +247,7 @@ public class CustomerService {
 	
 	// Handle userDAO.existsById(k.getUid()) in controller if possible
 	public ResponseEntity<String> delUser(Key k) { //******************
-		MDC.put("Action", "Delete User");
+		MDC.put(action, "Delete User");
 		Optional<User> u2 = userDAO.findById(k.getUid());
 		if (!u2.isPresent()) {
 			return InvalidException.thrown("User does not exist.", new RuntimeException());
@@ -262,7 +263,7 @@ public class CustomerService {
 
 	// CART SERVICE METHODS
 	public ResponseEntity<String> addToMyCart(CartItemProto cip, Key k) { //*************************
-		MDC.put("Action", "Add to Cart");
+		MDC.put(action, "Add to Cart");
 		cip.setUid(k.getUid());
 		if (cip.getUid() < 1 || cip.getCid() < 0 || k.getSid() == null) {
 			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
@@ -284,7 +285,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> modMyCart(CartItemProto cip, Key k) {
-		MDC.put("Action", "Modify Cart Item");
+		MDC.put(action, "Modify Cart Item");
 		if (cip.getUid() < 1 || (!coupDAO.existsById(cip.getCid()) && cip.getCid()!= 0 ) || k.getSid() == null) {
 			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
 					cip.getUid(), cip.getCid(), k.getSid()), new RuntimeException());
@@ -305,7 +306,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> delMyCartItem(CartItemProto cip, Key k) { //**********************
-		MDC.put("Action", "Delete Cart Item");
+		MDC.put(action, "Delete Cart Item");
 		if (cip.getUid() == k.getUid()) {
 			cDAO.delete(cip);
 			return ResponseEntity.ok().body("Cart item deleted.");
@@ -315,7 +316,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> emptyCart(Key k) { //*****************
-		MDC.put("Action", "Empty Cart");
+		MDC.put(action, "Empty Cart");
 		if (cDAO.countByUid(k.getUid()) > 0) {
 			List<CartItemProto> cps = cDAO.findAllByUid(k.getUid());
 			for (CartItemProto p : cps) {
@@ -328,7 +329,7 @@ public class CustomerService {
 	}
 
 	public List<CartItem> displayCart(Key k) {
-		MDC.put("Action", "Display Cart");
+		MDC.put(action, "Display Cart");
 		List<CartItemProto> cips = cDAO.findAllByUid(k.getUid());
 		List<CartItem> cis = new ArrayList<>();
 		for (CartItemProto cip : cips) {
@@ -389,12 +390,12 @@ public class CustomerService {
 
 	// TRANSACTION SERVICE METHODS
 	public List<Transaction> displayTransactions(Key k) { //*******************
-		MDC.put("Action", "Display Transactions");
+		MDC.put(action, "Display Transactions");
 		return tDAO.findAllByUid(k.getUid());
 	}
 
 	public ResponseEntity<List<CartItem>> displayTransactionItems(Transaction t, Key k) {
-		MDC.put("Action", "Display Transaction Items");
+		MDC.put(action, "Display Transaction Items");
 		if (t.getTid() > 0 && k.getUid() == t.getUid()) {
 			InvalidException.thrown(String.format("SELECT: User %d does not match requested Transaction %d", k.getUid(),t.getUid()), new RuntimeException());
 			//send body as new ArrayList<>() if this method gets called in another function
@@ -412,7 +413,7 @@ public class CustomerService {
 	}
 
 	public List<BackorderProto> displayBackorders(Key k) { //******************
-		MDC.put("Action", "Display Backorders");
+		MDC.put(action, "Display Backorders");
 		return boDAO.findAllByUid(k.getUid());
 	}
 	// STAND ALONE METHODS

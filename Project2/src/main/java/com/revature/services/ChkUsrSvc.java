@@ -18,6 +18,7 @@ public class ChkUsrSvc {
 
 	private String key = "projectzero";
 	private String permErrMsg = "Permission Denied";
+	private String admin = "Admin";
 
 	@Autowired
 	private HttpServletRequest r;
@@ -45,7 +46,7 @@ public class ChkUsrSvc {
 	}
 	
 	public Key validateAdmin(Key k) {
-		return validate(k,"Admin");
+		return validate(k,admin);
 	}
 	
 	public Key validate(Key k, String level) {
@@ -58,16 +59,16 @@ public class ChkUsrSvc {
 			return new Key();
 		}
 		if (level.equals("Customer")) {
-			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("employee")&&!u.getAccesslevel().equals("Admin")) {
+			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("employee")&&!u.getAccesslevel().equals(admin)) {
 				InvalidException.thrown(permErrMsg, new RuntimeException());
 				return new Key();
 			}
 		} else if (level.equals("Employee")) {
-			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("Admin")) {
+			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals(admin)) {
 				InvalidException.thrown(permErrMsg, new RuntimeException());
 				return new Key();
 			}
-		} else if (level.equals("Admin")&&!u.getAccesslevel().equals(level)) {
+		} else if (level.equals(admin)&&!u.getAccesslevel().equals(level)) {
 			InvalidException.thrown(permErrMsg, new RuntimeException());
 			return new Key();
 		}
