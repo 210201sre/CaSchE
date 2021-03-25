@@ -39,9 +39,6 @@ import com.revature.services.AdminService;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminServiceTests {
 	
-//	@Rule
-//	public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.LENIENT);
-	
 	@Mock
 	UserDAO userDAO;
 	@Mock
@@ -173,20 +170,6 @@ public class AdminServiceTests {
 		Assertions.assertEquals(cartItem, adminService.buildTui(tp));
 	}
 	
-//	@Test
-//	void displayUserTransactionItems() {
-//		TuiProto tp1 = new TuiProto(1000,1000,1000,1000);
-//		TuiProto tp2 = new TuiProto(2000,2000,2000,2000);
-//		Transaction t = new Transaction();
-//		List<TuiProto> tProto = new ArrayList<TuiProto>(); tProto.add(tp1); tProto.add(tp2);
-//		Mockito.when(tDAO.existsById(t.getTid())).thenReturn(true);
-//		Mockito.when(tDAO.findAllByTid(t.getTid())).thenReturn(tProto);
-//		Item i1 = new Item(456, "Canteloupe", "Fruit", 1, 3.20, 1, null, 4.00, 6);
-//		Item i2 = new Item(6000, "Carrots", "Veggie", 16, 0, 0, null, 0, 0);
-//		CartItem ci1 = new CartItem(1,2,3,i1); CartItem ci2 = new CartItem(4,5,6,i2);
-//		
-//	}
-	
 	@Test 
 	void displayUserTransactions() {
 		User b = new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Customer", null);
@@ -236,28 +219,4 @@ public class AdminServiceTests {
 		Assertions.assertEquals(rest, adminService.delUserTransaction(k, t1));
 	}
 
-//	@Test
-//	void updateUserAtRequestByUser() {
-//		User u = new User((long)2883, "John", "Cady", null, null, null, null, null, null, null, null, null, null);
-//		Key k = new Key();
-//		Optional<User> u2 = Optional.ofNullable(u);
-//		Mockito.when(userDAO.findById(u.getUid())).thenReturn(u2);
-//		Mockito.when(userDAO.existsById(u.getUid())).thenReturn(true);
-//		Mockito.when(userDAO.findByUname(u.getUname())).thenReturn(u2);
-//		Mockito.when(userDAO.save(u)).thenReturn(u);
-//		u.setUid((long) 999); k.setUid(888);
-//		ResponseEntity<String> res = new ResponseEntity<String>("User Updated", HttpStatus.OK);
-//		Assertions.assertEquals(res, adminService.updateUserAtRequestByUser(k, u));
-//	}
-	
-//	@Test
-//	void addToMyCart() {
-//		CartItemProto cip = new CartItemProto(); Key k =new Key((long) 4444, 3333);
-//		cip.setCid(24); 
-//		Mockito.when(iDAO.existsById(cip.getIid())).thenReturn(true);
-//		Mockito.when(cDAO.save(cip)).thenReturn(cip);
-//		ResponseEntity<String> res = new ResponseEntity<String>("Item added to cart.", HttpStatus.ACCEPTED);
-//		Assertions.assertEquals(res, adminService.addToMyCart(cip, k));
-//	}
-	
 }
