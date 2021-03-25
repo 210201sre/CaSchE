@@ -72,6 +72,11 @@ public class CustomerService {
 	private MeterRegistry meterRegistry;
 	
 	@Autowired
+	public CustomerService() {
+		super();
+	}
+
+	@Autowired
 	public CustomerService(MeterRegistry meterRegistry) {
 		this.meterRegistry = meterRegistry;
 		initLoginCounters();

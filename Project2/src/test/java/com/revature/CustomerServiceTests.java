@@ -31,6 +31,8 @@ import com.revature.repositories.UserDAO;
 import com.revature.services.AdminService;
 import com.revature.services.CustomerService;
 
+import io.micrometer.core.instrument.MeterRegistry;
+
 @ExtendWith(MockitoExtension.class)
 public class CustomerServiceTests {
 	
@@ -44,6 +46,9 @@ public class CustomerServiceTests {
 	TransactionDAO tDAO;
 	@Mock
 	BackorderDAO boDAO;
+	
+	@Mock
+	MeterRegistry meterRegistry;
 	
 	@InjectMocks
 	CustomerService cServ;
