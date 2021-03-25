@@ -75,6 +75,9 @@ pipeline {
         }
 
         stage('Sonar Quality Analysis') {
+            tools {
+                jdk "jdk11"
+            }
             steps {
                 dir("Project2") {
                     withSonarQubeEnv(credentialsId: 'sonar-token-2', installationName: 'sonarcloud') {
