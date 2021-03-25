@@ -68,6 +68,9 @@ public class CustomerService {
 	private Counter successLoginCounter;
 	private Counter failLoginCounter;
 	
+	private FunctionTimer successLoginFTimer;
+	private FunctionTimer failLoginFTimer;
+	
 	private MeterRegistry meterRegistry;
 	
 	@Autowired
@@ -79,10 +82,12 @@ public class CustomerService {
 	private void initLoginCounters() {
 		successLoginCounter = Counter.builder("login.sucesses").tag("type", "success")
 				.description("The number of successful login attempts").register(meterRegistry);
-		successLoginDuration = Duration.
 		failLoginCounter = Counter.builder("login.failures").tag("type", "faile")
 				.description("The number of failed login attempts").register(meterRegistry);
-		
+	}
+	
+	private void initLoginFunctionTimer() {
+//		successLoginFTimer = FunctionTimer.Builder<T>
 	}
 	
 	public ResponseEntity<String> login(String username, String password) {
@@ -119,8 +124,10 @@ public class CustomerService {
 			session.setAttribute(key, k);
 			userDAO.save(u);
 
+			successLoginCounter.increment();
 			return ResponseEntity.ok().body("Logged In");
 		} else {
+			failLoginCounter.increment();
 			return InvalidException.thrown(String.format("No User with username:%s password:%s", username, password), new RuntimeException());
 		}
 	}
