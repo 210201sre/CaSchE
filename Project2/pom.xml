@@ -12,7 +12,7 @@
 	<groupId>com.revature</groupId>
 	<artifactId>casche-project-two</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Project1</name>
+	<name>CaSchE</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -23,11 +23,11 @@
 
 		<!-- test coverage report properties -->
 		<coverage.reports.dir>target/coverage-reports</coverage.reports.dir>
-		<!-- path to xml file -->
+	
 		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- exclusions -->
 		<sonar.exclusions>src/**/models/**/*, src/**/controllers/**/*,
-			src/**/repositories/**/*</sonar.exclusions>
+			src/**/repositories/**/*, src/**/exceptions/**/*, src/**/filters/**/*</sonar.exclusions>
 
 	</properties>
 	<dependencies>
@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>3.8.0</version>
+			<version>3.8.0</version><!--$NO-MVN-MAN-VER$-->
 			<scope>test</scope>
 		</dependency>
 
@@ -110,7 +110,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<version>4.13.2</version><!--$NO-MVN-MAN-VER$-->
 			<scope>test</scope>
 		</dependency>
 

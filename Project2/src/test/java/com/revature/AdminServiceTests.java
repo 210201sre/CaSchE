@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.revature.models.BackorderProto;
 import com.revature.models.CartItem;
 import com.revature.models.CartItemProto;
@@ -122,7 +121,6 @@ public class AdminServiceTests {
 	
 	@Test
 	void delCoupon() {
-		ResponseEntity<String> o = new ResponseEntity<String>("Coupon Deleted", HttpStatus.OK);
 		Coupon c = new Coupon(); Key k = new Key();
 		Mockito.when(coupDAO.existsById(c.getCid())).thenReturn(true);
 		ArrayList<Coupon> coups = new ArrayList<Coupon>();

@@ -18,6 +18,10 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class CartItemProto implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5233706010530733672L;
 	//uid equivalent to transaction id when requesting items for a transaction
 	@Id
 	private long uid;

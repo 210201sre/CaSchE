@@ -111,16 +111,6 @@ public class CustomerServiceTests {
 		Assertions.assertEquals(ciAns, cServ.buildCartItem(cip1));
 	}
 	
-//	@Test
-//	void displayCart() {
-//		Key k = new Key(); CartItemProto cip1 = new CartItemProto(21, 22, 3, 24);
-//		List<CartItemProto> cipL = new ArrayList<CartItemProto>(); cipL.add(cip1);
-//		Mockito.when(cDAO.findAllByUid(k.getUid())).thenReturn(cipL);
-//		Item i1 = new Item(2, "Peaches", null, 0, 0, 0, null, 0, 16);
-//		Optional<Item> oi = Optional.ofNullable(i1);
-//		Mockito.when(iDAO.findById(cip1.getIid())).thenReturn(oi);
-//	}
-	
 	@Test 
 	void displayTransactions(){
 		Key k = new Key();
