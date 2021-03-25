@@ -30,6 +30,7 @@ kubectl apply -n casche -f deployment-p2.yml >> err
 kubectl apply -n casche -f svcmonitor.yml >> err
 echo ""
 echo "Restarting Deployment"
+kubectl delete -n casche replicasets --all
 kubectl -n casche rollout restart deployment
 echo ""
 echo "Displaying Data"
