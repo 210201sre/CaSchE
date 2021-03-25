@@ -24,7 +24,7 @@
 		<!-- test coverage report properties -->
 		<coverage.reports.dir>target/coverage-reports</coverage.reports.dir>
 	
-		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.jacoco.xmlReportPaths>target/coverage-reports/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- exclusions -->
 		<sonar.exclusions>src/**/models/**/*, src/**/controllers/**/*,
 			src/**/repositories/**/*, src/**/exceptions/**/*, src/**/filters/**/*</sonar.exclusions>
@@ -142,9 +142,6 @@
 					<excludes>
 						<exclude>**/models/**</exclude>
 						<exclude>**/controllers/**</exclude>
-						<exclude>**/exceptions/**</exclude>
-						<exclude>**/filters/**</exclude>
-						<exclude>**/repositories/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
