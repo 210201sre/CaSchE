@@ -86,7 +86,7 @@ public class CustomerService {
 	private void initLoginCounters() {
 		successLoginCounter = Counter.builder("login.sucesses").tag("type", "success")
 				.description("The number of successful login attempts").register(meterRegistry);
-		failLoginCounter = Counter.builder("login.failures").tag("type", "faile")
+		failLoginCounter = Counter.builder("login.failures").tag("type", "fail")
 				.description("The number of failed login attempts").register(meterRegistry);
 	}
 	
