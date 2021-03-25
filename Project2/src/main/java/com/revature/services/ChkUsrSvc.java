@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.exceptions.InvalidException;
-import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.Key;
 import com.revature.models.User;
 import com.revature.repositories.UserDAO;
@@ -33,7 +32,6 @@ public class ChkUsrSvc {
 		if (session == null || session.getAttribute(key) == null || !userDAO.findBySid(((Key) session.getAttribute(key)).getSid()).isPresent()) {
 			InvalidException.thrown("User not logged in.", new RuntimeException());
 			return new Key();
-			//throw new NoValidSessionException("User not logged in.");
 		}
 		return (Key) session.getAttribute(key);
 	}
@@ -56,7 +54,6 @@ public class ChkUsrSvc {
 		if (u2.isPresent()) {
 			u = u2.get();
 		} else {
-			//new UserNotFoundException(String.format("SELECT: User %d does not exist.", k.getUid()));
 			InvalidException.thrown(String.format("SELECT: User %d does not exist.", k.getUid()), new RuntimeException());
 			return new Key();
 		}
@@ -64,23 +61,17 @@ public class ChkUsrSvc {
 			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("employee")&&!u.getAccesslevel().equals("Admin")) {
 				InvalidException.thrown(permErrMsg, new RuntimeException());
 				return new Key();
-//				throw new InvalidException(permErrMsg);
 			}
 		} else if (level.equals("Employee")) {
 			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("Admin")) {
 				InvalidException.thrown(permErrMsg, new RuntimeException());
 				return new Key();
-//				throw new InvalidException(permErrMsg);
 			}
 		} else if (level.equals("Admin")&&!u.getAccesslevel().equals(level)) {
 			InvalidException.thrown(permErrMsg, new RuntimeException());
 			return new Key();
-//			throw new InvalidException(permErrMsg);
 		}
 		
-//		if (!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("Admin")) {
-//			throw new InvalidException("Permission Denied");
-//		}
 		return k;
 	}
 }
