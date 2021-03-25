@@ -1,5 +1,7 @@
 package com.revature;
 
+import static org.mockito.Mockito.doNothing;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +13,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.revature.models.CartItem;
+import com.revature.models.CartItemProto;
 import com.revature.models.Item;
+import com.revature.models.Key;
 import com.revature.models.User;
+import com.revature.repositories.CartDAO;
+import com.revature.repositories.ItemDAO;
 import com.revature.repositories.UserDAO;
 import com.revature.services.AdminService;
 import com.revature.services.CustomerService;
@@ -24,6 +32,10 @@ public class CustomerServiceTests {
 	
 	@Mock
 	UserDAO userDAO;
+	@Mock
+	CartDAO cDAO;
+	@Mock
+	ItemDAO iDAO;
 	
 	@InjectMocks
 	CustomerService cServ;
@@ -39,10 +51,57 @@ public class CustomerServiceTests {
 		Assertions.assertEquals(4.40, as.calculateTotal(cis));
 	}
 	
-//	@Test
-//	void getMyInfo() {
-//		Optional<User> b = Optional.of(new User((long) 24000, "Ben", "Cady", null, null, null, null, null, null, null, null, null, null));
-//		Mockito.doReturn(b).when(userDAO).findById((long) 24000);
-//	}
+	@Test
+	void addUsr() {
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setAccesslevel("Customer");
+		Mockito.when(userDAO.save(b)).thenReturn(b);
+		ResponseEntity<String> res = new ResponseEntity<String>("User Account Created", HttpStatus.ACCEPTED);
+		Assertions.assertEquals(res, cServ.addUsr(b));
+	}
+	
+	@Test
+	void getMyInfo() {
+		Key k = new Key();
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setAccesslevel("Customer");
+		Optional<User> ob = Optional.ofNullable(b);
+		Mockito.when(userDAO.findById(k.getUid())).thenReturn(ob);
+		ResponseEntity<User> reu = new ResponseEntity<User>(ob.get(), HttpStatus.OK);
+		Assertions.assertEquals(reu, cServ.getMyInfo(k));
+	}
+	
+	@Test
+	void delUser() {
+		Key k = new Key();
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setAccesslevel("Customer");
+		Optional<User> ob = Optional.ofNullable(b);
+		Mockito.when(userDAO.findById(k.getUid())).thenReturn(ob);
+		doNothing().when(userDAO).deleteById(b.getUid());
+		ResponseEntity<String> res= new ResponseEntity<String>("User account has been deleted.", HttpStatus.OK);
+		Assertions.assertEquals(res, cServ.delUser(k));
+	}
+	
+	@Test
+	void emptyCart() {
+		Key k = new Key();
+		Mockito.when(cDAO.countByUid(k.getUid())).thenReturn((long) 5);
+		CartItemProto cip1 = new CartItemProto(); CartItemProto cip2 = new CartItemProto();
+		List<CartItemProto> cipL = new ArrayList<CartItemProto>(); cipL.add(cip1); cipL.add(cip2);
+		Mockito.when(cDAO.findAllByUid(k.getUid())).thenReturn(cipL);
+		CartItemProto p = new CartItemProto();
+		doNothing().when(cDAO).delete(p);
+		ResponseEntity<String> res= new ResponseEntity<String>("Cart has been emptied.", HttpStatus.OK);
+		Assertions.assertEquals(res, cServ.emptyCart(k));
+	}
+	
+	@Test
+	void buildCartItem() {
+		CartItemProto cip1 = new CartItemProto(21, 22, 3, 24);
+		Item i1 = new Item(2, "Peaches", null, 0, 0, 0, null, 0, 16);
+		Optional<Item> oi = Optional.ofNullable(i1);
+		Mockito.when(iDAO.findById(cip1.getIid())).thenReturn(oi);
+		CartItem ciAns = new CartItem(21,3,24,i1);
+		Assertions.assertEquals(ciAns, cServ.buildCartItem(cip1));
+	}
+	
 	
 }

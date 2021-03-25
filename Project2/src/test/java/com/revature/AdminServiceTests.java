@@ -228,8 +228,15 @@ public class AdminServiceTests {
 	
 	@Test
 	void delUserTransactions() {
-		
+		Transaction t1 = new Transaction(333, 343, 2.33, "stamp1");
+		Key k = new Key();
+		Optional<Transaction> t2 = Optional.ofNullable(t1);
+		Mockito.when(tDAO.findById(t1.getTid())).thenReturn(t2);
+		doNothing().when(tuiDAO).deleteByTid(t1.getTid());
+		doNothing().when(tDAO).deleteById(t1.getTid());
+		ResponseEntity<String> rest = new ResponseEntity<String>("User Deleted", HttpStatus.OK);
+		Assertions.assertEquals(rest, adminService.delUserTransaction(k, t1));
 	}
-	
+//	
 	
 }

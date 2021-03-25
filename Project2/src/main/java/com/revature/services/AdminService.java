@@ -48,7 +48,7 @@ public class AdminService /* extends EmployeeService */ {
 	@Autowired
 	private CouponDAO coupDAO;
 
-	public ResponseEntity<String> addUser(Key k, User u) {
+	public ResponseEntity<String> addUser(Key k, User u) { //************************************
 		MDC.put("Action", "Adm Add User");
 		if (userDAO.findByUname(u.getUname()).isPresent()) {
 			return InvalidException.thrown(String.format("INSERT: Username %s already exists.", u.getUname()),

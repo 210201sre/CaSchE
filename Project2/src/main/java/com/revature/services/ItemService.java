@@ -87,7 +87,7 @@ public class ItemService {
 		return ResponseEntity.accepted().body("Supplier Added");
 	}
 	
-	public ResponseEntity<String> modSupplier(Key k, Manufacturer m) {
+	public ResponseEntity<String> modSupplier(Key k, Manufacturer m) { //********************
 		if (m.getMid() < 1) {
 			return InvalidException.thrown(String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()), new RuntimeException());
 		}

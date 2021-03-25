@@ -121,7 +121,7 @@ public class CustomerService {
 		return ResponseEntity.ok().body("Logged Out");
 	}
 
-	public ResponseEntity<String> addUsr(User u) {
+	public ResponseEntity<String> addUsr(User u) { //************************************
 		MDC.put("Action", "New User");
 		if (userDAO.findByUname(u.getUname()).isPresent()) {
 			return InvalidException.thrown(String.format("INSERT: Username %s already exists.", u.getUname()), new RuntimeException());
@@ -139,7 +139,7 @@ public class CustomerService {
 	// Handle session verification in Controller if possible, and pass to methods.
 	// This will save on lines of duplicate code. Otherwise create a seperate method
 	// in this service file.
-	public ResponseEntity<User> getMyInfo(Key k) {
+	public ResponseEntity<User> getMyInfo(Key k) { //*****************************
 		MDC.put("Action", "User Info");
 		Optional<User> u2 = userDAO.findById(k.getUid());
 		if(u2.isPresent()) {
@@ -220,7 +220,7 @@ public class CustomerService {
 	
 	// Handle userDAO.existsById(k.getUid()) in controller if possible
 	// TODO
-	public ResponseEntity<String> delUser(Key k) {
+	public ResponseEntity<String> delUser(Key k) { //******************
 		MDC.put("Action", "Delete User");
 		Optional<User> u2 = userDAO.findById(k.getUid());
 		if (!u2.isPresent()) {
@@ -300,7 +300,7 @@ public class CustomerService {
 		}
 	}
 
-	public ResponseEntity<String> emptyCart(Key k) {
+	public ResponseEntity<String> emptyCart(Key k) { //*****************
 		MDC.put("Action", "Empty Cart");
 		if (cDAO.countByUid(k.getUid()) > 0) {
 			//log.info("count was {}",cDAO.countByUid(k.getUid()));
@@ -405,7 +405,7 @@ public class CustomerService {
 		return boDAO.findAllByUid(k.getUid());
 	}
 	// STAND ALONE METHODS
-	protected CartItem buildCartItem(CartItemProto cip) {
+	public CartItem buildCartItem(CartItemProto cip) {
 		CartItem ci = new CartItem();
 		ci.setCid(cip.getCid());
 		ci.setUtid(cip.getUid());
