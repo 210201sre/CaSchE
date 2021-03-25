@@ -13,41 +13,41 @@ pipeline {
             spec:
             containers:
             - name: jnlp
-                image: odavid/jenkins-slave:latest
-                workingDir: /home/jenkins
-                env:
-                - name: DOCKER_HOST
+              image: odavid/jenkins-slave:latest
+              workingDir: /home/jenkins
+              env:
+              - name: DOCKER_HOST
                 value: tcp://localhost:2375
-                resources:
+              resources:
                 requests:
-                    memory: "500Mi"
-                    cpu: "0.3"
+                  memory: "500Mi"
+                  cpu: "0.3"
                 limits:
-                    memory: "800Mi"
-                    cpu: "0.5"
+                  memory: "800Mi"
+                  cpu: "0.5"
             - name: dind-daemon
-                image: docker:18-dind
-                workingDir: /var/lib/docker
-                securityContext:
+              image: docker:18-dind
+              workingDir: /var/lib/docker
+              securityContext:
                 privileged: true
-                volumeMounts:
-                - name: docker-storage
+              volumeMounts:
+              - name: docker-storage
                 mountPath: /var/lib/docker
-                resources:
+              resources:
                 requests:
-                    memory: "300Mi"
-                    cpu: "0.3"
+                  memory: "300Mi"
+                  cpu: "0.3"
                 limits:
-                    memory: "500Mi"
-                    cpu: "0.5"
+                  memory: "500Mi"
+                  cpu: "0.5"
             - name: kubectl
-                image: jshimko/kube-tools-aws:latest
-                command:
-                - cat
-                tty: true
+              image: jshimko/kube-tools-aws:latest
+              command:
+              - cat
+              tty: true
             volumes:
             - name: docker-storage
-                emptyDir: {}
+              emptyDir: {}
             """
         }
     }
