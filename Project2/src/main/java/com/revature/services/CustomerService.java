@@ -71,7 +71,7 @@ public class CustomerService {
 	
 	private MeterRegistry meterRegistry;
 	
-	@Autowired
+	//@Autowired
 	public CustomerService() {
 		super();
 	}
