@@ -40,16 +40,16 @@ public class AdminController {
 		}
 	}
 
-	@PatchMapping("/user")
-	public ResponseEntity<String> modifyUser(@RequestBody User u) {
-		try {
-			return aSvc.updateUserAtRequestByUser(usrSvc.validateAdmin(usrSvc.logdin()), u);
-		} catch (IllegalArgumentException e) {
-			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
-		} catch (Exception e) {
-			return InvalidException.thrown("Invalid data sent", e);
-		}
-	}
+//	@PatchMapping("/user")
+//	public ResponseEntity<String> modifyUser(@RequestBody User u) {
+//		try {
+//			return aSvc.updateUserAtRequestByUser(usrSvc.validateAdmin(usrSvc.logdin()), u);
+//		} catch (IllegalArgumentException e) {
+//			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+//		} catch (Exception e) {
+//			return InvalidException.thrown("Invalid data sent", e);
+//		}
+//	}
 
 	@DeleteMapping("/user")
 	public ResponseEntity<String> removeUser(@RequestBody User u) {
@@ -75,27 +75,27 @@ public class AdminController {
 		}
 	}
 
-	@PatchMapping("/user/hire")
-	public ResponseEntity<String> hireUser(@RequestBody User u) {
-		try {
-			return aSvc.hireCustomer(usrSvc.validateAdmin(usrSvc.logdin()), u);
-		} catch (IllegalArgumentException e) {
-			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
-		} catch (Exception e) {
-			return InvalidException.thrown("Invalid data sent", e);
-		}
-	}
-
-	@PatchMapping("/user/release")
-	public ResponseEntity<String> releaseUser(@RequestBody User u) {
-		try {
-			return aSvc.releaseEmployee(usrSvc.validateAdmin(usrSvc.logdin()), u);
-		} catch (IllegalArgumentException e) {
-			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
-		} catch (Exception e) {
-			return InvalidException.thrown("Invalid data sent", e);
-		}
-	}
+//	@PatchMapping("/user/hire")
+//	public ResponseEntity<String> hireUser(@RequestBody User u) {
+//		try {
+//			return aSvc.hireCustomer(usrSvc.validateAdmin(usrSvc.logdin()), u);
+//		} catch (IllegalArgumentException e) {
+//			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+//		} catch (Exception e) {
+//			return InvalidException.thrown("Invalid data sent", e);
+//		}
+//	}
+//
+//	@PatchMapping("/user/release")
+//	public ResponseEntity<String> releaseUser(@RequestBody User u) {
+//		try {
+//			return aSvc.releaseEmployee(usrSvc.validateAdmin(usrSvc.logdin()), u);
+//		} catch (IllegalArgumentException e) {
+//			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+//		} catch (Exception e) {
+//			return InvalidException.thrown("Invalid data sent", e);
+//		}
+//	}
 
 	@DeleteMapping("/user/transaction")
 	public ResponseEntity<String> removeTransaction(@RequestBody Transaction t) {
