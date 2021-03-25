@@ -61,9 +61,9 @@ pipeline {
         stage('Build') {
             steps {
                 dir("Project2") {
-                    sh 'ls'
-                    sh 'echo "========================================================================"'
-                    sh 'java -version'
+                    //sh 'ls'
+                    //sh 'echo "========================================================================"'
+                    //sh 'java -version'
                     sh 'chmod +x mvnw && ./mvnw clean package'
                     sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
