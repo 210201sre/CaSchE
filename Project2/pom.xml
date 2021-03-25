@@ -23,11 +23,12 @@
 
 		<!-- test coverage report properties -->
 		<coverage.reports.dir>target/coverage-reports</coverage.reports.dir>
-	
+
 		<sonar.coverage.jacoco.xmlReportPaths>target/coverage-reports/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- exclusions -->
 		<sonar.exclusions>src/**/models/**/*, src/**/controllers/**/*,
-			src/**/repositories/**/*, src/**/exceptions/**/*, src/**/filters/**/*</sonar.exclusions>
+			src/**/repositories/**/*, src/**/exceptions/**/*,
+			src/**/filters/**/*, src/**/Project2Application.java</sonar.exclusions>
 
 	</properties>
 	<dependencies>
@@ -100,7 +101,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>3.8.0</version><!--$NO-MVN-MAN-VER$-->
+			<version>3.8.0</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>test</scope>
 		</dependency>
 
@@ -110,7 +111,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version><!--$NO-MVN-MAN-VER$-->
+			<version>4.13.2</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>test</scope>
 		</dependency>
 
@@ -142,6 +143,7 @@
 					<excludes>
 						<exclude>**/models/**</exclude>
 						<exclude>**/controllers/**</exclude>
+						<exclude>**/Project2Application.java</exclude>
 					</excludes>
 				</configuration>
 				<executions>
