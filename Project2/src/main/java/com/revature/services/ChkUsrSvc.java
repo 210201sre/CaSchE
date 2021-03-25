@@ -50,7 +50,7 @@ public class ChkUsrSvc {
 		return validate(k,"Admin");
 	}
 	
-	private Key validate(Key k, String level) {
+	public Key validate(Key k, String level) {
 		Optional<User> u2 = userDAO.findById(k.getUid());
 		User u = new User();
 		if (u2.isPresent()) {

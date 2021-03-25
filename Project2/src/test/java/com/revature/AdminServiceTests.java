@@ -227,7 +227,7 @@ public class AdminServiceTests {
 	}
 	
 	@Test
-	void delUserTransactions() {
+	void delUserTransactions() {                     
 		Transaction t1 = new Transaction(333, 343, 2.33, "stamp1");
 		Key k = new Key();
 		Optional<Transaction> t2 = Optional.ofNullable(t1);
@@ -237,6 +237,29 @@ public class AdminServiceTests {
 		ResponseEntity<String> rest = new ResponseEntity<String>("User Deleted", HttpStatus.OK);
 		Assertions.assertEquals(rest, adminService.delUserTransaction(k, t1));
 	}
-//	
+
+//	@Test
+//	void updateUserAtRequestByUser() {
+//		User u = new User((long)2883, "John", "Cady", null, null, null, null, null, null, null, null, null, null);
+//		Key k = new Key();
+//		Optional<User> u2 = Optional.ofNullable(u);
+//		Mockito.when(userDAO.findById(u.getUid())).thenReturn(u2);
+//		Mockito.when(userDAO.existsById(u.getUid())).thenReturn(true);
+//		Mockito.when(userDAO.findByUname(u.getUname())).thenReturn(u2);
+//		Mockito.when(userDAO.save(u)).thenReturn(u);
+//		u.setUid((long) 999); k.setUid(888);
+//		ResponseEntity<String> res = new ResponseEntity<String>("User Updated", HttpStatus.OK);
+//		Assertions.assertEquals(res, adminService.updateUserAtRequestByUser(k, u));
+//	}
+	
+//	@Test
+//	void addToMyCart() {
+//		CartItemProto cip = new CartItemProto(); Key k =new Key((long) 4444, 3333);
+//		cip.setCid(24); 
+//		Mockito.when(iDAO.existsById(cip.getIid())).thenReturn(true);
+//		Mockito.when(cDAO.save(cip)).thenReturn(cip);
+//		ResponseEntity<String> res = new ResponseEntity<String>("Item added to cart.", HttpStatus.ACCEPTED);
+//		Assertions.assertEquals(res, adminService.addToMyCart(cip, k));
+//	}
 	
 }

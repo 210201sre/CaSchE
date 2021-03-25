@@ -16,13 +16,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.revature.models.BackorderProto;
 import com.revature.models.CartItem;
 import com.revature.models.CartItemProto;
 import com.revature.models.Item;
 import com.revature.models.Key;
+import com.revature.models.Transaction;
 import com.revature.models.User;
+import com.revature.repositories.BackorderDAO;
 import com.revature.repositories.CartDAO;
 import com.revature.repositories.ItemDAO;
+import com.revature.repositories.TransactionDAO;
 import com.revature.repositories.UserDAO;
 import com.revature.services.AdminService;
 import com.revature.services.CustomerService;
@@ -36,6 +40,10 @@ public class CustomerServiceTests {
 	CartDAO cDAO;
 	@Mock
 	ItemDAO iDAO;
+	@Mock
+	TransactionDAO tDAO;
+	@Mock
+	BackorderDAO boDAO;
 	
 	@InjectMocks
 	CustomerService cServ;
@@ -101,6 +109,71 @@ public class CustomerServiceTests {
 		Mockito.when(iDAO.findById(cip1.getIid())).thenReturn(oi);
 		CartItem ciAns = new CartItem(21,3,24,i1);
 		Assertions.assertEquals(ciAns, cServ.buildCartItem(cip1));
+	}
+	
+//	@Test
+//	void displayCart() {
+//		Key k = new Key(); CartItemProto cip1 = new CartItemProto(21, 22, 3, 24);
+//		List<CartItemProto> cipL = new ArrayList<CartItemProto>(); cipL.add(cip1);
+//		Mockito.when(cDAO.findAllByUid(k.getUid())).thenReturn(cipL);
+//		Item i1 = new Item(2, "Peaches", null, 0, 0, 0, null, 0, 16);
+//		Optional<Item> oi = Optional.ofNullable(i1);
+//		Mockito.when(iDAO.findById(cip1.getIid())).thenReturn(oi);
+//	}
+	
+	@Test 
+	void displayTransactions(){
+		Key k = new Key();
+		List<Transaction> lt = new ArrayList<Transaction>();
+		Mockito.when(tDAO.findAllByUid(k.getUid())).thenReturn(lt);
+		Assertions.assertEquals(lt, cServ.displayTransactions(k));
+	}
+	
+	@Test 
+	void displayBackorders(){
+		Key k = new Key();
+		List<BackorderProto> lt = new ArrayList<BackorderProto>();
+		Mockito.when(boDAO.findAllByUid(k.getUid())).thenReturn(lt);
+		Assertions.assertEquals(lt, cServ.displayBackorders(k));
+	}
+	
+	@Test
+	void setNewQuantities() {
+		Item i1 = new Item(2, "Peaches", null, 22, 0, 0, null, 0, 16);
+		Mockito.when(iDAO.existsById(i1.getIid())).thenReturn(true);
+		Mockito.when(iDAO.save(i1)).thenReturn(i1);
+		Assertions.assertEquals(true, cServ.setNewQuantities(i1, 4));
+	}
+	
+	@Test
+	void delMyCartItem() {
+		ResponseEntity<String> res = new ResponseEntity<String>("Cart item deleted.", HttpStatus.OK);
+		CartItemProto cip = new CartItemProto(); Key k = new Key();
+		doNothing().when(cDAO).delete(cip);
+		Assertions.assertEquals(res, cServ.delMyCartItem(cip, k));
+	}
+	
+	@Test
+	void resetUnPw() {
+		Key k = new Key(); k.setSid((long) 0);
+		User b = new User(); Optional<User> bo = Optional.ofNullable(b);
+		String un ="username"; String pswrd = "password";
+		Mockito.when(userDAO.findByUname(un)).thenReturn(bo);
+		Mockito.when(userDAO.findBySid(k.getSid())).thenReturn(bo);
+		Mockito.when(userDAO.save(bo.get())).thenReturn(bo.get());
+		ResponseEntity<String> res = new ResponseEntity<String>("User credentials successfully changed.", HttpStatus.OK);
+		Assertions.assertEquals(res, cServ.resetUnPw(un, pswrd, k));
+		
+	}
+	
+	@Test
+	void addToMyCart() {
+		CartItemProto cip = new CartItemProto(); Key k =new Key((long) 4444, 3333);
+		cip.setCid(24); 
+		Mockito.when(iDAO.existsById(cip.getIid())).thenReturn(true);
+		Mockito.when(cDAO.save(cip)).thenReturn(cip);
+		ResponseEntity<String> res = new ResponseEntity<String>("Item added to cart.", HttpStatus.ACCEPTED);
+		Assertions.assertEquals(res, cServ.addToMyCart(cip, k));
 	}
 	
 	

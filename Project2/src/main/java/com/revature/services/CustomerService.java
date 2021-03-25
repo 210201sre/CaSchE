@@ -202,7 +202,7 @@ public class CustomerService {
 		}
 	}
 
-	public ResponseEntity<String> resetUnPw(String uname, String pswrd, Key k){
+	public ResponseEntity<String> resetUnPw(String uname, String pswrd, Key k){ //*************************************
 		MDC.put("Action", "Reset Username Password");
 		if(!userDAO.findByUname(uname).isPresent()) {			
 			return InvalidException.thrown(String.format("SELECT: username: %s is taken.", uname), new RuntimeException());
@@ -241,7 +241,7 @@ public class CustomerService {
 	}
 
 	// CART SERVICE METHODS
-	public ResponseEntity<String> addToMyCart(CartItemProto cip, Key k) {
+	public ResponseEntity<String> addToMyCart(CartItemProto cip, Key k) { //*************************
 		MDC.put("Action", "Add to Cart");
 		cip.setUid(k.getUid());
 		if (cip.getUid() < 1 || cip.getCid() < 0 || k.getSid() == null) {
@@ -290,7 +290,7 @@ public class CustomerService {
 		}
 	}
 
-	public ResponseEntity<String> delMyCartItem(CartItemProto cip, Key k) {
+	public ResponseEntity<String> delMyCartItem(CartItemProto cip, Key k) { //**********************
 		MDC.put("Action", "Delete Cart Item");
 		if (cip.getUid() == k.getUid()) {
 			cDAO.delete(cip);
@@ -377,7 +377,7 @@ public class CustomerService {
 	}
 
 	// TRANSACTION SERVICE METHODS
-	public List<Transaction> displayTransactions(Key k) {
+	public List<Transaction> displayTransactions(Key k) { //*******************
 		MDC.put("Action", "Display Transactions");
 		return tDAO.findAllByUid(k.getUid());
 	}
@@ -400,12 +400,12 @@ public class CustomerService {
 		return ResponseEntity.ok().body(cis);
 	}
 
-	public List<BackorderProto> displayBackorders(Key k) {
+	public List<BackorderProto> displayBackorders(Key k) { //******************
 		MDC.put("Action", "Display Backorders");
 		return boDAO.findAllByUid(k.getUid());
 	}
 	// STAND ALONE METHODS
-	public CartItem buildCartItem(CartItemProto cip) {
+	public CartItem buildCartItem(CartItemProto cip) { //************
 		CartItem ci = new CartItem();
 		ci.setCid(cip.getCid());
 		ci.setUtid(cip.getUid());
@@ -450,7 +450,7 @@ public class CustomerService {
 
 	// MUST NOT THROW ERROR, WILL DISRUPT CHECKOUT PROCESS
 	// ADMIN MUST HANDLE LOGGED ISSUE VIA BACKORDER TABLE
-	private boolean setNewQuantities(Item i, long amountSold) {
+	public boolean setNewQuantities(Item i, long amountSold) { //*****************
 		if (iDAO.existsById(i.getIid())) {
 			i.setQuantity(i.getQuantity() - amountSold);
 			i.setTotalpurchases(i.getTotalpurchases() + amountSold);
