@@ -63,7 +63,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.accepted().body("User Created");
 	}
 
-	public ResponseEntity<String> hireCustomer(Key k, User u) { //*******
+	public ResponseEntity<String> hireCustomer(Key k, User u) { //***********************
 		MDC.put("Action", "Adm Hire Customer");
 		Optional<User> u2 = userDAO.findById(u.getUid());
 		if (u2.isPresent()) {
@@ -103,7 +103,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("Employee Released");
 	}
 
-	public List<User> displayAllUsers(Key k) { //******
+	public List<User> displayAllUsers(Key k) { //*********************
 		MDC.put("Action", "Adm Display Users");
 		return userDAO.findAll();
 	}
@@ -276,7 +276,7 @@ public class AdminService /* extends EmployeeService */ {
 		
 	}
 
-	public ResponseEntity<String> delUserTransactionItem(Key k, TuiProto tp) {
+	public ResponseEntity<String> delUserTransactionItem(Key k, TuiProto tp) { //***************
 		MDC.put("Action", "Adm Delete Transaction Item");
 		if (!tDAO.existsById(tp.getTid())) {
 			return InvalidException.thrown(
@@ -312,7 +312,7 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("Coupon Updated");
 	}
 
-	public ResponseEntity<String> delCoupon(Key k, Coupon c) {
+	public ResponseEntity<String> delCoupon(Key k, Coupon c) { //********************************
 		MDC.put("Action", "Adm Delete Coupon");
 		if (!coupDAO.existsById(c.getCid())) {
 			return InvalidException.thrown(String.format("UPDATE: Coupon %d does not exist.", c.getCid()),
