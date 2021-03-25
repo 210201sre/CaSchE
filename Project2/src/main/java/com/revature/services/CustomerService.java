@@ -35,8 +35,6 @@ import com.revature.repositories.UserDAO;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.FunctionTimer;
-import io.micrometer.core.instrument.Timer;
 
 @Service
 public class CustomerService {
@@ -68,8 +66,8 @@ public class CustomerService {
 	private Counter successLoginCounter;
 	private Counter failLoginCounter;
 	
-	private FunctionTimer successLoginFTimer;
-	private FunctionTimer failLoginFTimer;
+	private Counter backorderCheckoutCounter;
+	private Counter completedCheckoutCounter;
 	
 	private MeterRegistry meterRegistry;
 	
@@ -77,6 +75,7 @@ public class CustomerService {
 	public CustomerService(MeterRegistry meterRegistry) {
 		this.meterRegistry = meterRegistry;
 		initLoginCounters();
+		initCheckoutCounters();
 	}
 	
 	private void initLoginCounters() {
@@ -86,8 +85,11 @@ public class CustomerService {
 				.description("The number of failed login attempts").register(meterRegistry);
 	}
 	
-	private void initLoginFunctionTimer() {
-//		successLoginFTimer = FunctionTimer.Builder<T>
+	private void initCheckoutCounters() {
+		backorderCheckoutCounter = Counter.builder("checkout.backorder").tag("type", "backorder")
+				.description("The number of items sent to backorder").register(meterRegistry);
+		completedCheckoutCounter = Counter.builder("checkout.complete").tag("type", "complete")
+				.description("The number of completed checkouts").register(meterRegistry);
 	}
 	
 	public ResponseEntity<String> login(String username, String password) {
@@ -214,14 +216,6 @@ public class CustomerService {
 				 u2.setZip(u.getZip());
 			 }
 			 
-			//    if field != u2.field && field != null/ 0?
-			//        u2.field = u.field //using userDAO.save
-			//    else
-			//        u1.field = u2.field //using userDAO.update
-			
-			// return userDAO.save(u2);
-			// return userDAO.update(u1.get..., ...);
-//			return userDAO.update(k.getUid(), u.getFname(), u.getLname(), u.getEmail(), u.getPhonenum(), u.getAddress(), u.getCity(), u.getState(), u.getZip());
 			 userDAO.save(u2);
 			 return ResponseEntity.ok().body("User Updated");
 		} else {
@@ -259,11 +253,6 @@ public class CustomerService {
 		userDAO.deleteById(u.getUid());
 		return ResponseEntity.ok().body("User account has been deleted.");
 
-//		} else {
-//			log.error("DELETE: User {} does not exist.", k.getUid());
-//			return false;
-//			throw new InvalidException(String.format("DELETE: User %d does not exist.", k.getUid()));
-//		}
 	}
 
 	// CART SERVICE METHODS
@@ -277,15 +266,12 @@ public class CustomerService {
 			if (cip.getUid() == k.getUid()) {
 				if (iDAO.existsById(cip.getIid())) {
 					cDAO.save(cip);
-					//buildCartItem(cDAO.save(cip));
 					return ResponseEntity.accepted().body("Item added to cart.");
 				} else {
-//					log.error("SELECT: Item {} does not exist.", cip.getIid());
 //					return new CartItem();
 					return InvalidException.thrown(String.format("SELECT: Item %d does not exist.", cip.getIid()), new RuntimeException());
 				}
 			} else {
-//				log.error("INSERT: User {} mismatch {}", cip.getUid(), k.getUid());
 //				return new CartItem();
 				return InvalidException.thrown(String.format("INSERT: User %d mismatch %d", cip.getUid(), k.getUid()), new RuntimeException());
 			}
@@ -301,15 +287,12 @@ public class CustomerService {
 			if (cip.getUid() == k.getUid()) {
 				if (cDAO.findByUidAndIid(cip.getUid(), cip.getIid()).isPresent()) {
 					cDAO.save(cip);
-					//buildCartItem(cDAO.save(cip));
 					return ResponseEntity.ok().body("Cart item modified");
 				} else {
-//					log.error("SELECT: Item {} does not exist.", cip.getIid());
 //					return new CartItem();
 					return InvalidException.thrown(String.format("SELECT: Item %d does not exist in cart.", cip.getIid()), new RuntimeException());
 				}
 			} else {
-//				log.error("UPDATE: User {} mismatch {}", cip.getUid(), k.getUid());
 //				return new CartItem();
 				return InvalidException.thrown(String.format("UPDATE: User %d mismatch %d", cip.getUid(), k.getUid()), new RuntimeException());
 			}
@@ -329,12 +312,10 @@ public class CustomerService {
 	public ResponseEntity<String> emptyCart(Key k) { //*****************
 		MDC.put("Action", "Empty Cart");
 		if (cDAO.countByUid(k.getUid()) > 0) {
-			//log.info("count was {}",cDAO.countByUid(k.getUid()));
 			List<CartItemProto> cps = cDAO.findAllByUid(k.getUid());
 			for (CartItemProto p : cps) {
 				cDAO.delete(p);
 			}
-			//cDAO.deleteByUid(k.getUid());
 			return ResponseEntity.ok().body("Cart has been emptied.");
 		} else {
 			return InvalidException.thrown(String.format("DELETE: User %d cart is empty.", k.getUid()), new RuntimeException());
@@ -357,8 +338,6 @@ public class CustomerService {
 	public ResponseEntity<String> checkout(Key k) {
 		String start=""; if (MDC.get("Start")!=null){ start = MDC.get("Start");}
 		
-		// the below line may not work properly
-		//if (cDAO.countByUid(k.getUid()) > 0) {
 		MDC.put("TopAction", "Checkout");
 		if(cDAO.findAllByUid(k.getUid()).size() > 0) {
 			List<CartItem> cis = displayCart(k);
@@ -366,13 +345,13 @@ public class CustomerService {
 			Transaction t = new Transaction();
 			t.setUid(k.getUid());
 			t.setTotalcost(0.01);
-			//t = tDAO.save(t.getUid(), t.getTotalcost());
 			t = tDAO.save(t);
 			log.info("Transaction id {}", t);
 			if (t.getTid() > 0) {
 				for (CartItem ci : cis) {
 					if (ci.getI().getQuantity() < ci.getCartQuantity()) {
 						boDAO.save(new BackorderProto(k.getUid(), ci.getI().getIid(), ci.getCartQuantity(), ci.getCid()));
+						backorderCheckoutCounter.increment();
 						log.info("Item {}:{} was put on backorder due to limited stock on hand.", ci.getI().getIid(),
 								ci.getI().getUnitname());
 					} else {
@@ -393,6 +372,7 @@ public class CustomerService {
 				}
 				emptyCart(k);
 				MDC.put("TopAction", "Checkout"); if(!start.equals("")){MDC.put("Start",start);}
+				completedCheckoutCounter.increment();
 				return ResponseEntity.ok().body("Checkout Complete");
 			} else {
 				return InvalidException.thrown(String.format("CHECKOUT: Failed to get transaction ID for user %d.", k.getUid()), new RuntimeException());
@@ -440,7 +420,6 @@ public class CustomerService {
 		if (i.isPresent()) {
 			ci.setI(i.get());
 		} else {
-//			log.error("SELECT: Item {} does not exist.", cip.getIid());
 //			return new CartItem();
 			InvalidException.thrown(String.format("SELECT: Item %d does not exist.", cip.getIid()), new RuntimeException());
 			return new CartItem();
@@ -457,7 +436,6 @@ public class CustomerService {
 		if (i.isPresent()) {
 			ci.setI(i.get());
 		} else {
-//			log.error("SELECT: Item {} does not exist.", cip.getIid());
 			InvalidException.thrown(String.format("SELECT: Item %d does not exist.", tp.getIid()), new RuntimeException());
 			return new CartItem();
 		}
