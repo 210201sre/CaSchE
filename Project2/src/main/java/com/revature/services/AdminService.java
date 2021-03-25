@@ -63,45 +63,45 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.accepted().body("User Created");
 	}
 
-	public ResponseEntity<String> hireCustomer(Key k, User u) { //***********************
-		MDC.put("Action", "Adm Hire Customer");
-		Optional<User> u2 = userDAO.findById(u.getUid());
-		if (u2.isPresent()) {
-			if (!u2.get().getAccesslevel().equals("Customer")) {
-				return InvalidException.thrown(String.format("UPDATE: User %d is not a customer to hire.", u.getUid()),
-						new RuntimeException());
-			}
-		} else {
-			return InvalidException.thrown(String.format("UPDATE: Customer %d does not exist.", u.getUid()),
-					new RuntimeException());
-		}
-		if ((!u.getAccesslevel().equals("Employee") && !u.getAccesslevel().equals("Admin"))
-				|| u.getAccesslevel().equals("Customer")) {
-			return InvalidException.thrown("UPDATE: User accesslevel has not been changed.", new RuntimeException());
-		}
-		userDAO.save(u);
-		return ResponseEntity.ok().body("Customer Hired");
-	}
-
-	public ResponseEntity<String> releaseEmployee(Key k, User u) { //*************
-		MDC.put("Action", "Adm Release Employee");
-		Optional<User> u2 = userDAO.findById(u.getUid());
-		if (u2.isPresent()) { 
-			if (u2.get().getAccesslevel().equals("Customer")) { //originally was if (!u2.get().getAccesslevel().equals("Customer")), might've been and error
-				return InvalidException.thrown(
-						String.format("UPDATE: User %d is not an employee to release.", u.getUid()),
-						new RuntimeException());
-			}
-		} else {
-			return InvalidException.thrown(String.format("UPDATE: Employee %d does not exist.", u.getUid()),
-					new RuntimeException());
-		}
-		if (!u.getAccesslevel().equals("Customer")) {
-			return InvalidException.thrown("UPDATE: User accesslevel is invalid.", new RuntimeException());
-		}
-		userDAO.save(u);
-		return ResponseEntity.ok().body("Employee Released");
-	}
+//	public ResponseEntity<String> hireCustomer(Key k, User u) { //***********************
+//		MDC.put("Action", "Adm Hire Customer");
+//		Optional<User> u2 = userDAO.findById(u.getUid());
+//		if (u2.isPresent()) {
+//			if (!u2.get().getAccesslevel().equals("Customer")) {
+//				return InvalidException.thrown(String.format("UPDATE: User %d is not a customer to hire.", u.getUid()),
+//						new RuntimeException());
+//			}
+//		} else {
+//			return InvalidException.thrown(String.format("UPDATE: Customer %d does not exist.", u.getUid()),
+//					new RuntimeException());
+//		}
+//		if ((!u.getAccesslevel().equals("Employee") && !u.getAccesslevel().equals("Admin"))
+//				|| u.getAccesslevel().equals("Customer")) {
+//			return InvalidException.thrown("UPDATE: User accesslevel has not been changed.", new RuntimeException());
+//		}
+//		userDAO.save(u);
+//		return ResponseEntity.ok().body("Customer Hired");
+//	}
+//
+//	public ResponseEntity<String> releaseEmployee(Key k, User u) { //*************
+//		MDC.put("Action", "Adm Release Employee");
+//		Optional<User> u2 = userDAO.findById(u.getUid());
+//		if (u2.isPresent()) { 
+//			if (u2.get().getAccesslevel().equals("Customer")) { //originally was if (!u2.get().getAccesslevel().equals("Customer")), might've been and error
+//				return InvalidException.thrown(
+//						String.format("UPDATE: User %d is not an employee to release.", u.getUid()),
+//						new RuntimeException());
+//			}
+//		} else {
+//			return InvalidException.thrown(String.format("UPDATE: Employee %d does not exist.", u.getUid()),
+//					new RuntimeException());
+//		}
+//		if (!u.getAccesslevel().equals("Customer")) {
+//			return InvalidException.thrown("UPDATE: User accesslevel is invalid.", new RuntimeException());
+//		}
+//		userDAO.save(u);
+//		return ResponseEntity.ok().body("Employee Released");
+//	}
 
 	public List<User> displayAllUsers(Key k) { //*********************
 		MDC.put("Action", "Adm Display Users");
@@ -126,71 +126,6 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body("Customer Deleted");
 	}
 
-	// Does not modify Username
-	public ResponseEntity<String> updateUserAtRequestByUser(Key k, User u) {
-		MDC.put("Action", "Adm Modify User");
-		User u2 = userDAO.findById(u.getUid()).get();
-		System.out.println(u);
-		if (!u.getPswrd().equals(u2.getPswrd()) && !u.getPswrd().equals("")) {
-			u2.setPswrd(u.getPswrd());
-		}
-		if (!u.getFname().equals(u2.getFname()) && !u.getFname().equals("")) {
-			u2.setFname(u.getFname());
-		}
-		if (!u.getLname().equals(u2.getLname()) && !u.getLname().equals("")) {
-			u2.setLname(u.getLname());
-		}
-		if (!u.getEmail().equals(u2.getEmail()) && u.getEmail() != null) {
-			u2.setEmail(u.getEmail());
-		}
-		if (!u.getPhonenum().equals(u2.getPhonenum()) && !u.getPhonenum().equals("")) {
-			u2.setPhonenum(u.getPhonenum());
-		}
-		if (!u.getAddress().equals(u2.getAddress()) && !u.getAddress().equals("")) {
-			u2.setAddress(u.getAddress());
-		}
-		if (!u.getCity().equals(u2.getCity()) && u.getCity() != null) {
-			u2.setCity(u.getCity());
-		}
-		if (!u.getState().equals(u2.getState()) && u.getState() != null) {
-			u2.setState(u.getState());
-		}
-		if (!u.getZip().equals(u2.getZip()) && u.getZip() != null) {
-			u2.setZip(u.getZip());
-		}
-		u = u2;
-
-		if (!userDAO.existsById(u.getUid()) || !userDAO.findByUname(u.getUname()).isPresent()) {
-			return InvalidException
-					.thrown(String.format("UPDATE: Invalid ID %d or username %s passed during User modification.",
-							u.getUid(), u.getUname()), new RuntimeException());
-		}
-		if (u.getUid() == k.getUid()) {
-			return InvalidException.thrown(
-					String.format("UPDATE: User %d attempting to update self incorrectly.", u.getUid()),
-					new RuntimeException());
-		}
-		userDAO.save(u);
-		return ResponseEntity.ok().body("User Updated");
-	}
-
-	public ResponseEntity<String> delUserTransaction(Key k, Transaction t) { //***********************
-		MDC.put("Action", "Adm Delete Transaction");
-		Optional<Transaction> t2 = tDAO.findById(t.getTid());
-		if (t2.isPresent()) {
-			if (k.getUid() == t2.get().getUid()) {
-				return InvalidException.thrown(
-						String.format("DELETE: User %d attempted to delete their own transaction.", k.getUid()),
-						new RuntimeException());
-			}
-		} else {
-			return InvalidException.thrown(String.format("DELETE: Transaction %d does not exist.", t.getTid()),
-					new RuntimeException());
-		}
-		tuiDAO.deleteByTid(t.getTid());
-		tDAO.deleteById(t.getTid());
-		return ResponseEntity.ok().body("User Deleted");
-	}
 
 	public ResponseEntity<List<Transaction>> displayUserTransactions(Key k, User u) { //********************
 		MDC.put("Action", "Adm Display Transactions");
@@ -274,6 +209,24 @@ public class AdminService /* extends EmployeeService */ {
 			return InvalidException.thrown(String.format("SELECT: Transaction %d does not exist.", t.getTid()), new RuntimeException());
 		}
 		
+	}
+	
+	public ResponseEntity<String> delUserTransaction(Key k, Transaction t) { //***********************
+		MDC.put("Action", "Adm Delete Transaction");
+		Optional<Transaction> t2 = tDAO.findById(t.getTid());
+		if (t2.isPresent()) {
+			if (k.getUid() == t2.get().getUid()) {
+				return InvalidException.thrown(
+						String.format("DELETE: User %d attempted to delete their own transaction.", k.getUid()),
+						new RuntimeException());
+			}
+		} else {
+			return InvalidException.thrown(String.format("DELETE: Transaction %d does not exist.", t.getTid()),
+					new RuntimeException());
+		}
+		tuiDAO.deleteByTid(t.getTid());
+		tDAO.deleteById(t.getTid());
+		return ResponseEntity.ok().body("User Deleted");
 	}
 
 	public ResponseEntity<String> delUserTransactionItem(Key k, TuiProto tp) { //***************

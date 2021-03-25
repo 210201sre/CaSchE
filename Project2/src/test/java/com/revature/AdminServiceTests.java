@@ -133,25 +133,25 @@ public class AdminServiceTests {
 		Assertions.assertEquals(res, adminService.delCoupon(k, c));
 	}
 	
-	@Test
-	void hireCustomer() {
-		User b0 = new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Admin", null);
-		Optional<User> b = Optional.of(new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Customer", null));
-		Mockito.when(userDAO.findById(b0.getUid())).thenReturn(b);
-		Mockito.when(userDAO.save(b0)).thenReturn(b0);
-		ResponseEntity<String> sro = new ResponseEntity<String>("Customer Hired", HttpStatus.OK);
-		Assertions.assertEquals(sro, adminService.hireCustomer(k1, b0));
-	}
+//	@Test
+//	void hireCustomer() {
+//		User b0 = new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Admin", null);
+//		Optional<User> b = Optional.of(new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Customer", null));
+//		Mockito.when(userDAO.findById(b0.getUid())).thenReturn(b);
+//		Mockito.when(userDAO.save(b0)).thenReturn(b0);
+//		ResponseEntity<String> sro = new ResponseEntity<String>("Customer Hired", HttpStatus.OK);
+//		Assertions.assertEquals(sro, adminService.hireCustomer(k1, b0));
+//	}
 	
-	@Test
-	void releaseEmployee() {
-		User b = new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Customer", null);
-		Optional<User> b1 = Optional.of(new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Employee", null));	
-		ResponseEntity<String> res = new ResponseEntity<String>("Employee Released", HttpStatus.OK);
-		Mockito.when(userDAO.findById(b.getUid())).thenReturn(b1);
-		Mockito.when(userDAO.save(b)).thenReturn(b);
-		Assertions.assertEquals(res, adminService.releaseEmployee(k1, b));
-	}
+//	@Test
+//	void releaseEmployee() {
+//		User b = new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Customer", null);
+//		Optional<User> b1 = Optional.of(new User((long)999, "Ben", "Cady", null, null, null, null, null, null, null, null, "Employee", null));	
+//		ResponseEntity<String> res = new ResponseEntity<String>("Employee Released", HttpStatus.OK);
+//		Mockito.when(userDAO.findById(b.getUid())).thenReturn(b1);
+//		Mockito.when(userDAO.save(b)).thenReturn(b);
+//		Assertions.assertEquals(res, adminService.releaseEmployee(k1, b));
+//	}
 	
 	@Test
 	void setNewQuantities() {

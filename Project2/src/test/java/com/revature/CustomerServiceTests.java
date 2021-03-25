@@ -153,7 +153,6 @@ public class CustomerServiceTests {
 		Mockito.when(userDAO.save(bo.get())).thenReturn(bo.get());
 		ResponseEntity<String> res = new ResponseEntity<String>("User credentials successfully changed.", HttpStatus.OK);
 		Assertions.assertEquals(res, cServ.resetUnPw(un, pswrd, k));
-		
 	}
 	
 	@Test

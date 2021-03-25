@@ -16,13 +16,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "cart")
 @IdClass(CipId.class)
 @Data @NoArgsConstructor @AllArgsConstructor
+
 public class CartItemProto implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5233706010530733672L;
-	//uid equivalent to transaction id when requesting items for a transaction
+	
 	@Id
 	private long uid;
 	@Id
@@ -40,13 +38,5 @@ public class CartItemProto implements Serializable {
 			return str;
 		}
 	}
-//	public String toString(boolean b) {
-//		String nul = "CartItem [uid=0, cartQuantity=0, cid=0, i=0]";
-//		String str = "CartItem [uid=" + uid + ", cartQuantity=" + cartQuantity + ", cid=" + cid + ", i=" + iid + "]";
-//		if (str.equals(nul)) {
-//			return null;
-//		} else {
-//			return str;
-//		}
-//	}
+
 }
