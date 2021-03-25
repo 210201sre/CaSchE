@@ -51,7 +51,7 @@ public class CustomerServiceTests {
 	MeterRegistry meterRegistry;
 	
 	@InjectMocks
-	CustomerService cServ;
+	CustomerService cServ = new CustomerService();
 
 	@Test
 	void calculateTotal() {
