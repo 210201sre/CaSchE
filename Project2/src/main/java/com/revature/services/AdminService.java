@@ -108,7 +108,7 @@ public class AdminService /* extends EmployeeService */ {
 		return userDAO.findAll();
 	}
 
-	public ResponseEntity<String> delCustomer(Key k, User u) {
+	public ResponseEntity<String> delCustomer(Key k, User u) { //****************************************
 		MDC.put("Action", "Adm Delete Customer");
 		if (!userDAO.existsById(u.getUid())) {
 			return InvalidException.thrown(String.format("DELETE: User %d does not exist.", u.getUid()),

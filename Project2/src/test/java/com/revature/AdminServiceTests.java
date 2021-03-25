@@ -67,14 +67,14 @@ public class AdminServiceTests {
 	Optional<User> j = Optional.ofNullable(new User(null, "John", "Cady", null, null, null, null, null, null, null, null, null, null));
 	User q =new User();
 	
-//	@Test
-//	void addUser() {
-//		ResponseEntity<String> t = new ResponseEntity<String>("User Created", HttpStatus.ACCEPTED);
-//		Mockito.when(userDAO.findByUname(b.getUname())).thenReturn(null);
-//		//returning null does not work, you need to return a lack of an optional item
-//		Assertions.assertEquals(t, adminService.addUser(k1, b));		
-//	}
-//	
+	@Test
+	void addUser() {
+		ResponseEntity<String> t = new ResponseEntity<String>("User Created", HttpStatus.ACCEPTED);
+		User u = new User();
+		Mockito.when(userDAO.save(u)).thenReturn(u);
+		Assertions.assertEquals(t, adminService.addUser(k1, u));		
+	}
+	
 	@Test
 	void displayAllUsers() {
 		List<User> usrList = new ArrayList<User>();
@@ -125,19 +125,14 @@ public class AdminServiceTests {
 		ResponseEntity<String> o = new ResponseEntity<String>("Coupon Deleted", HttpStatus.OK);
 		Coupon c = new Coupon(); Key k = new Key();
 		Mockito.when(coupDAO.existsById(c.getCid())).thenReturn(true);
-		
 		ArrayList<Coupon> coups = new ArrayList<Coupon>();
-		Mockito.when(coupDAO.findAllByCid(c.getCid())).thenReturn(coups);
-		
+		Mockito.when(coupDAO.findAllByCid(c.getCid())).thenReturn(coups);	
 		ArrayList<BackorderProto> bop = new ArrayList<BackorderProto>();
 		Mockito.when(boDAO.findAllByCid(c.getCid())).thenReturn(bop);
-		
 		ArrayList<TuiProto> tp = new ArrayList<TuiProto>();
 		Mockito.when(tuiDAO.findAllByCid(c.getCid())).thenReturn(tp);
-		
 		ArrayList<CartItemProto> cIt = new ArrayList<CartItemProto>();
 		Mockito.when(cDAO.findAllByCid(c.getCid())).thenReturn(cIt);
-		
 		doNothing().when(coupDAO).delete(c);
 		ResponseEntity<String> res = new ResponseEntity<String>("Coupon Deleted", HttpStatus.OK);
 		Assertions.assertEquals(res, adminService.delCoupon(k, c));
@@ -188,7 +183,6 @@ public class AdminServiceTests {
 //		List<TuiProto> tProto = new ArrayList<TuiProto>(); tProto.add(tp1); tProto.add(tp2);
 //		Mockito.when(tDAO.existsById(t.getTid())).thenReturn(true);
 //		Mockito.when(tDAO.findAllByTid(t.getTid())).thenReturn(tProto);
-//		
 //		Item i1 = new Item(456, "Canteloupe", "Fruit", 1, 3.20, 1, null, 4.00, 6);
 //		Item i2 = new Item(6000, "Carrots", "Veggie", 16, 0, 0, null, 0, 0);
 //		CartItem ci1 = new CartItem(1,2,3,i1); CartItem ci2 = new CartItem(4,5,6,i2);
@@ -224,11 +218,18 @@ public class AdminServiceTests {
 		List<Transaction> ts = new ArrayList<Transaction>(); Transaction t1 = new Transaction();
 		Transaction t2 = new Transaction(); Transaction t3 = new Transaction(); ts.add(t3); ts.add(t2); ts.add(t1);
 		Mockito.when(tDAO.findAllByUid(u.getUid())).thenReturn(ts); Transaction t = new Transaction(); 
-		doNothing().when(tDAO).deleteByUid(u.getUid()); //would t work for the enhanced for loop or would I need t1,t2,t3
+		doNothing().when(tDAO).deleteByUid(u.getUid()); 
 		doNothing().when(boDAO).deleteByUid(u.getUid());
 		doNothing().when(cDAO).deleteByUid(u.getUid());
 		doNothing().when(userDAO).deleteById(t.getUid());
 		ResponseEntity<String> rest = new ResponseEntity<String>("Customer Deleted", HttpStatus.OK);
 		Assertions.assertEquals(rest, adminService.delCustomer(k, u));
 	}
+	
+	@Test
+	void delUserTransactions() {
+		
+	}
+	
+	
 }
