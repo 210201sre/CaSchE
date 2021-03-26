@@ -3,15 +3,15 @@ pipeline {
     agent {
         kubernetes {
             //label 'build-agent'
-            inheritFrom 'build-agent'
-            defaultContainer 'jnlp'
-            yaml """
-            apiVersion: v1
-            kind: Pod
-            metadata:
-            labels:
+          inheritFrom 'build-agent'
+          defaultContainer 'jnlp'
+          yaml """
+          apiVersion: v1
+          kind: Pod
+          metadata:
+          labels:
             component: ci
-            spec:
+          spec:
             containers:
             - name: jnlp
               image: odavid/jenkins-slave:latest
@@ -49,7 +49,7 @@ pipeline {
             volumes:
             - name: docker-storage
               emptyDir: {}
-            """
+          """
         }
     }
 
