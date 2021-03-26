@@ -135,8 +135,8 @@ public class CustomerServiceTests {
 		CartItem ci1 = new CartItem(1,1,1, i1);
 		CartItem ci2 = new CartItem(2,1,2,i2);
 		List<CartItem> cis = new ArrayList<CartItem>(); cis.add(ci1); cis.add(ci2);
-		AdminService as = new AdminService();
-		Assertions.assertEquals(4.40, as.calculateTotal(cis));
+//		AdminService as = new AdminService();
+		Assertions.assertEquals(4.40, cServ.calculateTotal(cis));
 	}
 	
 	@Test
