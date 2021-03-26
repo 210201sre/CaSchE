@@ -98,13 +98,18 @@ public class ChkUsrServiceTests {
 	@Test 
 	void validate5() {
 		Key k = new Key();
+		User u = new User(); 
 		String level = "Customer";
+		u.setAccesslevel(level);
+		Mockito.when(userDAO.findById(0L)).thenReturn(Optional.ofNullable(u));
 		Mockito.when(u.getAccesslevel()).thenReturn(level);
 		Assertions.assertEquals(new Key(), cus.validate(k, "level"));
 		level = "Employee";
+		u.setAccesslevel(level);
 		Mockito.when(u.getAccesslevel()).thenReturn(level);
 		Assertions.assertEquals(new Key(), cus.validate(k, "level"));
 		level = "Admin";
+		u.setAccesslevel(level);
 		Mockito.when(u.getAccesslevel()).thenReturn(level);
 		Assertions.assertEquals(new Key(), cus.validate(k, "level"));
 	}
