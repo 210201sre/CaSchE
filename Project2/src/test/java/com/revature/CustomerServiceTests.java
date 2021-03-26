@@ -397,6 +397,15 @@ public class CustomerServiceTests {
 		Assertions.assertEquals(res, cServ.resetUnPw(un, "pw", k));
 	}
 	
+	@Test
+	void checkout() {
+		List<CartItemProto> ci = new ArrayList<CartItemProto>();
+		Key k = new Key();
+		Mockito.when(cDAO.findAllByUid(k.getUid())).thenReturn(ci);
+		ResponseEntity<String> rest = InvalidException.thrown(String.format("CHECKOUT: User %d cart is empty.", k.getUid()), new RuntimeException());
+		Assertions.assertEquals(rest, cServ.checkout(k));
+	}
+	
 	
 	
 }
