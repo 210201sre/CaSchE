@@ -202,7 +202,7 @@ public class AdminService /* extends EmployeeService */ {
 
 			cis = (List<CartItem>) displayUserTransactionItems(k, t).getBody();
 			t.setTotalcost(calculateTotal(cis));
-			t = tDAO.save(t);
+			tDAO.save(t);
 			// call third party function to reimburse/bill user for changes
 //		buildTui(tp);
 			return ResponseEntity.ok().body("Transaction Item Updated");
