@@ -1,5 +1,5 @@
 apiVersion: monitoring.coreos.com/v1
-kind: Prometheus
+kind: PrometheusRule
 metadata:
   name: casche-prometheus
   namespace: casche
@@ -7,6 +7,7 @@ metadata:
     app: project-two
     release: prometheus
     job: isms
+    team: sre
 spec:
   groups:
   - name: SLOs-slo_errors_per_request

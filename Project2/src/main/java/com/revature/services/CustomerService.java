@@ -73,8 +73,8 @@ public class CustomerService {
 	private Counter successLoginCounter;
 	private Counter failLoginCounter;
 	
-	private Counter backorderCheckoutCounter;
-	private Counter completedCheckoutCounter;
+//	private Counter backorderCheckoutCounter;
+//	private Counter completedCheckoutCounter;
 	
 	private MeterRegistry meterRegistry;
 	
@@ -87,7 +87,7 @@ public class CustomerService {
 	public CustomerService(MeterRegistry meterRegistry) {
 		this.meterRegistry = meterRegistry;
 		initLoginCounters();
-		initCheckoutCounters();
+//		initCheckoutCounters();
 	}
 	
 	private void initLoginCounters() {
@@ -97,12 +97,12 @@ public class CustomerService {
 				.description("The number of failed login attempts").register(meterRegistry);
 	}
 	
-	private void initCheckoutCounters() {
-		backorderCheckoutCounter = Counter.builder("checkout.backorder").tag("type", "backorder")
-				.description("The number of items sent to backorder").register(meterRegistry);
-		completedCheckoutCounter = Counter.builder("checkout.complete").tag("type", "complete")
-				.description("The number of completed checkouts").register(meterRegistry);
-	}
+//	private void initCheckoutCounters() {
+//		backorderCheckoutCounter = Counter.builder("checkout.backorder").tag("type", "backorder")
+//				.description("The number of items sent to backorder").register(meterRegistry);
+//		completedCheckoutCounter = Counter.builder("checkout.complete").tag("type", "complete")
+//				.description("The number of completed checkouts").register(meterRegistry);
+//	}
 	
 	public ResponseEntity<String> login(String username, String password) {
 		MDC.put(labelAction, "Login");
@@ -342,7 +342,7 @@ public class CustomerService {
 				for (CartItem ci : cis) {
 					if (ci.getI().getQuantity() < ci.getCartQuantity()) {
 						boDAO.save(new BackorderProto(k.getUid(), ci.getI().getIid(), ci.getCartQuantity(), ci.getCid()));
-						backorderCheckoutCounter.increment();
+//						backorderCheckoutCounter.increment();
 						log.info("Item {}:{} was put on backorder due to limited stock on hand.", ci.getI().getIid(),
 								ci.getI().getUnitname());
 					} else {
@@ -363,7 +363,7 @@ public class CustomerService {
 				}
 				emptyCart(k);
 				MDC.put(labelTopAction, labelCheckout); if(!start.equals("")){MDC.put(labelStart,start);}
-				completedCheckoutCounter.increment();
+//				completedCheckoutCounter.increment();
 				return ResponseEntity.ok().body("Checkout Complete");
 			} else {
 				return InvalidException.thrown(String.format("CHECKOUT: Failed to get transaction ID for user %d.", k.getUid()), new RuntimeException());
