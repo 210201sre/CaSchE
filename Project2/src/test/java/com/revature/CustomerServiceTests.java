@@ -96,11 +96,11 @@ public class CustomerServiceTests {
 	
 	@Test
 	void delUser() {
-		Key k = new Key();
-		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setAccesslevel("Customer");
+		Key k = new Key(); k.setSid((long) 50);
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setAccesslevel("Customer"); b.setSid(50l);
 		Optional<User> ob = Optional.ofNullable(b);
 		Mockito.when(userDAO.findById(k.getUid())).thenReturn(ob);
-		doNothing().when(userDAO).deleteById(b.getUid());
+		doNothing().when(userDAO).deleteById(b.getUid()); 
 		ResponseEntity<String> res= new ResponseEntity<String>("User account has been deleted.", HttpStatus.OK);
 		Assertions.assertEquals(res, cServ.delUser(k));
 	}
