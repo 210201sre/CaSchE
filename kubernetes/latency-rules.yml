@@ -1,0 +1,122 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: casche-prometheus
+  namespace: casche
+  labels:
+    app: project-two
+    release: prometheus
+    job: isms
+    team: sre
+spec:
+  groups:
+  - name: SLOs-http_request_duration_seconds
+    rules:
+    - alert: LatencyBudgetBurn
+      annotations:
+        message: 'High requests latency budget burn for job=isms,latency=0.40000000000000002 (current value: {{ $value }})'
+      expr: |
+        (
+          latencytarget:http_request_duration_seconds:rate1h{job="isms",latency="0.40000000000000002"} > (14.4*1.000000)
+          and
+          latencytarget:http_request_duration_seconds:rate5m{job="isms",latency="0.40000000000000002"} > (14.4*1.000000)
+        )
+        or
+        (
+          latencytarget:http_request_duration_seconds:rate6h{job="isms",latency="0.40000000000000002"} > (6*1.000000)
+          and
+          latencytarget:http_request_duration_seconds:rate30m{job="isms",latency="0.40000000000000002"} > (6*1.000000)
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+        severity: critical
+    - alert: LatencyBudgetBurn
+      annotations:
+        message: 'High requests latency budget burn for job=isms,latency=0.40000000000000002 (current value: {{ $value }})'
+      expr: |
+        (
+          latencytarget:http_request_duration_seconds:rate1d{job="isms",latency="0.40000000000000002"} > (3*1.000000)
+          and
+          latencytarget:http_request_duration_seconds:rate2h{job="isms",latency="0.40000000000000002"} > (3*1.000000)
+        )
+        or
+        (
+          latencytarget:http_request_duration_seconds:rate3d{job="isms",latency="0.40000000000000002"} > (1.000000)
+          and
+          latencytarget:http_request_duration_seconds:rate6h{job="isms",latency="0.40000000000000002"} > (1.000000)
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+        severity: warning
+    - expr: |
+        1 - (
+          sum(rate(http_request_duration_seconds_bucket{job="isms",le="0.40000000000000002",code!~"5.."}[5m]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="isms"}[5m]))
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+      record: latencytarget:http_request_duration_seconds:rate5m
+    - expr: |
+        1 - (
+          sum(rate(http_request_duration_seconds_bucket{job="isms",le="0.40000000000000002",code!~"5.."}[30m]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="isms"}[30m]))
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+      record: latencytarget:http_request_duration_seconds:rate30m
+    - expr: |
+        1 - (
+          sum(rate(http_request_duration_seconds_bucket{job="isms",le="0.40000000000000002",code!~"5.."}[1h]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="isms"}[1h]))
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+      record: latencytarget:http_request_duration_seconds:rate1h
+    - expr: |
+        1 - (
+          sum(rate(http_request_duration_seconds_bucket{job="isms",le="0.40000000000000002",code!~"5.."}[2h]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="isms"}[2h]))
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+      record: latencytarget:http_request_duration_seconds:rate2h
+    - expr: |
+        1 - (
+          sum(rate(http_request_duration_seconds_bucket{job="isms",le="0.40000000000000002",code!~"5.."}[6h]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="isms"}[6h]))
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+      record: latencytarget:http_request_duration_seconds:rate6h
+    - expr: |
+        1 - (
+          sum(rate(http_request_duration_seconds_bucket{job="isms",le="0.40000000000000002",code!~"5.."}[1d]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="isms"}[1d]))
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+      record: latencytarget:http_request_duration_seconds:rate1d
+    - expr: |
+        1 - (
+          sum(rate(http_request_duration_seconds_bucket{job="isms",le="0.40000000000000002",code!~"5.."}[3d]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="isms"}[3d]))
+        )
+      labels:
+        job: isms
+        latency: "0.40000000000000002"
+      record: latencytarget:http_request_duration_seconds:rate3d
