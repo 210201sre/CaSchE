@@ -9,8 +9,8 @@ pipeline {
           apiVersion: v1
           kind: Pod
           metadata:
-          labels:
-            component: ci
+            labels:
+              component: ci
           spec:
             containers:
             - name: jnlp
