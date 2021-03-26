@@ -116,13 +116,15 @@ pipeline {
                 CANARY_REPLICAS = 1
             }
             steps {
-                script {
-                    container('kubectl') {
-                        withKubeConfig([credentialsId: 'kubeconfig']) {
-                            sh "aws eks update-kubeconfig --name matt-oberlies-sre-943"
-                            sh "kubectl apply -n casche -f canary-p2.yml"
-                            sh "kubectl set -n casche image deployment/project-two-canary project-two=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
-                            sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
+                dir("kubernetes") {
+                    script {
+                        container('kubectl') {
+                            withKubeConfig([credentialsId: 'kubeconfig']) {
+                                sh "aws eks update-kubeconfig --name matt-oberlies-sre-943"
+                                sh "kubectl apply -n casche -f canary-p2.yml"
+                                sh "kubectl set -n casche image deployment/project-two-canary project-two=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
+                                sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
+                            }
                         }
                     }
                 }
@@ -134,13 +136,15 @@ pipeline {
                 CANARY_REPLICAS = 0
             }
             steps {
-                script {
-                    withKubeConfig([credentialsId: 'kubeconfig']) {
-                        sh "aws eks update-kubeconfig --name matt-oberlies-sre-943"
-                        input 'Deploy to Production?'
+                dir("Project2") {
+                    script {
+                        withKubeConfig([credentialsId: 'kubeconfig']) {
+                            sh "aws eks update-kubeconfig --name matt-oberlies-sre-943"
+                            input 'Deploy to Production?'
 
-                        sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
-                        sh "kubectl set -n casche image deployment/project-two project-two=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
+                            sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
+                            sh "kubectl set -n casche image deployment/project-two project-two=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
+                        }
                     }
                 }
             }
