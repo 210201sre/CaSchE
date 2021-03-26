@@ -142,6 +142,15 @@ public class AdminServiceTests {
 	}
 	
 	@Test
+	void modCoupon2() {
+		Coupon c1 = new Coupon(0, "Food", "Food Discount", 3.2, 45);
+		ResponseEntity<String> t = InvalidException.thrown(String.format("UPDATE: Coupon %d does not exist.", c1.getCid()),
+				new RuntimeException());
+		Mockito.when(coupDAO.existsById(c1.getCid())).thenReturn(false);
+		Assertions.assertEquals(t, adminService.modCoupon(k1, c1));
+	}
+	
+	@Test
 	void calculateTotal() {
 		Item i1 = new Item(456, "Cateloupe", "Fruit", 1, 3.20, 1, null, 4.00, 6);
 		Item i2 = new Item(2478, "Cheese", "", 1, 1.20, 1, null, 2.00, 6);
@@ -182,6 +191,27 @@ public class AdminServiceTests {
 		Mockito.when(cDAO.findAllByCid(c.getCid())).thenReturn(cIt);
 		doNothing().when(coupDAO).delete(c);
 		ResponseEntity<String> res = new ResponseEntity<String>("Coupon Deleted", HttpStatus.OK);
+		Assertions.assertEquals(res, adminService.delCoupon(k, c));
+	}
+	
+	@Test
+	void delCoupon2() {
+		Coupon c = new Coupon(); Key k = new Key();
+		Mockito.when(coupDAO.existsById(c.getCid())).thenReturn(false);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("UPDATE: Coupon %d does not exist.", c.getCid()),
+				new RuntimeException());
+		Assertions.assertEquals(res, adminService.delCoupon(k, c));
+	}
+	
+	@Test
+	void delCoupon3() {
+		CartItemProto cip = new CartItemProto();
+		Coupon c = new Coupon(); Key k = new Key(); List<CartItemProto> ci = new ArrayList<CartItemProto>(); ci.add(cip);
+		Mockito.when(coupDAO.existsById(c.getCid())).thenReturn(true);
+		Mockito.when(cDAO.findAllByCid(c.getCid())).thenReturn(ci);
+		ResponseEntity<String> res = InvalidException.thrown(
+				String.format("DELETE: Coupon %d is present in a cart/backorder/transaction.", c.getCid()),
+				new RuntimeException());
 		Assertions.assertEquals(res, adminService.delCoupon(k, c));
 	}
 	
