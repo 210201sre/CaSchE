@@ -2,6 +2,9 @@ package com.revature;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +27,34 @@ public class ChkUsrServiceTests {
 	@Mock
 	UserDAO userDAO;
 	
+	@Mock
+	HttpSession s;
+	
+	@Mock
+	HttpServletRequest r;
+	
 	@InjectMocks
 	ChkUsrSvc cus;
+	
+	@Test
+	void logdin1() {
+		Mockito.when(r.getSession(false)).thenReturn(s);
+		Key k = new Key(); k.setSid(0L); String key = "";
+		HttpSession session = r.getSession();
+		Mockito.when(userDAO.findBySid((k).getSid())).thenReturn(Optional.empty());
+		Mockito.when(s.getAttribute(key)).thenReturn(null);
+		Assertions.assertEquals(new Key(), cus.logdin());
+	}
+	
+	@Test
+	void logdin2() {
+		Mockito.when(r.getSession(false)).thenReturn(s);
+		Key k = new Key(); k.setSid(0L); String key = "";
+		HttpSession session = r.getSession();
+		Mockito.when(userDAO.findBySid((k).getSid())).thenReturn(Optional.ofNullable(new User()));
+		Mockito.when(s.getAttribute(key)).thenReturn(k);
+		Assertions.assertEquals(new Key(), cus.logdin());
+	}
 	
 	@Test
 	void validate() {

@@ -25,10 +25,12 @@ public class ChkUsrSvc {
 
 	@Autowired
 	private UserDAO userDAO;
+	
+	HttpSession session;
 
 	public Key logdin() {
 
-		HttpSession session = r.getSession(false);
+		session = r.getSession(false);
 
 		if (session == null || session.getAttribute(key) == null || !userDAO.findBySid(((Key) session.getAttribute(key)).getSid()).isPresent()) {
 			InvalidException.thrown("User not logged in.", new RuntimeException());
