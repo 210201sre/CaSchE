@@ -37,6 +37,32 @@ public class ChkUsrServiceTests {
 	}
 	
 	@Test
+	void validate2() {
+		Key k = new Key();
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setUid((long) 23); b.setAccesslevel("Employee");
+		Optional<User> bo = Optional.ofNullable(b);
+		Mockito.when(userDAO.findById(k.getUid())).thenReturn(bo);
+		Assertions.assertEquals(k, cus.validate(k, "Employee"));
+	}
+	
+	@Test
+	void validate3() {
+		Key k = new Key();
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setUid((long) 23); b.setAccesslevel("Customer");
+		Optional<User> bo = Optional.ofNullable(b);
+		Mockito.when(userDAO.findById(k.getUid())).thenReturn(bo);
+		Assertions.assertEquals(k, cus.validate(k, "Customer"));
+	}
+	
+	@Test
+	void validate4() {
+		Key k = new Key();
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setUid((long) 23); b.setAccesslevel("Admin");
+		Mockito.when(userDAO.findById(k.getUid())).thenReturn(Optional.empty());
+		Assertions.assertEquals(k, cus.validate(k, "Admin"));
+	}
+	
+	@Test
 	void validateCustomer() {
 		Key k = new Key();
 		Assertions.assertEquals(k, cus.validateCustomer(k));
