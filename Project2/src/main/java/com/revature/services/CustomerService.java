@@ -121,10 +121,11 @@ public class CustomerService {
 		}
 		User u = u2.get();
 		if (u.getPswrd().equals(password)) {
-			HttpSession session = req.getSession();
+			s = req.getSession();
 			long sid = r.nextLong();
 			//limit = new ArrayList<>();
-			while (userDAO.findBySid(sid).isPresent() && limit.size() < Long.MAX_VALUE - 1) {
+			//while (userDAO.findBySid(sid).isPresent() && limit.size() < Long.MAX_VALUE - 1) {
+			while (userDAO.findBySid(sid).isPresent() && limit.size() < Integer.MAX_VALUE - 1) {
 				if (!limit.contains(sid)) {
 					limit.add(sid);
 				}
@@ -132,13 +133,12 @@ public class CustomerService {
 			}
 			
 			//if ((limit.size() >= Long.MAX_VALUE - 1)) {
-			System.out.println(limit.size());
 			if ((limit.size() >= Integer.MAX_VALUE -1)) {
 				return InvalidException.thrown("LOGIN: DATABASE LIMIT: Unable to generate a secure connection.", new RuntimeException());
 			}
 			u.setSid(sid);
 			Key k = new Key(u.getSid(), u.getUid());
-			session.setAttribute(key, k);
+			s.setAttribute(key, k);
 			userDAO.save(u);
 
 			successLoginCounter.increment();
