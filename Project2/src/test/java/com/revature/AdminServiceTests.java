@@ -358,6 +358,17 @@ public class AdminServiceTests {
 		
 	}
 	
+	@Test
+	void displayUserTransactionItems2() {
+		Transaction t = new Transaction();
+		Mockito.when(tDAO.existsById(t.getTid())).thenReturn(true);
+		List<TuiProto> ltp = new ArrayList<TuiProto>();
+		Mockito.when(tuiDAO.findAllByTid(t.getTid())).thenReturn(ltp);
+		List<CartItem> lci = new ArrayList<CartItem>();
+		ResponseEntity<List<CartItem>> rlci = ResponseEntity.ok().body(lci);
+		Assertions.assertEquals(rlci, adminService.displayUserTransactionItems(k1, t));
+	}
+	
 	
 
 }
