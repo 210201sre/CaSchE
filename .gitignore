@@ -1,6 +1,7 @@
 /.metadata/
 Project2/target/
-**/.factorypath
+Project2/.factorypath
+.factorypath
 # Attempting to ignore additional files / directories
 **/.sonarlint
 **/logs/

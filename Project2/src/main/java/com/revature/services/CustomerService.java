@@ -60,7 +60,11 @@ public class CustomerService {
 	private CouponDAO coupDAO;
 
 	private String key = "projectzero";
-	private String action = "Action";
+	private String labelAction = "Action";
+	private String labelTopAction = "TopAction";
+	private String labelStart = "Start";
+	private String noUser = "User does not exist.";
+	private String noItem = "SELECT: Item %d does not exist.";
 	private Random r = new Random();
 
 	//// EVERY DAO METHOD CALL MUST BE WITHIN A TRY - CATCH (PSQLException e) BLOCK ////
@@ -100,7 +104,7 @@ public class CustomerService {
 	}
 	
 	public ResponseEntity<String> login(String username, String password) {
-		MDC.put(action, "Login");
+		MDC.put(labelAction, "Login");
 		HttpSession s = req.getSession(false);
 		if (s != null && s.getAttribute(key) != null) {
 			Key k = (Key) s.getAttribute(key);
@@ -141,7 +145,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> logout(Key k) {
-		MDC.put(action, "Logout");
+		MDC.put(labelAction, "Logout");
 		HttpSession session = req.getSession(false);
 		if (session == null) {
 			return InvalidException.thrown("User not logged in.", new RuntimeException());
@@ -150,7 +154,7 @@ public class CustomerService {
 			return InvalidException.thrown("Invalid session.", new RuntimeException());
 		} else if (!userDAO.findById(k.getUid()).isPresent()) {
 			session.invalidate();
-			return InvalidException.thrown("User does not exist.", new RuntimeException());
+			return InvalidException.thrown(noUser, new RuntimeException());
 		}
 		User u = userDAO.findById(k.getUid()).get();
 		u.setSid(null);
@@ -160,7 +164,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> addUsr(User u) { //************************************
-		MDC.put(action, "New User");
+		MDC.put(labelAction, "New User");
 		if (userDAO.findByUname(u.getUname()).isPresent()) {
 			return InvalidException.thrown(String.format("INSERT: Username %s already exists.", u.getUname()), new RuntimeException());
 		}		
@@ -178,13 +182,13 @@ public class CustomerService {
 	// This will save on lines of duplicate code. Otherwise create a separate method
 	// in this service file.
 	public ResponseEntity<User> getMyInfo(Key k) { //*****************************
-		MDC.put(action, "User Info");
+		MDC.put(labelAction, "User Info");
 		Optional<User> u2 = userDAO.findById(k.getUid());
 		if(u2.isPresent()) {
 			return ResponseEntity.ok().body(u2.get());
 		}
 		else {
-			InvalidException.thrown("User does not exist.", new RuntimeException());
+			InvalidException.thrown(noUser, new RuntimeException());
 			return ResponseEntity.status(400).body(null);
 		}
 //		return userDAO.findById(k.getUid()).orElseThrow(
@@ -194,7 +198,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> modUser(User u, Key k) {
-		MDC.put(action, "Modify User");
+		MDC.put(labelAction, "Modify User");
 		if (u.getUid() == k.getUid()) {
 			 User u2 = userDAO.findById(u.getUid()).get();
 			 if (u.getFname() != u2.getFname() && u.getFname() != "") {
@@ -230,7 +234,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> resetUnPw(String uname, String pswrd, Key k){ //*************************************
-		MDC.put(action, "Reset Username Password");
+		MDC.put(labelAction, "Reset Username Password");
 		if(!userDAO.findByUname(uname).isPresent()) {			
 			return InvalidException.thrown(String.format("SELECT: username: %s is taken.", uname), new RuntimeException());
 		}
@@ -247,10 +251,10 @@ public class CustomerService {
 	
 	// Handle userDAO.existsById(k.getUid()) in controller if possible
 	public ResponseEntity<String> delUser(Key k) { //******************
-		MDC.put(action, "Delete User");
+		MDC.put(labelAction, "Delete User");
 		Optional<User> u2 = userDAO.findById(k.getUid());
 		if (!u2.isPresent()) {
-			return InvalidException.thrown("User does not exist.", new RuntimeException());
+			return InvalidException.thrown(noUser, new RuntimeException());
 		}
 		User u = u2.get();
 		if (u.getSid() != k.getSid()) {
@@ -263,7 +267,7 @@ public class CustomerService {
 
 	// CART SERVICE METHODS
 	public ResponseEntity<String> addToMyCart(CartItemProto cip, Key k) { //*************************
-		MDC.put(action, "Add to Cart");
+		MDC.put(labelAction, "Add to Cart");
 		cip.setUid(k.getUid());
 		if (cip.getUid() < 1 || cip.getCid() < 0 || k.getSid() == null) {
 			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
@@ -275,7 +279,7 @@ public class CustomerService {
 					return ResponseEntity.accepted().body("Item added to cart.");
 				} else {
 //					return new CartItem();
-					return InvalidException.thrown(String.format("SELECT: Item %d does not exist.", cip.getIid()), new RuntimeException());
+					return InvalidException.thrown(String.format(noItem, cip.getIid()), new RuntimeException());
 				}
 			} else {
 //				return new CartItem();
@@ -285,7 +289,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> modMyCart(CartItemProto cip, Key k) {
-		MDC.put(action, "Modify Cart Item");
+		MDC.put(labelAction, "Modify Cart Item");
 		if (cip.getUid() < 1 || (!coupDAO.existsById(cip.getCid()) && cip.getCid()!= 0 ) || k.getSid() == null) {
 			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
 					cip.getUid(), cip.getCid(), k.getSid()), new RuntimeException());
@@ -306,7 +310,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> delMyCartItem(CartItemProto cip, Key k) { //**********************
-		MDC.put(action, "Delete Cart Item");
+		MDC.put(labelAction, "Delete Cart Item");
 		if (cip.getUid() == k.getUid()) {
 			cDAO.delete(cip);
 			return ResponseEntity.ok().body("Cart item deleted.");
@@ -316,7 +320,7 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> emptyCart(Key k) { //*****************
-		MDC.put(action, "Empty Cart");
+		MDC.put(labelAction, "Empty Cart");
 		if (cDAO.countByUid(k.getUid()) > 0) {
 			List<CartItemProto> cps = cDAO.findAllByUid(k.getUid());
 			for (CartItemProto p : cps) {
@@ -329,7 +333,7 @@ public class CustomerService {
 	}
 
 	public List<CartItem> displayCart(Key k) {
-		MDC.put(action, "Display Cart");
+		MDC.put(labelAction, "Display Cart");
 		List<CartItemProto> cips = cDAO.findAllByUid(k.getUid());
 		List<CartItem> cis = new ArrayList<>();
 		for (CartItemProto cip : cips) {
@@ -342,12 +346,12 @@ public class CustomerService {
 	}
 
 	public ResponseEntity<String> checkout(Key k) {
-		String start=""; if (MDC.get("Start")!=null){ start = MDC.get("Start");}
+		String start=""; if (MDC.get(labelStart)!=null){ start = MDC.get(labelStart);}
 		
-		MDC.put("TopAction", "Checkout");
+		MDC.put(labelTopAction, "Checkout");
 		if(cDAO.findAllByUid(k.getUid()).size() > 0) {
 			List<CartItem> cis = displayCart(k);
-			MDC.put("TopAction", "Checkout"); if(!start.equals("")){MDC.put("Start",start);}
+			MDC.put(labelTopAction, "Checkout"); if(!start.equals("")){MDC.put(labelStart,start);}
 			Transaction t = new Transaction();
 			t.setUid(k.getUid());
 			t.setTotalcost(0.01);
@@ -377,7 +381,7 @@ public class CustomerService {
 					tDAO.delete(t);
 				}
 				emptyCart(k);
-				MDC.put("TopAction", "Checkout"); if(!start.equals("")){MDC.put("Start",start);}
+				MDC.put(labelTopAction, "Checkout"); if(!start.equals("")){MDC.put(labelStart,start);}
 				completedCheckoutCounter.increment();
 				return ResponseEntity.ok().body("Checkout Complete");
 			} else {
@@ -390,12 +394,12 @@ public class CustomerService {
 
 	// TRANSACTION SERVICE METHODS
 	public List<Transaction> displayTransactions(Key k) { //*******************
-		MDC.put(action, "Display Transactions");
+		MDC.put(labelAction, "Display Transactions");
 		return tDAO.findAllByUid(k.getUid());
 	}
 
 	public ResponseEntity<List<CartItem>> displayTransactionItems(Transaction t, Key k) {
-		MDC.put(action, "Display Transaction Items");
+		MDC.put(labelAction, "Display Transaction Items");
 		if (t.getTid() > 0 && k.getUid() == t.getUid()) {
 			InvalidException.thrown(String.format("SELECT: User %d does not match requested Transaction %d", k.getUid(),t.getUid()), new RuntimeException());
 			//send body as new ArrayList<>() if this method gets called in another function
@@ -413,7 +417,7 @@ public class CustomerService {
 	}
 
 	public List<BackorderProto> displayBackorders(Key k) { //******************
-		MDC.put(action, "Display Backorders");
+		MDC.put(labelAction, "Display Backorders");
 		return boDAO.findAllByUid(k.getUid());
 	}
 	// STAND ALONE METHODS
@@ -427,7 +431,7 @@ public class CustomerService {
 			ci.setI(i.get());
 		} else {
 //			return new CartItem();
-			InvalidException.thrown(String.format("SELECT: Item %d does not exist.", cip.getIid()), new RuntimeException());
+			InvalidException.thrown(String.format(noItem, cip.getIid()), new RuntimeException());
 			return new CartItem();
 		}
 		return ci;
@@ -442,7 +446,7 @@ public class CustomerService {
 		if (i.isPresent()) {
 			ci.setI(i.get());
 		} else {
-			InvalidException.thrown(String.format("SELECT: Item %d does not exist.", tp.getIid()), new RuntimeException());
+			InvalidException.thrown(String.format(noItem, tp.getIid()), new RuntimeException());
 			return new CartItem();
 		}
 		return ci;
