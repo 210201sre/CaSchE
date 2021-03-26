@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.revature.exceptions.InvalidException;
+import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.Key;
 import com.revature.models.User;
 import com.revature.repositories.UserDAO;
@@ -48,6 +50,21 @@ public class EmployeeServiceTests {
 			u.setUname(null);
 			dir2.add(u);
 		}
-		Assertions.assertEquals(dir2, eServ.displayInternalDirectory(ky));
+		Assertions.assertEquals(dir2, eServ.displayInternalDirectory(ky));	
 	}
+	
+	@Test
+	void displayInternalDirectory2() {
+		Key ky = new Key();
+		List<User> dirEmp2 = new ArrayList<User>();
+		List<User> dirAdm2 = new ArrayList<User>();
+		Optional<List<User>> dirEmpO; Optional<List<User>> dirAdmO;
+		dirEmpO= Optional.of(dirEmp2); dirAdmO= Optional.of(dirAdm2);	
+		Mockito.when(userDAO.findAllByAccesslevel("Employee")).thenReturn(dirEmpO);
+		Mockito.when(userDAO.findAllByAccesslevel("Admin")).thenReturn(dirAdmO);
+		Assertions.assertEquals(new ArrayList<>(), eServ.displayInternalDirectory(ky));
+		
+	}
+	
+	
 }
