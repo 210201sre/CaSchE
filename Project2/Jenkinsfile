@@ -24,7 +24,7 @@ pipeline {
                     memory: "500Mi"
                     cpu: "0.3"
                   limits:
-                    memory: "800Mi"
+                    memory: "1600Mi"
                     cpu: "0.5"
               - name: dind-daemon
                 image: docker:18-dind
