@@ -189,7 +189,6 @@ public class CustomerService {
 			return ResponseEntity.ok().body(u2.get());
 		}
 		else {
-			Optional.empty();
 			InvalidException.thrown(noUser, new RuntimeException());
 			return ResponseEntity.status(400).body(null);
 		}
