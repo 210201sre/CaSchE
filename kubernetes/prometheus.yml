@@ -1,0 +1,106 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: casche-prometheus
+  namespace: casche
+  labels:
+    app: project-two
+    release: prometheus
+    job: isms
+spec:
+  groups:
+  - name: SLOs-slo_errors_per_request
+    rules:
+    - alert: ErrorBudgetBurn
+      annotations:
+        message: 'High error budget burn for job=isms (current value: {{ $value }})'
+      expr: |
+        sum(slo_errors_per_request:burnrate5m{job="isms"}) > (14.40 * (1-0.90000))
+        and
+        sum(slo_errors_per_request:burnrate1h{job="isms"}) > (14.40 * (1-0.90000))
+      for: 2m
+      labels:
+        job: isms
+        severity: critical
+    - alert: ErrorBudgetBurn
+      annotations:
+        message: 'High error budget burn for job=isms (current value: {{ $value }})'
+      expr: |
+        sum(slo_errors_per_request:burnrate30m{job="isms"}) > (6.00 * (1-0.90000))
+        and
+        sum(slo_errors_per_request:burnrate6h{job="isms"}) > (6.00 * (1-0.90000))
+      for: 15m
+      labels:
+        job: isms
+        severity: critical
+    - alert: ErrorBudgetBurn
+      annotations:
+        message: 'High error budget burn for job=isms (current value: {{ $value }})'
+      expr: |
+        sum(slo_errors_per_request:burnrate2h{job="isms"}) > (3.00 * (1-0.90000))
+        and
+        sum(slo_errors_per_request:burnrate1d{job="isms"}) > (3.00 * (1-0.90000))
+      for: 1h
+      labels:
+        job: isms
+        severity: warning
+    - alert: ErrorBudgetBurn
+      annotations:
+        message: 'High error budget burn for job=isms (current value: {{ $value }})'
+      expr: |
+        sum(slo_errors_per_request:burnrate6h{job="isms"}) > (1.00 * (1-0.90000))
+        and
+        sum(slo_errors_per_request:burnrate3d{job="isms"}) > (1.00 * (1-0.90000))
+      for: 3h
+      labels:
+        job: isms
+        severity: warning
+    - expr: |
+        sum(rate(slo_errors_per_request{job="isms",code=~"5.."}[1d]))
+        /
+        sum(rate(slo_errors_per_request{job="isms"}[1d]))
+      labels:
+        job: isms
+      record: slo_errors_per_request:burnrate1d
+    - expr: |
+        sum(rate(slo_errors_per_request{job="isms",code=~"5.."}[1h]))
+        /
+        sum(rate(slo_errors_per_request{job="isms"}[1h]))
+      labels:
+        job: isms
+      record: slo_errors_per_request:burnrate1h
+    - expr: |
+        sum(rate(slo_errors_per_request{job="isms",code=~"5.."}[2h]))
+        /
+        sum(rate(slo_errors_per_request{job="isms"}[2h]))
+      labels:
+        job: isms
+      record: slo_errors_per_request:burnrate2h
+    - expr: |
+        sum(rate(slo_errors_per_request{job="isms",code=~"5.."}[30m]))
+        /
+        sum(rate(slo_errors_per_request{job="isms"}[30m]))
+      labels:
+        job: isms
+      record: slo_errors_per_request:burnrate30m
+    - expr: |
+        sum(rate(slo_errors_per_request{job="isms",code=~"5.."}[3d]))
+        /
+        sum(rate(slo_errors_per_request{job="isms"}[3d]))
+      labels:
+        job: isms
+      record: slo_errors_per_request:burnrate3d
+    - expr: |
+        sum(rate(slo_errors_per_request{job="isms",code=~"5.."}[5m]))
+        /
+        sum(rate(slo_errors_per_request{job="isms"}[5m]))
+      labels:
+        job: isms
+      record: slo_errors_per_request:burnrate5m
+    - expr: |
+        sum(rate(slo_errors_per_request{job="isms",code=~"5.."}[6h]))
+        /
+        sum(rate(slo_errors_per_request{job="isms"}[6h]))
+      labels:
+        job: isms
+      record: slo_errors_per_request:burnrate6h
