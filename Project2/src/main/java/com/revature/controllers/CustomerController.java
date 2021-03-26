@@ -122,16 +122,16 @@ public class CustomerController {
 		}
 	}
 
-	@PatchMapping("/cart")
-	public ResponseEntity<String> modCartItem(@RequestBody CartItemProto cip) {
-		try {
-			return custSvc.modMyCart(cip, usrSvc.logdin());
-		} catch (IllegalArgumentException e) {
-			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
-		} catch (Exception e) {
-			return InvalidException.thrown("Invalid data sent", e);
-		}
-	}
+//	@PatchMapping("/cart")
+//	public ResponseEntity<String> modCartItem(@RequestBody CartItemProto cip) {
+//		try {
+//			return custSvc.modMyCart(cip, usrSvc.logdin());
+//		} catch (IllegalArgumentException e) {
+//			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
+//		} catch (Exception e) {
+//			return InvalidException.thrown("Invalid data sent", e);
+//		}
+//	}
 
 	@DeleteMapping("/cart")
 	public ResponseEntity<String> removeCartItem(@RequestBody CartItemProto cip) {

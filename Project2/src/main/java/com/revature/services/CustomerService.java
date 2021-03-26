@@ -247,7 +247,7 @@ public class CustomerService {
 		userDAO.deleteById(u.getUid());
 		return ResponseEntity.ok().body("User account has been deleted.");
 
-	}
+	} 
 
 	// CART SERVICE METHODS
 	public ResponseEntity<String> addToMyCart(CartItemProto cip, Key k) { //*************************
@@ -272,26 +272,26 @@ public class CustomerService {
 		}
 	}
 
-	public ResponseEntity<String> modMyCart(CartItemProto cip, Key k) {
-		MDC.put(labelAction, "Modify Cart Item");
-		if (cip.getUid() < 1 || (!coupDAO.existsById(cip.getCid()) && cip.getCid()!= 0 ) || k.getSid() == null) {
-			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
-					cip.getUid(), cip.getCid(), k.getSid()), new RuntimeException());
-		} else {
-			if (cip.getUid() == k.getUid()) {
-				if (cDAO.findByUidAndIid(cip.getUid(), cip.getIid()).isPresent()) {
-					cDAO.save(cip);
-					return ResponseEntity.ok().body("Cart item modified");
-				} else {
-//					return new CartItem();
-					return InvalidException.thrown(String.format("SELECT: Item %d does not exist in cart.", cip.getIid()), new RuntimeException());
-				}
-			} else {
-//				return new CartItem();
-				return InvalidException.thrown(String.format("UPDATE: User %d mismatch %d", cip.getUid(), k.getUid()), new RuntimeException());
-			}
-		}
-	}
+//	public ResponseEntity<String> modMyCart(CartItemProto cip, Key k) {
+//		MDC.put(labelAction, "Modify Cart Item");
+//		if (cip.getUid() < 1 || (!coupDAO.existsById(cip.getCid()) && cip.getCid()!= 0 ) || k.getSid() == null) {
+//			return InvalidException.thrown(String.format("UPDATE: Invalid ID(s) (%d:%d:%d) passed during cart update.",
+//					cip.getUid(), cip.getCid(), k.getSid()), new RuntimeException());
+//		} else {
+//			if (cip.getUid() == k.getUid()) {
+//				if (cDAO.findByUidAndIid(cip.getUid(), cip.getIid()).isPresent()) {
+//					cDAO.save(cip);
+//					return ResponseEntity.ok().body("Cart item modified");
+//				} else {
+////					return new CartItem();
+//					return InvalidException.thrown(String.format("SELECT: Item %d does not exist in cart.", cip.getIid()), new RuntimeException());
+//				}
+//			} else {
+////				return new CartItem();
+//				return InvalidException.thrown(String.format("UPDATE: User %d mismatch %d", cip.getUid(), k.getUid()), new RuntimeException());
+//			}
+//		}
+//	}
 
 	public ResponseEntity<String> delMyCartItem(CartItemProto cip, Key k) { //**********************
 		MDC.put(labelAction, "Delete Cart Item");

@@ -93,8 +93,8 @@ public class CustomerServiceTests {
 		Mockito.when(req.getSession(false)).thenReturn(s);
 		Mockito.when(s.getAttribute(key)).thenReturn(k);
 		Mockito.when(userDAO.existsById(k.getUid())).thenReturn(true);
-		Random ro = new Random();
-		Mockito.when(r.nextLong()).thenReturn(ro.nextLong());
+//		Random ro = new Random();
+//		Mockito.when(r.nextLong()).thenReturn(ro.nextLong());
 		Assertions.assertEquals(re, cServ.login(un, pw));
 	}
 	
