@@ -18,6 +18,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.revature.exceptions.InvalidException;
 import com.revature.models.Item;
 import com.revature.models.Key;
 import com.revature.models.Manufacturer;
@@ -95,6 +96,14 @@ public class ItemServiceTests {
 	}
 	
 	@Test
+	void addItem2() {
+		Key key = new Key();
+		Item i1 = new Item(0, "Peaches", null, 0, 0, 0, null, 0, 16); i1.setIid(5l);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("INSERT: Invalid item id %d.", i1.getIid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.addItem(key, i1));
+	}
+	
+	@Test
 	void modItem() {
 		Key key = new Key();
 		Item i1 = new Item(23, "Peaches", null, 0, 0, 0, null, 0, 16);
@@ -102,6 +111,14 @@ public class ItemServiceTests {
 		Mockito.when(iDAO.save(i1)).thenReturn(i1);
 		ResponseEntity<String> res = new ResponseEntity<String>("Item updated.", HttpStatus.OK);
 		Assertions.assertEquals(res, iServ.modItem(key, i1));
+	}
+	
+	@Test
+	void modItem2() {
+		Item i = new Item(); Key k = new Key();
+		Mockito.when(iDAO.existsById(i.getIid())).thenReturn(false);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("UPDATE: Item %d does not exist.", i.getIid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.modItem(k, i));
 	}
 	
 	@Test
@@ -118,6 +135,25 @@ public class ItemServiceTests {
 	}
 	
 	@Test
+	void delItem2() {
+		Key key = new Key();
+		Item i1 = new Item(23, "Peaches", null, 0, 0, 0, null, 0, 16);
+		Mockito.when(iDAO.existsById(i1.getIid())).thenReturn(false);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("DELETE: Item %d does not exist.", i1.getIid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.delItem(key, i1));
+	}
+	
+	@Test
+	void delItem3() {
+		Key key = new Key();
+		Item i1 = new Item(23, "Peaches", null, 0, 0, 0, null, 0, 16);
+		Mockito.when(iDAO.existsById(i1.getIid())).thenReturn(true);
+		Mockito.when(cDAO.existsByIid(i1.getIid())).thenReturn(true);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("DELETE: Item %d is present in a cart/backorder/transaction.", i1.getIid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.delItem(key, i1));	
+	}
+	
+	@Test
 	void restockItem() {
 		Key key = new Key();
 		Item d = new Item();
@@ -130,12 +166,35 @@ public class ItemServiceTests {
 	}
 	
 	@Test
+	void restockItem2() {
+		Item i = new Item(); Key k = new Key();
+		Mockito.when(iDAO.existsById(i.getIid())).thenReturn(false);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("UPDATE: Item %d does not exist.", i.getIid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.restockItem(k, i, 16));
+	}
+	
+	@Test
+	void restockItem3() {
+		Item i = new Item(); Key k = new Key();
+		Mockito.when(iDAO.existsById(i.getIid())).thenReturn(true);
+		ResponseEntity<String> res = InvalidException.thrown("UPDATE: Restock amount must be greater than 0.", new RuntimeException());
+		Assertions.assertEquals(res, iServ.restockItem(k, i, 0));
+	}
+	
+	@Test
 	void addSupplier() {
 		Key key = new Key();
 		Manufacturer m = new Manufacturer(); m.setMid(0);
 		Mockito.when(mDAO.save(m)).thenReturn(m);
 		ResponseEntity<String> res = new ResponseEntity<String>("Supplier Added", HttpStatus.ACCEPTED);
 		Assertions.assertEquals(res, iServ.addSupplier(key, m));
+	}
+	
+	@Test
+	void addSuplier2() {
+		Manufacturer m = new Manufacturer(); m.setMid(3); Key k = new Key();
+		ResponseEntity<String> res = InvalidException.thrown(String.format("INSERT: Invalid ID %d passed during Manufacturer insertion.", m.getMid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.addSupplier(k, m));
 	}
 	
 	@Test
@@ -165,4 +224,37 @@ public class ItemServiceTests {
 		ResponseEntity<String> res = new ResponseEntity<String>("Supplier information modified.", HttpStatus.OK);
 		Assertions.assertEquals(res, iServ.modSupplier(k, m));
 	}
+	
+	@Test
+	void modSupplier2() {
+		Key k = new Key();
+		Manufacturer m = new Manufacturer(); m.setMid(0);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.modSupplier(k, m));
+	}
+	
+	@Test
+	void delSupplier2() {
+		Key k = new Key();
+		Manufacturer m = new Manufacturer(); m.setMid(0);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("UPDATE: Invalid ID %d passed during Manufacturer modification.", m.getMid()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.modSupplier(k, m));
+	}
+	
+	@Test
+	void delSupplier3() {
+		Key k = new Key();
+		Manufacturer m = new Manufacturer(); m.setMid(3);
+		Item i = new Item();
+		Item i1 = new Item(); Item i2 = new Item(); Item i3 = new Item();
+		List<Item> li = new ArrayList<Item>(); li.add(i3); li.add(i2); li.add(i1);
+		Mockito.when(iDAO.findAllByMid(m.getMid())).thenReturn(li);
+		Mockito.when(tuiDAO.existsById(i.getIid())).thenReturn(true);
+		
+		ResponseEntity<String> res = InvalidException.thrown(String.format("DELETE: Manufacturer item %s exists in cart/transaction/backorder.%nCannot remove manufacturer %s.", i.getUnitname(), m.getMname()), new RuntimeException());
+		Assertions.assertEquals(res, iServ.delSupplier(k, m));
+		
+	}
+	
+	
 }
