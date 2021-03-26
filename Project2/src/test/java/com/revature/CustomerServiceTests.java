@@ -181,5 +181,20 @@ public class CustomerServiceTests {
 		Assertions.assertEquals(res, cServ.addToMyCart(cip, k));
 	}
 	
+	@Test
+	void modUser() {
+		User u1 = new User(); Key k = new Key();
+		u1.setUid((long) 45);	k.setUid(45);	
+		User u2 = new User(); u2.setUid((long) 5556);
+		Mockito.when(userDAO.save(u1)).thenReturn(u1);
+		
+		ResponseEntity<String> resOK = new ResponseEntity<String>("User Updated", HttpStatus.OK);
+		Assertions.assertEquals(resOK, cServ.modUser(u1, k));
+		
+		String a = String.format("UPDATE: Invalid User (%d!%d) modification.", u2.getUid(), k.getUid());
+		ResponseEntity<String> resBAD = new ResponseEntity<String>(a, HttpStatus.OK);
+		
+	}
+	
 	
 }
