@@ -132,7 +132,7 @@ pipeline {
                     // allows our kubernetes manifestes to interpolate information from our environment variables
                     enableConfigSubstitution: true,
                   
-                    configs: 'manifests/canary-deployment.yml'
+                    configs: 'manifests/canary-p2.yml'
                 )
             }
         }
@@ -159,7 +159,7 @@ pipeline {
                 kubernetesDeploy(
                     kubeconfigId: 'kubeconfig-sre',
                     enableConfigSubstitution: true,
-                    configs: 'manifests/canary-deployment.yml'
+                    configs: 'manifests/canary-p2.yml'
                 )
                 kubernetesDeploy(
                     kubeconfigId: 'kubeconfig-sre',
