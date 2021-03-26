@@ -189,6 +189,7 @@ public class CustomerService {
 			return ResponseEntity.ok().body(u2.get());
 		}
 		else {
+			Optional.empty();
 			InvalidException.thrown(noUser, new RuntimeException());
 			return ResponseEntity.status(400).body(null);
 		}
@@ -201,34 +202,13 @@ public class CustomerService {
 	public ResponseEntity<String> modUser(User u, Key k) {
 		MDC.put(labelAction, "Modify User");
 		if (u.getUid() == k.getUid()) {
-			 User u2 = userDAO.findById(u.getUid()).get();
-			 if (!u.getFname().equals(u2.getFname()) && !u.getFname().equals("")) {
-				 u2.setFname(u.getFname());
-			 }
-			 if (!u.getLname().equals(u2.getLname()) && !u.getLname().equals("")) {
-				 u2.setLname(u.getLname());
-			 }
-			 if (!u.getEmail().equals(u2.getEmail()) && u.getEmail() != null) {
-				 u2.setEmail(u.getEmail());
-			 }
-			 if (!u.getPhonenum().equals(u2.getPhonenum()) && !u.getPhonenum().equals("")) {
-				 u2.setPhonenum(u.getPhonenum());
-			 }
-			 if (!u.getAddress().equals(u2.getAddress()) && !u.getAddress().equals("")) {
-				 u2.setAddress(u.getAddress());
-			 }
-			 if (!u.getCity().equals(u2.getCity()) && u.getCity() != null) {
-				 u2.setCity(u.getCity());
-			 }
-			 if (!u.getState().equals(u2.getState()) && u.getState() != null) {
-				 u2.setState(u.getState());
-			 }
-			 if (!u.getZip().equals(u2.getZip()) && u.getZip() != null) {
-				 u2.setZip(u.getZip());
-			 }
-			 
-			 userDAO.save(u2);
-			 return ResponseEntity.ok().body("User Updated");
+			//Recommended that user's current data is pulled and
+			//  if inputed data is new and not empty
+			//    new data replaces pulled data.
+			//User u2 = userDAO.findById(u.getUid()).get();
+			//userDAO.save(u2);
+			userDAO.save(u);
+			return ResponseEntity.ok().body("User Updated");
 		} else {
 			return InvalidException.thrown(String.format("UPDATE: Invalid User (%d!%d) modification.", u.getUid(), k.getUid()), new RuntimeException());
 		}
