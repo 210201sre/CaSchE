@@ -147,4 +147,13 @@ public class CustomerServiceTests2 {
 		Assertions.assertEquals(res, cServ.addUsr(b));
 	}
 	
+	@Test
+	void getMyInfo2() {
+		Key k = new Key();
+		Mockito.when(userDAO.findById(k.getUid())).thenReturn(Optional.empty());
+		User ou = null;
+		ResponseEntity<User> reu = ResponseEntity.status(400).body(ou);
+		Assertions.assertEquals(reu, cServ.getMyInfo(k));
+	}
+	
 }
