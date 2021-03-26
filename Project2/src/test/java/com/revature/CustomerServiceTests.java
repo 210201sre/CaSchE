@@ -73,6 +73,17 @@ public class CustomerServiceTests {
 	}
 	
 	@Test
+	void getMyInfo2() {
+		Key k = new Key();
+		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setAccesslevel("Customer");
+		Mockito.when(userDAO.findById(k.getUid())).thenReturn(Optional.empty());
+		User j = null;
+		ResponseEntity<User> reu = ResponseEntity.status(400).body(null);
+		Assertions.assertEquals(reu, cServ.getMyInfo(k));
+	}
+
+	
+	@Test
 	void getMyInfo() {
 		Key k = new Key();
 		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setAccesslevel("Customer");
