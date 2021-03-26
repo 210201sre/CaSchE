@@ -62,7 +62,23 @@ public class EmployeeServiceTests {
 		dirEmpO= Optional.of(dirEmp2); dirAdmO= Optional.of(dirAdm2);	
 		Mockito.when(userDAO.findAllByAccesslevel("Employee")).thenReturn(dirEmpO);
 		Mockito.when(userDAO.findAllByAccesslevel("Admin")).thenReturn(dirAdmO);
-		Assertions.assertEquals(new ArrayList<>(), eServ.displayInternalDirectory(ky));
+		List<User> r= new ArrayList<>();
+		Assertions.assertEquals(r, eServ.displayInternalDirectory(ky));
+		
+	}
+	
+	@Test
+	void displayInternalDirectory3() {
+		Key ky = new Key();
+		List<User> dirEmp2 = new ArrayList<User>();
+		List<User> dirAdm2 = new ArrayList<User>();
+		Optional<List<User>> dirEmpO; Optional<List<User>> dirAdmO;
+		dirEmpO= Optional.of(dirEmp2); dirAdmO= Optional.of(dirAdm2);	
+		Optional<List<User>> olu = Optional.empty();
+		Mockito.when(userDAO.findAllByAccesslevel("Employee")).thenReturn(olu);
+		Mockito.when(userDAO.findAllByAccesslevel("Admin")).thenReturn(olu);
+		List<User> r= new ArrayList<>();
+		Assertions.assertEquals(r, eServ.displayInternalDirectory(ky));
 		
 	}
 	
