@@ -237,7 +237,7 @@ public class CustomerService {
 			return InvalidException.thrown(noUser, new RuntimeException());
 		}
 		User u = u2.get();
-		if (u.getSid() != k.getSid()) {
+		if (!u.getSid().equals(k.getSid())) {
 			return InvalidException.thrown("Invalid Session", new RuntimeException());
 		}
 		userDAO.deleteById(u.getUid());
