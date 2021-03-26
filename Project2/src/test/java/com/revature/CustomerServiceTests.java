@@ -27,6 +27,7 @@ import com.revature.models.CartItemProto;
 import com.revature.models.Item;
 import com.revature.models.Key;
 import com.revature.models.Transaction;
+import com.revature.models.TuiProto;
 import com.revature.models.User;
 import com.revature.repositories.BackorderDAO;
 import com.revature.repositories.CartDAO;
@@ -52,6 +53,8 @@ public class CustomerServiceTests {
 	TransactionDAO tDAO;
 	@Mock
 	BackorderDAO boDAO;
+	@Mock
+	TransactionDAO tuiDAO;
 	
 	@Mock
 	MeterRegistry meterRegistry;
@@ -423,7 +426,6 @@ public class CustomerServiceTests {
 		ResponseEntity<String> rest = InvalidException.thrown(String.format("CHECKOUT: User %d cart is empty.", k.getUid()), new RuntimeException());
 		Assertions.assertEquals(rest, cServ.checkout(k));
 	}
-	
-	
+		
 	
 }
