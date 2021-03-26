@@ -202,28 +202,28 @@ public class CustomerService {
 		MDC.put(labelAction, "Modify User");
 		if (u.getUid() == k.getUid()) {
 			 User u2 = userDAO.findById(u.getUid()).get();
-			 if (u.getFname() != u2.getFname() && u.getFname() != "") {
+			 if (!u.getFname().equals(u2.getFname()) && !u.getFname().equals("")) {
 				 u2.setFname(u.getFname());
 			 }
-			 if (u.getLname() != u2.getLname() && u.getLname() != "") {
+			 if (!u.getLname().equals(u2.getLname()) && !u.getLname().equals("")) {
 				 u2.setLname(u.getLname());
 			 }
-			 if (u.getEmail() != u2.getEmail() && u.getEmail() != null) {
+			 if (!u.getEmail().equals(u2.getEmail()) && u.getEmail() != null) {
 				 u2.setEmail(u.getEmail());
 			 }
-			 if (u.getPhonenum() != u2.getPhonenum() && u.getPhonenum() != "") {
+			 if (!u.getPhonenum().equals(u2.getPhonenum()) && !u.getPhonenum().equals("")) {
 				 u2.setPhonenum(u.getPhonenum());
 			 }
-			 if (u.getAddress() != u2.getAddress() && u.getAddress() != "") {
+			 if (!u.getAddress().equals(u2.getAddress()) && !u.getAddress().equals("")) {
 				 u2.setAddress(u.getAddress());
 			 }
-			 if (u.getCity() != u2.getCity() && u.getCity() != null) {
+			 if (!u.getCity().equals(u2.getCity()) && u.getCity() != null) {
 				 u2.setCity(u.getCity());
 			 }
-			 if (u.getState() != u2.getState() && u.getState() != null) {
+			 if (!u.getState().equals(u2.getState()) && u.getState() != null) {
 				 u2.setState(u.getState());
 			 }
-			 if (u.getZip() != u2.getZip() && u.getZip() != null) {
+			 if (!u.getZip().equals(u2.getZip()) && u.getZip() != null) {
 				 u2.setZip(u.getZip());
 			 }
 			 
