@@ -72,9 +72,6 @@ public class CustomerServiceTests {
 	List<Long> limit;
 	
 	@InjectMocks
-    CustomerService cServ1 = new CustomerService(meterRegistry);
-	
-	@InjectMocks
 	CustomerService cServ = new CustomerService();
 
 	
