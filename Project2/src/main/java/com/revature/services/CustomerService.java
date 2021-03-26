@@ -237,8 +237,6 @@ public class CustomerService {
 			return InvalidException.thrown(noUser, new RuntimeException());
 		}
 		User u = u2.get();
-		System.out.println(new Long(1234) == new Long(1234));
-		//if (u.getSid() != k.getSid()) {
 		if (u.getSid() == null || k.getSid() == null || !u.getSid().equals(k.getSid())) {
 			return InvalidException.thrown("Invalid Session", new RuntimeException());
 		}
