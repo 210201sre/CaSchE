@@ -17,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import com.revature.exceptions.InvalidException;
 import com.revature.models.BackorderProto;
 import com.revature.models.CartItem;
 import com.revature.models.CartItemProto;
@@ -69,6 +71,48 @@ public class AdminServiceTests {
 		User u = new User();
 		Mockito.when(userDAO.save(u)).thenReturn(u);
 		Assertions.assertEquals(t, adminService.addUser(k1, u));		
+	}
+	
+	@Test
+	void addUser2() {
+		User u = new User(); Optional<User> uo = Optional.ofNullable(u);
+		Mockito.when(userDAO.findByUname(u.getUname())).thenReturn(uo);
+		ResponseEntity<String> t = InvalidException.thrown(String.format("INSERT: Username %s already exists.", u.getUname()),
+				new RuntimeException());
+		Assertions.assertEquals(t, adminService.addUser(k1, u));
+	}
+	
+	@Test
+	void addUser3() {
+		User u = new User(); 
+		Mockito.when(userDAO.findByUname(u.getUname())).thenReturn(Optional.empty());
+		u.setUid(5l);
+		ResponseEntity<String> t = InvalidException.thrown(
+				String.format("INSERT: Invalid ID(s) (%d:%d) passed during insertion.", u.getUid(), u.getSid()),
+				new RuntimeException());
+		Assertions.assertEquals(t, adminService.addUser(k1, u));
+	}
+	
+	@Test
+	void addUser4() {
+		User u = new User(); 
+		Mockito.when(userDAO.findByUname(u.getUname())).thenReturn(Optional.empty());
+		u.setSid(5l);
+		ResponseEntity<String> t = InvalidException.thrown(
+				String.format("INSERT: Invalid ID(s) (%d:%d) passed during insertion.", u.getUid(), u.getSid()),
+				new RuntimeException());
+		Assertions.assertEquals(t, adminService.addUser(k1, u));
+	}
+	
+	@Test
+	void addUser5() {
+		User u = new User(); 
+		Mockito.when(userDAO.findByUname(u.getUname())).thenReturn(Optional.empty());
+		u.setSid(5l); u.setUid(4l);
+		ResponseEntity<String> t = InvalidException.thrown(
+				String.format("INSERT: Invalid ID(s) (%d:%d) passed during insertion.", u.getUid(), u.getSid()),
+				new RuntimeException());
+		Assertions.assertEquals(t, adminService.addUser(k1, u));
 	}
 	
 	@Test
