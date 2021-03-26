@@ -371,6 +371,15 @@ public class CustomerServiceTests {
 	}
 	
 	@Test
+	void addUsr6() {
+		User b = new User(); 
+		Mockito.when(userDAO.findByUname(b.getUname())).thenReturn(Optional.empty());
+		b.setSid((long) 6); b.setUid((long) 7);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("INSERT: Invalid ID(s) (%d:%d) passed during insertion.", b.getUid(), b.getSid()), new RuntimeException());
+		Assertions.assertEquals(res, cServ.addUsr(b));
+	}
+	
+	@Test
 	void addUsr4() {
 		User b = new User(); 
 		Mockito.when(userDAO.findByUname(b.getUname())).thenReturn(Optional.empty());
