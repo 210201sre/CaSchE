@@ -144,7 +144,7 @@ pipeline {
                                 input 'Deploy to Production?'
 
                                 sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
-                                sh "kubectl set -n casche image deployment/project-two project-two=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
+                                sh "kubectl set -n casche image deployment/project-two p1-application=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
                             }
                         }
                     }
