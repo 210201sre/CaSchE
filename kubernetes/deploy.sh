@@ -1,4 +1,4 @@
-#!/bin/bash
+\#!/bin/bash
 echo "Generating Logs"
 echo ""
 echo "Secrets:" >> logs
@@ -16,8 +16,8 @@ kubectl describe -n casche ing project-two >> logs
 echo "ServiceMonitor:" >> logs
 kubectl describe -n casche ServiceMonitor project-two >> logs
 echo "=======================================================" >> logs
-echo ""
 echo "Reapplying some manifests"
+echo ""
 kubectl config use-context sre;
 # Must have proper system variables to connect to database or must have identical database in RDS to run the below command.
 # kubectl create -n casche secret generic casche-credentials --from-literal=url=$DB_URL --from-literal=username=$DB_USERNAME --from-literal=password=$DB_PASSWORD
