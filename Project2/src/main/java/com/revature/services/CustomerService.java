@@ -68,7 +68,7 @@ public class CustomerService {
 	private String noItem = "SELECT: Item %d does not exist.";
 	private Random r = new Random();
 	private HttpSession s;
-
+	private List<Long> limit = new ArrayList<>();
 	//// EVERY DAO METHOD CALL MUST BE WITHIN A TRY - CATCH (PSQLException e) BLOCK ////
 	
 	private Counter successLoginCounter;
@@ -123,14 +123,17 @@ public class CustomerService {
 		if (u.getPswrd().equals(password)) {
 			HttpSession session = req.getSession();
 			long sid = r.nextLong();
-			List<Long> limit = new ArrayList<>();
+			//limit = new ArrayList<>();
 			while (userDAO.findBySid(sid).isPresent() && limit.size() < Long.MAX_VALUE - 1) {
 				if (!limit.contains(sid)) {
 					limit.add(sid);
 				}
 				sid = r.nextLong();
 			}
-			if ((limit.size() >= Long.MAX_VALUE - 1)) {
+			
+			//if ((limit.size() >= Long.MAX_VALUE - 1)) {
+			System.out.println(limit.size());
+			if ((limit.size() >= Integer.MAX_VALUE -1)) {
 				return InvalidException.thrown("LOGIN: DATABASE LIMIT: Unable to generate a secure connection.", new RuntimeException());
 			}
 			u.setSid(sid);

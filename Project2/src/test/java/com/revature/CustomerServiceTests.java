@@ -68,6 +68,9 @@ public class CustomerServiceTests {
 	@Mock
 	Counter failLoginCounter;
 	
+	@Mock
+	List<Long> limit;
+	
 	@InjectMocks
 	CustomerService cServ = new CustomerService();
 
@@ -110,9 +113,9 @@ public class CustomerServiceTests {
 		User u = new User(); u.setPswrd("");
 		Optional<User> u2 = Optional.ofNullable(u);
 		Mockito.when(userDAO.findByUname(un)).thenReturn(u2);
-		long sid = r.nextLong();
-		Mockito.when(userDAO.findBySid(sid)).thenReturn(Optional.ofNullable(u));
-		
+		limit.add(new Long(0));
+		//Mockito.when(userDAO.findBySid(sid)).thenReturn(Optional.ofNullable(u));
+		Mockito.when(limit.size()).thenReturn(Integer.MAX_VALUE);
 		Assertions.assertEquals(re, cServ.login(un, pw));
 	}
 	
