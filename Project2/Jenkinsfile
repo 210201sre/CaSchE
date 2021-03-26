@@ -120,6 +120,7 @@ pipeline {
                     container('kubectl') {
                         withKubeConfig([credentialsId: 'kubeconfig']) {
                             sh "aws eks update-kubeconfig --name matt-oberlies-sre-943"
+                            sh "kubectl apply -n casche -f canary-p2.yml"
                             sh "kubectl set -n casche image deployment/project-two-canary project-two=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
                             sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
                         }
