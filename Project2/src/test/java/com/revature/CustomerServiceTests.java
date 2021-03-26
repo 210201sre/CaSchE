@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.revature.exceptions.InvalidException;
 import com.revature.models.BackorderProto;
 import com.revature.models.CartItem;
 import com.revature.models.CartItemProto;
@@ -191,9 +192,8 @@ public class CustomerServiceTests {
 		ResponseEntity<String> resOK = new ResponseEntity<String>("User Updated", HttpStatus.OK);
 		Assertions.assertEquals(resOK, cServ.modUser(u1, k));
 		
-		String a = String.format("UPDATE: Invalid User (%d!%d) modification.", u2.getUid(), k.getUid());
-		ResponseEntity<String> resBAD = new ResponseEntity<String>(a, HttpStatus.OK);
-		
+		ResponseEntity<String> resBAD = InvalidException.thrown(String.format("UPDATE: Invalid User (%d!%d) modification.", u2.getUid(), k.getUid()), new RuntimeException());
+		Assertions.assertEquals(resBAD, cServ.modUser(u2, k));
 	}
 	
 	
