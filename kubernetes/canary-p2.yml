@@ -6,7 +6,7 @@ metadata:
   labels:
     app: project-two
 spec:
-  replicas: $CANARY_REPLICAS
+  replicas: 0
   # Due to the enableConfigSubstitution property
   # We can inject information into the yml from our Jenkins environment variables
   selector:
