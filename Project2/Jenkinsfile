@@ -2,52 +2,53 @@ pipeline {
 //   agent any
     agent {
         kubernetes {
-            label 'build-agent'
+                //label 'build-agent'
+            inheritFrom 'build-agent'
             defaultContainer 'jnlp'
             yaml """
             apiVersion: v1
             kind: Pod
             metadata:
-            labels:
-            component: ci
+              labels:
+                component: ci
             spec:
-            containers:
-            - name: jnlp
-              image: odavid/jenkins-slave:latest
-              workingDir: /home/jenkins
-              env:
-              - name: DOCKER_HOST
-                value: tcp://localhost:2375
-              resources:
-                requests:
-                  memory: "500Mi"
-                  cpu: "0.3"
-                limits:
-                  memory: "800Mi"
-                  cpu: "0.5"
-            - name: dind-daemon
-              image: docker:18-dind
-              workingDir: /var/lib/docker
-              securityContext:
-                privileged: true
-              volumeMounts:
+              containers:
+              - name: jnlp
+                image: odavid/jenkins-jnlp-slave:latest
+                workingDir: /home/jenkins
+                env:
+                - name: DOCKER_HOST
+                  value: tcp://localhost:2375
+                resources:
+                  requests:
+                    memory: "500Mi"
+                    cpu: "0.3"
+                  limits:
+                    memory: "800Mi"
+                    cpu: "0.5"
+              - name: dind-daemon
+                image: docker:18-dind
+                workingDir: /var/lib/docker
+                securityContext:
+                  privileged: true
+                volumeMounts:
+                - name: docker-storage
+                  mountPath: /var/lib/docker
+                resources:
+                  requests:
+                    memory: "300Mi"
+                    cpu: "0.3"
+                  limits:
+                    memory: "500Mi"
+                    cpu: "0.5"
+              - name: kubectl
+                image: jshimko/kube-tools-aws:latest
+                command:
+                - cat
+                tty: true
+              volumes:
               - name: docker-storage
-                mountPath: /var/lib/docker
-              resources:
-                requests:
-                  memory: "300Mi"
-                  cpu: "0.3"
-                limits:
-                  memory: "500Mi"
-                  cpu: "0.5"
-            - name: kubectl
-              image: jshimko/kube-tools-aws:latest
-              command:
-              - cat
-              tty: true
-            volumes:
-            - name: docker-storage
-              emptyDir: {}
+                emptyDir: {}
             """
         }
     }
@@ -63,9 +64,8 @@ pipeline {
                 dir("Project2") {
                     //sh 'ls'
                     //sh 'echo "========================================================================"'
-                    //sh 'java -version'
-                    sh 'which docker'
-                    sh 'docker -version'
+                    sh 'java -version'
+                    //sh 'yum install docker -y'
                     sh 'chmod +x mvnw && ./mvnw clean package'
                     sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
