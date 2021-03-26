@@ -2,7 +2,8 @@ pipeline {
 //   agent any
     agent {
         kubernetes {
-            label 'build-agent'
+            //label 'build-agent'
+            inheritFrom 'build-agent'
             defaultContainer 'jnlp'
             yaml """
             apiVersion: v1
@@ -64,7 +65,7 @@ pipeline {
                     //sh 'ls'
                     //sh 'echo "========================================================================"'
                     //sh 'java -version'
-                    sh 'yum install docker -y'
+                    //sh 'yum install docker -y'
                     sh 'chmod +x mvnw && ./mvnw clean package'
                     sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
