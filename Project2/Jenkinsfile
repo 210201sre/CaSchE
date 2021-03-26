@@ -64,7 +64,7 @@ pipeline {
                     //sh 'ls'
                     //sh 'echo "========================================================================"'
                     //sh 'java -version'
-                    sh 'docker images'
+                    sh 'sudo yum install docker -y'
                     sh 'chmod +x mvnw && ./mvnw clean package'
                     sh 'docker build -t sentrurion/casche-project-two .'
                     //sh 'echo other shell commands'
