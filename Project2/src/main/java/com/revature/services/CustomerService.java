@@ -67,6 +67,7 @@ public class CustomerService {
 	private String noUser = "User does not exist.";
 	private String noItem = "SELECT: Item %d does not exist.";
 	private Random r = new Random();
+	private HttpSession s;
 
 	//// EVERY DAO METHOD CALL MUST BE WITHIN A TRY - CATCH (PSQLException e) BLOCK ////
 	
@@ -106,7 +107,7 @@ public class CustomerService {
 	
 	public ResponseEntity<String> login(String username, String password) {
 		MDC.put(labelAction, "Login");
-		HttpSession s = req.getSession(false);
+		s = req.getSession(false);
 		if (s != null && s.getAttribute(key) != null) {
 			Key k = (Key) s.getAttribute(key);
 			if (userDAO.existsById(k.getUid())) {

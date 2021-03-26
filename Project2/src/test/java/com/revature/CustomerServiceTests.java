@@ -5,6 +5,10 @@ import static org.mockito.Mockito.doNothing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,6 +36,7 @@ import com.revature.repositories.UserDAO;
 import com.revature.services.AdminService;
 import com.revature.services.CustomerService;
 
+import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,9 +56,120 @@ public class CustomerServiceTests {
 	@Mock
 	MeterRegistry meterRegistry;
 	
+	@Mock
+	HttpServletRequest req;
+	
+	@Mock
+	Random r;
+	
+	@Mock
+	HttpSession s;
+	
+	@Mock
+	Counter failLoginCounter;
+	
 	@InjectMocks
 	CustomerService cServ = new CustomerService();
 
+	
+//	@Test
+//	void login() { // when bad key
+//		String un = null; String pw = null; String key = "projectzero";
+//		HttpSession s = req.getSession(false);
+//		Mockito.when(s.getAttribute(key)).thenReturn(new Key());
+//		
+//		
+//		Assertions.assertEquals(null, null);
+//	}
+	
+	@Test
+	void login1a() { //when un || pw == null
+		String un = null; String pw = null; String key = "projectzero";
+		ResponseEntity<String> re = ResponseEntity.status(400).body("LOGIN: No User with username:null password:null");
+		Assertions.assertEquals(re, cServ.login(un, pw));
+	}
+	
+	@Test
+	void login1y() { //when user already logged in
+		String un = null; String pw = ""; String key = "projectzero";
+		
+		ResponseEntity<String> re = ResponseEntity.status(400).body("LOGIN: User 0 already logged in on this device.");
+		User u = new User(); u.setPswrd("");
+		Key k = new Key();
+		Mockito.when(req.getSession(false)).thenReturn(s);
+		Mockito.when(s.getAttribute(key)).thenReturn(k);
+		Mockito.when(userDAO.existsById(k.getUid())).thenReturn(true);
+		
+		Assertions.assertEquals(re, cServ.login(un, pw));
+	}
+	
+	@Test
+	void login1x() { //when Long.MAX_VALUE users logged in at the same time
+		String un = null; String pw = ""; String key = "projectzero";
+		ResponseEntity<String> re = ResponseEntity.status(400).body("LOGIN: DATABASE LIMIT: Unable to generate a secure connection.");
+		User u = new User(); u.setPswrd("");
+		Optional<User> u2 = Optional.ofNullable(u);
+		Mockito.when(userDAO.findByUname(un)).thenReturn(u2);
+		long sid = r.nextLong();
+		Mockito.when(userDAO.findBySid(sid)).thenReturn(Optional.ofNullable(u));
+		
+		Assertions.assertEquals(re, cServ.login(un, pw));
+	}
+	
+//	@Test
+//	void login1b() { //when s.getAttribute(key) == null
+//		String un = ""; String pw = ""; String key = "projectzero";
+//		ResponseEntity<String> re = ResponseEntity.status(400).body("LOGIN: No User with username:null password:null");
+//		User u = new User(); u.setPswrd("");u.setSid(0l);u.setUid(0l);
+//		Optional<User> u2 = Optional.ofNullable(u);
+//		Mockito.when(userDAO.findByUname(un)).thenReturn(u2);
+//		HttpSession session = req.getSession(); Key k = new Key();
+//		Mockito.when(req.getSession()).thenReturn(session);
+//		Assertions.assertEquals(re, cServ.login(un, pw));
+//	}
+//	
+//	@Test
+//	void login1c() { //when userDAO.existsById(k.getUid()) == true
+//		String un = null; String pw = null; String key = "projectzero";
+//		HttpSession s = req.getSession(false);
+//		Mockito.when(s.getAttribute(key)).thenReturn(new Key());
+//	}
+//	
+//	@Test
+//	void login3() { //when !u2.isPresent == true
+//		String un = null; String pw = null; String key = "projectzero";
+//		HttpSession s = req.getSession(false);
+//		Mockito.when(s.getAttribute(key)).thenReturn(new Key());
+//	}
+//	
+//	@Test
+//	void login4() { // when u.getPswrd().equals(password) == true
+//		String un = null; String pw = null; String key = "projectzero";
+//		HttpSession s = req.getSession(false);
+//		Mockito.when(s.getAttribute(key)).thenReturn(new Key());
+//	}
+//	
+//	@Test
+//	void login5() { // when !limit.contains(sid) == true
+//		String un = null; String pw = null; String key = "projectzero";
+//		HttpSession s = req.getSession(false);
+//		Mockito.when(s.getAttribute(key)).thenReturn(new Key());
+//	}
+//	
+//	@Test
+//	void login6() { // when (limit.size() >= Long.MAX_VALUE - 1) == true
+//		String un = null; String pw = null; String key = "projectzero";
+//		HttpSession s = req.getSession(false);
+//		Mockito.when(s.getAttribute(key)).thenReturn(new Key());
+//	}
+//	
+//	@Test 
+//	void login7() { // when method succeeds
+//		String un = null; String pw = null; String key = "projectzero";
+//		HttpSession s = req.getSession(false);
+//		Mockito.when(s.getAttribute(key)).thenReturn(new Key());
+//	}
+	
 	@Test
 	void calculateTotal() {
 		Item i1 = new Item(456, "Cateloupe", "Fruit", 1, 3.20, 1, null, 4.00, 6);
