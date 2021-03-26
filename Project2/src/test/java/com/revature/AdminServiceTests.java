@@ -161,6 +161,14 @@ public class AdminServiceTests {
 	}
 	
 	@Test
+	void addCoupon2() {
+		Coupon c1 = new Coupon(0, "Test1", "Test Coupon", 3.68, 45); Key k = new Key(); c1.setCid(8l);
+		ResponseEntity<String> r= InvalidException.thrown(String.format("INSERT: Invalid coupon id %d.", c1.getCid()),
+				new RuntimeException());
+		Assertions.assertEquals(r, adminService.addCoupon(k, c1));
+	}
+	
+	@Test
 	void delCoupon() {
 		Coupon c = new Coupon(); Key k = new Key();
 		Mockito.when(coupDAO.existsById(c.getCid())).thenReturn(true);
@@ -227,6 +235,15 @@ public class AdminServiceTests {
 	}
 	
 	@Test
+	void displayUserTransactions2() {
+		User u = new User();
+		Mockito.when(userDAO.existsById(b.getUid())).thenReturn(false);
+		List<Transaction> ls = null;
+		ResponseEntity<List<Transaction>> rest = ResponseEntity.status(400).body(ls);
+		Assertions.assertEquals(rest, adminService.displayUserTransactions(k1, u));
+	}
+	
+	@Test
 	void delUserTransactionItem() {
 		Key k = new Key(); TuiProto tp = new TuiProto(1000, 2000, 3, 4000);
 		Mockito.when(tDAO.existsById(tp.getTid())).thenReturn(true);
@@ -252,6 +269,15 @@ public class AdminServiceTests {
 	}
 	
 	@Test
+	void delCustomer2() {
+		User u = new User();
+		Mockito.when(userDAO.existsById(u.getUid())).thenReturn(false);
+		ResponseEntity<String> res = InvalidException.thrown(String.format("DELETE: User %d does not exist.", u.getUid()),
+				new RuntimeException());
+		Assertions.assertEquals(res, adminService.delCustomer(k1, u));
+	}
+	
+	@Test
 	void delUserTransactions() {                     
 		Transaction t1 = new Transaction(333, 343, 2.33, "stamp1");
 		Key k = new Key();
@@ -262,5 +288,39 @@ public class AdminServiceTests {
 		ResponseEntity<String> rest = new ResponseEntity<String>("User Deleted", HttpStatus.OK);
 		Assertions.assertEquals(rest, adminService.delUserTransaction(k, t1));
 	}
+	
+	@Test
+	void delUserTransactions2() {
+		Transaction t = new Transaction(333, 343, 2.33, "stamp1");
+		Key k = new Key();
+		Mockito.when(tDAO.findById(t.getTid())).thenReturn(Optional.empty());
+		ResponseEntity<String> rest = InvalidException.thrown(String.format("DELETE: Transaction %d does not exist.", t.getTid()),
+				new RuntimeException());
+		Assertions.assertEquals(rest, adminService.delUserTransaction(k, t));
+	}
+	
+	@Test
+	void delUserTransactions3() {
+		Transaction t1 = new Transaction(333, 343, 2.33, "stamp1");
+		Key k = new Key(); k.setUid(60l); 
+		Optional<Transaction> t2 = Optional.ofNullable(t1); t2.get().setUid(60l);
+		Mockito.when(tDAO.findById(t1.getTid())).thenReturn(t2);
+		ResponseEntity<String> rest = InvalidException.thrown(
+				String.format("DELETE: User %d attempted to delete their own transaction.", k.getUid()),
+				new RuntimeException());
+		Assertions.assertEquals(rest, adminService.delUserTransaction(k, t1));
+	}
+	
+	@Test
+	void displayUserTransactionItems() {
+		Transaction t = new Transaction();
+		Mockito.when(tDAO.existsById(t.getTid())).thenReturn(false);
+		List<CartItem> lci = null;
+		ResponseEntity<List<CartItem>> rel = ResponseEntity.status(400).body(lci);
+		Assertions.assertEquals(rel, adminService.displayUserTransactionItems(k1, t));
+		
+	}
+	
+	
 
 }
