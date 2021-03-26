@@ -1,0 +1,217 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: casche-prometheus-rules
+  namespace: casche
+  labels:
+    app: project2
+    job: isms
+    release: prometheus
+    team: sre
+spec:
+    groups:
+    - name: casche-SLOs-http_requests_total
+      rules:
+      - alert: ErrorBudgetBurn
+        annotations:
+          message: 'High error budget burn for job=project2 (current value: {{ $value }})'
+        expr: |
+          sum(http_requests_total:burnrate5m{job="project2"}) > (14.40 * (1-0.99000))
+          and
+          sum(http_requests_total:burnrate1h{job="project2"}) > (14.40 * (1-0.99000))
+        for: 2m
+        labels:
+          job: isms
+          severity: critical
+      - alert: ErrorBudgetBurn
+        annotations:
+          message: 'High error budget burn for job=project2 (current value: {{ $value }})'
+        expr: |
+          sum(http_requests_total:burnrate30m{job="project2"}) > (6.00 * (1-0.99000))
+          and
+          sum(http_requests_total:burnrate6h{job="project2"}) > (6.00 * (1-0.99000))
+        for: 15m
+        labels:
+          job: isms
+          severity: critical
+      - alert: ErrorBudgetBurn
+        annotations:
+          message: 'High error budget burn for job=project2 (current value: {{ $value }})'
+        expr: |
+          sum(http_requests_total:burnrate2h{job="project2"}) > (3.00 * (1-0.99000))
+          and
+          sum(http_requests_total:burnrate1d{job="project2"}) > (3.00 * (1-0.99000))
+        for: 1h
+        labels:
+          job: isms
+          severity: warning
+      - alert: ErrorBudgetBurn
+        annotations:
+          message: 'High error budget burn for job=project2 (current value: {{ $value }})'
+        expr: |
+          sum(http_requests_total:burnrate6h{job="project2"}) > (1.00 * (1-0.99000))
+          and
+          sum(http_requests_total:burnrate3d{job="project2"}) > (1.00 * (1-0.99000))
+        for: 3h
+        labels:
+          job: isms
+          severity: warning
+      - expr: |
+          sum(rate(http_requests_total{job="project2",code=~"5.."}[1d]))
+          /
+          sum(rate(http_requests_total{job="project2"}[1d]))
+        labels:
+          job: isms
+        record: http_requests_total:burnrate1d
+      - expr: |
+          sum(rate(http_requests_total{job="project2",code=~"5.."}[1h]))
+          /
+          sum(rate(http_requests_total{job="project2"}[1h]))
+        labels:
+          job: isms
+        record: http_requests_total:burnrate1h
+      - expr: |
+          sum(rate(http_requests_total{job="project2",code=~"5.."}[2h]))
+          /
+          sum(rate(http_requests_total{job="project2"}[2h]))
+        labels:
+          job: isms
+        record: http_requests_total:burnrate2h
+      - expr: |
+          sum(rate(http_requests_total{job="project2",code=~"5.."}[30m]))
+          /
+          sum(rate(http_requests_total{job="project2"}[30m]))
+        labels:
+          job: isms
+        record: http_requests_total:burnrate30m
+      - expr: |
+          sum(rate(http_requests_total{job="project2",code=~"5.."}[3d]))
+          /
+          sum(rate(http_requests_total{job="project2"}[3d]))
+        labels:
+          job: isms
+        record: http_requests_total:burnrate3d
+      - expr: |
+          sum(rate(http_requests_total{job="project2",code=~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total{job="project2"}[5m]))
+        labels:
+          job: isms
+        record: http_requests_total:burnrate5m
+      - expr: |
+          sum(rate(http_requests_total{job="project2",code=~"5.."}[6h]))
+          /
+          sum(rate(http_requests_total{job="project2"}[6h]))
+        labels:
+          job: isms
+        record: http_requests_total:burnrate6h
+    - name: casche-SLOs-http_request_duration_seconds
+      rules:
+      - alert: LatencyBudgetBurn
+        annotations:
+          message: 'High requests latency budget burn for job=project2,latency=0.10000000000000001 (current value: {{ $value }})'
+        expr: |
+          (
+            latencytarget:http_request_duration_seconds:rate1h{job="project2",latency="0.10000000000000001"} > (14.4*1.000000)
+            and
+            latencytarget:http_request_duration_seconds:rate5m{job="project2",latency="0.10000000000000001"} > (14.4*1.000000)
+          )
+          or
+          (
+            latencytarget:http_request_duration_seconds:rate6h{job="project2",latency="0.10000000000000001"} > (6*1.000000)
+            and
+            latencytarget:http_request_duration_seconds:rate30m{job="project2",latency="0.10000000000000001"} > (6*1.000000)
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+          severity: critical
+      - alert: LatencyBudgetBurn
+        annotations:
+          message: 'High requests latency budget burn for job=project2,latency=0.10000000000000001 (current value: {{ $value }})'
+        expr: |
+          (
+            latencytarget:http_request_duration_seconds:rate1d{job="project2",latency="0.10000000000000001"} > (3*1.000000)
+            and
+            latencytarget:http_request_duration_seconds:rate2h{job="project2",latency="0.10000000000000001"} > (3*1.000000)
+          )
+          or
+          (
+            latencytarget:http_request_duration_seconds:rate3d{job="project2",latency="0.10000000000000001"} > (1.000000)
+            and
+            latencytarget:http_request_duration_seconds:rate6h{job="project2",latency="0.10000000000000001"} > (1.000000)
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+          severity: warning
+      - expr: |
+          1 - (
+            sum(rate(http_request_duration_seconds_bucket{job="project2",le="0.10000000000000001",code!~"5.."}[5m]))
+            /
+            sum(rate(http_request_duration_seconds_count{job="project2"}[5m]))
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+        record: latencytarget:http_request_duration_seconds:rate5m
+      - expr: |
+          1 - (
+            sum(rate(http_request_duration_seconds_bucket{job="project2",le="0.10000000000000001",code!~"5.."}[30m]))
+            /
+            sum(rate(http_request_duration_seconds_count{job="project2"}[30m]))
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+        record: latencytarget:http_request_duration_seconds:rate30m
+      - expr: |
+          1 - (
+            sum(rate(http_request_duration_seconds_bucket{job="project2",le="0.10000000000000001",code!~"5.."}[1h]))
+            /
+            sum(rate(http_request_duration_seconds_count{job="project2"}[1h]))
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+        record: latencytarget:http_request_duration_seconds:rate1h
+      - expr: |
+          1 - (
+            sum(rate(http_request_duration_seconds_bucket{job="project2",le="0.10000000000000001",code!~"5.."}[2h]))
+            /
+            sum(rate(http_request_duration_seconds_count{job="project2"}[2h]))
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+        record: latencytarget:http_request_duration_seconds:rate2h
+      - expr: |
+          1 - (
+            sum(rate(http_request_duration_seconds_bucket{job="project2",le="0.10000000000000001",code!~"5.."}[6h]))
+            /
+            sum(rate(http_request_duration_seconds_count{job="project2"}[6h]))
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+        record: latencytarget:http_request_duration_seconds:rate6h
+      - expr: |
+          1 - (
+            sum(rate(http_request_duration_seconds_bucket{job="project2",le="0.10000000000000001",code!~"5.."}[1d]))
+            /
+            sum(rate(http_request_duration_seconds_count{job="project2"}[1d]))
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+        record: latencytarget:http_request_duration_seconds:rate1d
+      - expr: |
+          1 - (
+            sum(rate(http_request_duration_seconds_bucket{job="project2",le="0.10000000000000001",code!~"5.."}[3d]))
+            /
+            sum(rate(http_request_duration_seconds_count{job="project2"}[3d]))
+          )
+        labels:
+          job: isms
+          latency: "0.10000000000000001"
+        record: latencytarget:http_request_duration_seconds:rate3d
