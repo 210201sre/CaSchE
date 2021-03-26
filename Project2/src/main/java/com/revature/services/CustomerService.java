@@ -62,6 +62,7 @@ public class CustomerService {
 	private String key = "projectzero";
 	private String labelAction = "Action";
 	private String labelTopAction = "TopAction";
+	private String labelCheckout = "Checkout";
 	private String labelStart = "Start";
 	private String noUser = "User does not exist.";
 	private String noItem = "SELECT: Item %d does not exist.";
@@ -348,10 +349,10 @@ public class CustomerService {
 	public ResponseEntity<String> checkout(Key k) {
 		String start=""; if (MDC.get(labelStart)!=null){ start = MDC.get(labelStart);}
 		
-		MDC.put(labelTopAction, "Checkout");
+		MDC.put(labelTopAction, labelCheckout);
 		if(cDAO.findAllByUid(k.getUid()).size() > 0) {
 			List<CartItem> cis = displayCart(k);
-			MDC.put(labelTopAction, "Checkout"); if(!start.equals("")){MDC.put(labelStart,start);}
+			MDC.put(labelTopAction, labelCheckout); if(!start.equals("")){MDC.put(labelStart,start);}
 			Transaction t = new Transaction();
 			t.setUid(k.getUid());
 			t.setTotalcost(0.01);
@@ -381,7 +382,7 @@ public class CustomerService {
 					tDAO.delete(t);
 				}
 				emptyCart(k);
-				MDC.put(labelTopAction, "Checkout"); if(!start.equals("")){MDC.put(labelStart,start);}
+				MDC.put(labelTopAction, labelCheckout); if(!start.equals("")){MDC.put(labelStart,start);}
 				completedCheckoutCounter.increment();
 				return ResponseEntity.ok().body("Checkout Complete");
 			} else {
