@@ -71,16 +71,16 @@ public class EmployeeController {
 		
 	}
 	
-	@PatchMapping("/user/transaction/item")
-	public ResponseEntity<String> modifyUserTransactionItem(@RequestBody TuiProto tp) {
-		try {
-			return aSvc.modUserTransactionItem(usrSvc.validateEmployee(usrSvc.logdin()), tp);
-		} catch(IllegalArgumentException e) {
-			InvalidException.thrown("SQLException: Invalid data inputed.", e);
-			return ResponseEntity.status(400).body(null);
-		} catch(Exception e) {
-			InvalidException.thrown("Invalid data sent", e);
-			return ResponseEntity.status(400).body(null);
-		}		
-	}
+//	@PatchMapping("/user/transaction/item")
+//	public ResponseEntity<String> modifyUserTransactionItem(@RequestBody TuiProto tp) {
+//		try {
+//			return aSvc.modUserTransactionItem(usrSvc.validateEmployee(usrSvc.logdin()), tp);
+//		} catch(IllegalArgumentException e) {
+//			InvalidException.thrown("SQLException: Invalid data inputed.", e);
+//			return ResponseEntity.status(400).body(null);
+//		} catch(Exception e) {
+//			InvalidException.thrown("Invalid data sent", e);
+//			return ResponseEntity.status(400).body(null);
+//		}		
+//	}
 }
