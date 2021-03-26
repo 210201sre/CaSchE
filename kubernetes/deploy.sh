@@ -1,4 +1,4 @@
-\#!/bin/bash
+#!/bin/bash
 echo "Generating Logs"
 echo ""
 echo "Secrets:" >> logs
