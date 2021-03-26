@@ -157,60 +157,60 @@ public class AdminService /* extends EmployeeService */ {
 		return ResponseEntity.ok().body(cis);
 	}
 
-	public ResponseEntity<String> modUserTransactionItem(Key k, TuiProto tp) {
-		MDC.put(labelAction, "Adm Modify Transaction Item");
-		if (!tDAO.existsById(tp.getTid()) || (tp.getCid() != 0 && !coupDAO.existsById(tp.getCid()))) {
-			return InvalidException.thrown(
-					String.format("UPDATE: Transaction %d or Coupon %d does not exist.", tp.getTid(), tp.getCid()),
-					new RuntimeException());
-		}
-		if (tp.getQuantity() < 1) {
-			return InvalidException.thrown("UPDATE: Transaction item quantity must be greater than 0.",
-					new RuntimeException());
-		}
-		// transaction already confirmed above
-		Transaction t = tDAO.findById(tp.getTid()).get();
-		List<CartItem> cis = (List<CartItem>) displayUserTransactionItems(k, t).getBody();
-		if (cis != null) {
-			CartItem ci = null;
-			for (CartItem i : cis) {
-				if (i.getI().getIid() == tp.getIid() && i.getUtid() == tp.getTid()) {
-					ci = i;
-				}
-			}
-			if (ci == null) {
-				return InvalidException.thrown("SELECT: Unable to find matching item in user's transaction item list.",
-						new RuntimeException());
-			}
-
-			if (ci.getI().getQuantity() < tp.getQuantity()) {
-				boDAO.save(new BackorderProto(t.getUid(), tp.getIid(), tp.getQuantity(), tp.getCid()));
-				log.info("Item {}:{} was put on backorder due to limited stock on hand.", ci.getI().getIid(),
-						ci.getI().getUnitname());
-			} else {
-				if (setNewQuantities(ci.getI(),
-						tp.getQuantity() - ci.getCartQuantity()/* newQuantity - oldQuantity */)) {
-					tuiDAO.deleteByTidAndIid(tp.getTid(), tp.getIid());
-					// TuiProto(ci.getUtid(),ci.getCartQuantity(),ci.getCid(),ci.getI().getIid()));
-					tuiDAO.save(tp);
-				} else {
-					boDAO.save(new BackorderProto(t.getUid(), tp.getIid(), tp.getQuantity(), tp.getCid()));
-					log.error("Item {}'s quantities could not be updated, item put on user {}'s backorder.",
-							tp.getIid(), t.getUid());
-				}
-			}
-
-			cis = (List<CartItem>) displayUserTransactionItems(k, t).getBody();
-			t.setTotalcost(calculateTotal(cis));
-			tDAO.save(t);
-			// call third party function to reimburse/bill user for changes
-//		buildTui(tp);
-			return ResponseEntity.ok().body("Transaction Item Updated");
-		} else {
-			return InvalidException.thrown(String.format("SELECT: Transaction %d does not exist.", t.getTid()), new RuntimeException());
-		}
-		
-	}
+//	public ResponseEntity<String> modUserTransactionItem(Key k, TuiProto tp) {
+//		MDC.put(labelAction, "Adm Modify Transaction Item");
+//		if (!tDAO.existsById(tp.getTid()) || (tp.getCid() != 0 && !coupDAO.existsById(tp.getCid()))) {
+//			return InvalidException.thrown(
+//					String.format("UPDATE: Transaction %d or Coupon %d does not exist.", tp.getTid(), tp.getCid()),
+//					new RuntimeException());
+//		}
+//		if (tp.getQuantity() < 1) {
+//			return InvalidException.thrown("UPDATE: Transaction item quantity must be greater than 0.",
+//					new RuntimeException());
+//		}
+//		// transaction already confirmed above
+//		Transaction t = tDAO.findById(tp.getTid()).get();
+//		List<CartItem> cis = (List<CartItem>) displayUserTransactionItems(k, t).getBody();
+//		if (cis != null) {
+//			CartItem ci = null;
+//			for (CartItem i : cis) {
+//				if (i.getI().getIid() == tp.getIid() && i.getUtid() == tp.getTid()) {
+//					ci = i;
+//				}
+//			}
+//			if (ci == null) {
+//				return InvalidException.thrown("SELECT: Unable to find matching item in user's transaction item list.",
+//						new RuntimeException());
+//			}
+//
+//			if (ci.getI().getQuantity() < tp.getQuantity()) {
+//				boDAO.save(new BackorderProto(t.getUid(), tp.getIid(), tp.getQuantity(), tp.getCid()));
+//				log.info("Item {}:{} was put on backorder due to limited stock on hand.", ci.getI().getIid(),
+//						ci.getI().getUnitname());
+//			} else {
+//				if (setNewQuantities(ci.getI(),
+//						tp.getQuantity() - ci.getCartQuantity()/* newQuantity - oldQuantity */)) {
+//					tuiDAO.deleteByTidAndIid(tp.getTid(), tp.getIid());
+//					// TuiProto(ci.getUtid(),ci.getCartQuantity(),ci.getCid(),ci.getI().getIid()));
+//					tuiDAO.save(tp);
+//				} else {
+//					boDAO.save(new BackorderProto(t.getUid(), tp.getIid(), tp.getQuantity(), tp.getCid()));
+//					log.error("Item {}'s quantities could not be updated, item put on user {}'s backorder.",
+//							tp.getIid(), t.getUid());
+//				}
+//			}
+//
+//			cis = (List<CartItem>) displayUserTransactionItems(k, t).getBody();
+//			t.setTotalcost(calculateTotal(cis));
+//			tDAO.save(t);
+//			// call third party function to reimburse/bill user for changes
+////		buildTui(tp);
+//			return ResponseEntity.ok().body("Transaction Item Updated");
+//		} else {
+//			return InvalidException.thrown(String.format("SELECT: Transaction %d does not exist.", t.getTid()), new RuntimeException());
+//		}
+//		
+//	}
 	
 	public ResponseEntity<String> delUserTransaction(Key k, Transaction t) { //***********************
 		MDC.put(labelAction, "Adm Delete Transaction");
