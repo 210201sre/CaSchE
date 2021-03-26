@@ -46,15 +46,16 @@ public class ChkUsrServiceTests {
 		Assertions.assertEquals(new Key(), cus.logdin());
 	}
 	
-	@Test
-	void logdin2() {
-		Mockito.when(r.getSession(false)).thenReturn(s);
-		Key k = new Key(); k.setSid(0L); String key = "";
-		HttpSession session = r.getSession();
-		Mockito.when(userDAO.findBySid((k).getSid())).thenReturn(Optional.ofNullable(new User()));
-		Mockito.when(s.getAttribute(key)).thenReturn(k);
-		Assertions.assertEquals(new Key(), cus.logdin());
-	}
+//	@Test
+//	void logdin2() {
+//		Mockito.when(r.getSession(false)).thenReturn(s);
+//		Key k = new Key(); k.setSid(0L); k.setUid(0L); String key = "";
+//		HttpSession session = r.getSession();
+//		Mockito.when(s.getAttribute("")).thenReturn(k);
+//		Mockito.when(userDAO.findBySid(0L)).thenReturn(Optional.ofNullable(new User()));
+//		Mockito.when(s.isNew()).thenReturn(false);
+//		Assertions.assertEquals(k, cus.logdin());
+//	}
 	
 	@Test
 	void validate() {
@@ -89,6 +90,23 @@ public class ChkUsrServiceTests {
 		User b = new User(); b.setFname("Ben"); b.setLname("Cady"); b.setUid((long) 23); b.setAccesslevel("Admin");
 		Mockito.when(userDAO.findById(k.getUid())).thenReturn(Optional.empty());
 		Assertions.assertEquals(k, cus.validate(k, "Admin"));
+	}
+	
+	@Mock
+	User u;
+	
+	@Test 
+	void validate5() {
+		Key k = new Key();
+		String level = "Customer";
+		Mockito.when(u.getAccesslevel()).thenReturn(level);
+		Assertions.assertEquals(new Key(), cus.validate(k, "level"));
+		level = "Employee";
+		Mockito.when(u.getAccesslevel()).thenReturn(level);
+		Assertions.assertEquals(new Key(), cus.validate(k, "level"));
+		level = "Admin";
+		Mockito.when(u.getAccesslevel()).thenReturn(level);
+		Assertions.assertEquals(new Key(), cus.validate(k, "level"));
 	}
 	
 	@Test

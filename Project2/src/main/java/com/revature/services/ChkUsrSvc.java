@@ -19,7 +19,8 @@ public class ChkUsrSvc {
 	private String key = "projectzero";
 	private String permErrMsg = "Permission Denied";
 	private String admin = "Admin";
-
+	private User u;
+	
 	@Autowired
 	private HttpServletRequest r;
 
@@ -31,8 +32,7 @@ public class ChkUsrSvc {
 	public Key logdin() {
 
 		session = r.getSession(false);
-
-		if (session == null || session.getAttribute(key) == null || !userDAO.findBySid(((Key) session.getAttribute(key)).getSid()).isPresent()) {
+		if (session.isNew() || session.getAttribute(key) == null || !userDAO.findBySid(((Key) session.getAttribute(key)).getSid()).isPresent()) {
 			InvalidException.thrown("User not logged in.", new RuntimeException());
 			return new Key();
 		}
@@ -53,7 +53,7 @@ public class ChkUsrSvc {
 	
 	public Key validate(Key k, String level) {
 		Optional<User> u2 = userDAO.findById(k.getUid());
-		User u = new User();
+		
 		if (u2.isPresent()) {
 			u = u2.get();
 		} else {
