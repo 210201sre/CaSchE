@@ -244,6 +244,13 @@ public class AdminServiceTests {
 	}
 	
 	@Test
+	void setNewQuantities2() {
+		Item it = new Item(6000, "Carrots", "Veggie", 16, 0, 0, null, 0, 0);
+		Mockito.when(iDAO.existsById(it.getIid())).thenReturn(false);
+		Assertions.assertEquals(false, adminService.setNewQuantities(it, 10l));
+	}
+	
+	@Test
 	void buildTui() {
 		TuiProto tp = new TuiProto(1000, 2000, 3000, 4000);
 		Optional<Item> i1 = Optional.ofNullable(new Item(456, "Cateloupe", "Fruit", 1, 3.20, 1, null, 4.00, 6));
