@@ -40,3 +40,4 @@ echo "Displaying Unmodified Data"
 kubectl get -n casche ing
 kubectl get -n casche secrets
 kubectl get -n casche configmap
+
