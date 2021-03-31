@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-two-canary
+  namespace: casche
+  labels:
+    app: project-two
+spec:
+  replicas: 0
+  # Due to the enableConfigSubstitution property
+  # We can inject information into the yml from our Jenkins environment variables
+  selector:
+    matchLabels:
+      app: project-two
+      track: canary
+      # This 'track' label will be used to differentiate the pods from
+      # the production system vs the canary
+  template:
+    metadata:
+      labels:
+        app: project-two
+        track: canary
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: fluent-conf
+      containers:
+      - name: fluentd
+        ports:
+        - containerPort: 24224
+        image: grafana/fluent-plugin-loki:latest
+        imagePullPolicy: IfNotPresent # Optional, since this is already the default value
+        # livenessProbe: # Perhaps with more research we could identify a URL to use for these probes
+        # readinessProbe:
+        env:
+        - name: LOKI_URL
+          value: http://loki:3100
+        volumeMounts:
+        - name: config
+          mountPath: /fluentd/etc/fluent.conf
+          # mountPath is the path inside the container that we will mount to
+          # the destination
+          subPath: fluent.conf
+          # subPath is the path inside the volume that we are mounting from
+          # the source
+      - name: project-two
+        image: $DOCKER_IMAGE_NAME:$BUILD_NUMBER
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: casche-credentials
+              key: url
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: casche-credentials
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: casche-credentials
+              key: password
+        imagePullPolicy: Always
+        

@@ -111,66 +111,46 @@ pipeline {
             }
         }
 
-        // stage('')
+        stage('Canary Deployment') {
+            environment {
+                CANARY_REPLICAS = 1
+            }
+            steps {
+                dir("kubernetes") {
+                    script {
+                        container('kubectl') {
+                            withKubeConfig([credentialsId: 'kubeconfig']) {
+                                sh "aws eks update-kubeconfig --name matt-oberlies-sre-943"
+                                sh "kubectl apply -n casche -f canary-p2.yml"
+                                sh "kubectl set -n casche image deployment/project-two-canary project-two=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
+                                sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+        stage('Production Deployment') {
+            environment {
+                CANARY_REPLICAS = 0
+            }
+            steps {
+                dir("Project2") {
+                    script {
+                        container('kubectl') {
+                            withKubeConfig([credentialsId: 'kubeconfig']) {
+                                sh "aws eks update-kubeconfig --name matt-oberlies-sre-943"
+                                input 'Deploy to Production?'
 
-        // stage('Canary Deployment') {
-        //     environment {
-        //         CANARY_REPLICAS = 1
-        //         // represents the number of canary instances that will be created
-        //         // the service that is configured in the cluster already will include this
-        //         // canary instance when it routes traffic
-
-        //         // ex: if our original deployment had 4 replicas and 1 canary replica
-
-        //         // the canary will receive 20% of the total traffic (1 out of 5)
-        //     }
-        //     steps {
-        //         kubernetesDeploy(
-        //             // this is the ID of the kubeconfig credentials on jenkins
-        //             kubeconfigId: 'kubeconfig-sre',
-        //             // allows our kubernetes manifestes to interpolate information from our environment variables
-        //             enableConfigSubstitution: true,
-                    
-        //             configs: 'manifests/canary-deployment.yml'
-        //         )
-        //     }
-        // }
-
-        // stage('Production Deployment') {
-        //     environment {
-        //         CANARY_Replicas = 0
-        //     }
-
-
-        //     steps {
-        //         // create a button press
-        //         input 'Deploy to Production?'
-        //         // response = input 'prompt text'
-        //         // if (response = 'NO') {
-
-        //         // }
-
-        //         // Effectively a yes/no prompt in Jenkins
-        //         // milestone(1) // would come from a separate plugin in Jenkins
-        //         // would help with many builds happening before the previous one finishes
-        //         // If a new version/build passes an older version/build, discard the older one
-
-        //         // Scale down the canary
-        //         kubernetesDeploy(
-        //             kubeconfigId: 'kubeconfig-sre',
-        //             enableConfigSubstitution: true,
-        //             configs: 'manifests/canary-deployment.yml'
-        //         )
-
-        //         kubernetesDeploy(
-        //             kubeconfigId: 'kubeconfig-sre',
-        //             enableConfigSubstitution: true,
-        //             configs: 'manifests/production-deployment.yml'
-        //         )
-
-        //     }
-        // }
-
+                                sh "kubectl scale -n casche deployment.v1.apps/project-two-canary --replicas=$CANARY_REPLICAS"
+                                sh "kubectl set -n casche image deployment/project-two p1-application=$DOCKER_IMAGE_NAME:$BUILD_NUMBER"
+                                sh "kubectl delete -n casche replicasets --all"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
