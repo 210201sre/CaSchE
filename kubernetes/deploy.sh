@@ -20,12 +20,14 @@ echo "Reapplying some manifests"
 echo ""
 kubectl config use-context sre;
 # Must have proper system variables to connect to database or must have identical database in RDS to run the below command.
-# kubectl create -n casche secret generic casche-credentials --from-literal=url=$DB_URL --from-literal=username=$DB_USERNAME --from-literal=password=$DB_PASSWORD
+# Comment the line below after the system is set up.
+ kubectl create -n casche secret generic casche-credentials --from-literal=url=$DB_URL --from-literal=username=$DB_USERNAME --from-literal=password=$DB_PASSWORD
 echo "=======================================================" >> err
 kubectl create -n casche configmap fluent-conf --from-file fluent.conf >> err
 kubectl apply -n casche -f loki-external.yml >> err
 kubectl apply -n casche -f service-p2.yml >> err
-# kubectl apply -n casche -f ingress-p2.yml >> err
+# Comment the line below after the system is set up.
+ kubectl apply -n casche -f ingress-p2.yml >> err
 kubectl apply -n casche -f deployment-p2.yml >> err
 kubectl apply -n casche -f svcmonitor.yml >> err
 echo ""
