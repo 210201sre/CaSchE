@@ -6,7 +6,7 @@ This application provides features for customers, employees and administrators o
 ### Technologies Used
 * Apache-Maven 3.6.3
 * Spring Tool Suite
-*Spring Boot Framework 2.4.3
+* Spring Boot Framework 2.4.3
 * Docker v0.9.1-beta3
 * Kubernetes 1.18.9
 * Grafana 6.4.5
@@ -28,8 +28,8 @@ This application has login feature where users must enter a valid username and p
 
 
 ### Getting Started
-* the command to clone the repository is 'git clone https://github.com/210201sre/CaSchE.git'
-* If you have access to the Revature SRE cluster, use the command 'kubectl get ing'
+* The command to clone the repository is 'git clone https://github.com/210201sre/CaSchE.git'.
+* If you have access to the Revature SRE cluster, use the command 'kubectl get ing'.
 * Under the 'ADDRESS' field, copy the url 'a62d60162057149549617360016d2e38-542496291.us-east-1.elb.amazonaws.com' and add :8080 to the end to specify the port. Use this address to send http requests to the application.
 
 Alternatively, if you are setting this up using your own EKS and RDS, then perform the following actions.
