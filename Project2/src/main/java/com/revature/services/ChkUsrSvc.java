@@ -61,7 +61,7 @@ public class ChkUsrSvc {
 			return new Key();
 		}
 		if (level.equals("Customer")) {
-			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("employee")&&!u.getAccesslevel().equals(admin)) {
+			if(!u.getAccesslevel().equals(level)&&!u.getAccesslevel().equals("Employee")&&!u.getAccesslevel().equals(admin)) {
 				InvalidException.thrown(permErrMsg, new RuntimeException());
 				return new Key();
 			}
