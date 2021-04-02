@@ -62,19 +62,19 @@ In order to use the application, you need to be logged in. You can log in by sen
 
 After you have logged in, you can make a variety of requests based on the type of account you have logged in as. POST and DELETE requests will expect data in JSON format. Please reference the outputs of GET requests to structure the information you plan to send.
 A customer account can change user account information, add items to a cart, checkout with the items in the cart, and view transaction and backorders. If the quantity of an item in the cart is greater than that of the current stock, the item will be placed as a backorder. These are located at the following endpoints:
-- \[GET, PATCH, DELETE] /user - view, update, & delete the currently logged in user account
-- \[POST, GET, DELETE] /user/cart - add, view, & delete cart items
-- \[PUT] /user/checkout - perform a checkout action
-- \[GET] /user/transaction/contents - view transactions
-- \[GET] /user/backorder - view backorders
+- \[GET, PATCH, DELETE]  /user - view, update, & delete the currently logged in user account
+- \[POST, GET, DELETE]  /user/cart - add, view, & delete cart items
+- \[PUT]  /user/checkout - perform a checkout action
+- \[GET]  /user/transaction/contents - view transactions
+- \[GET]  /user/backorder - view backorders
 
 An employee currently has the ability to view the employee directory using the following endpoint:
-- \[GET] /staff/directory
+- \[GET]  /staff/directory
 
 Admin accounts are able to view, add, and delete user accounts and coupons. They also have the ability to delete user transactions as well.
-- \[POST, GET, DELETE] /manager/user - add, view, & delete user account
-- \[DELETE] /manager/user/transaction - delete transaction
-- \[POST, GET, PATCH, DELETE] /manager/coupon - add, view, update, & delete coupon
+- \[POST, GET, DELETE]  /manager/user - add, view, & delete user account
+- \[DELETE]  /manager/user/transaction - delete transaction
+- \[POST, GET, PATCH, DELETE]  /manager/coupon - add, view, update, & delete coupon
 
 
 ### Contributors
