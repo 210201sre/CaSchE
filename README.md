@@ -25,7 +25,6 @@ This application has login feature where users must enter a valid username and p
 ##### ToDo List:
 - Restore & provide testing for features that were removed.
 - Implement entity relationships between models.
-- Restore access level based security.
 
 
 ### Getting Started
