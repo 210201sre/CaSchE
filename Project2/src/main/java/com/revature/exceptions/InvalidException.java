@@ -7,6 +7,10 @@ import org.springframework.http.ResponseEntity;
 
 public abstract class InvalidException {
 	private static final Logger log = LoggerFactory.getLogger(InvalidException.class);
+
+	public static ResponseEntity<String> thrown(String message) {
+		return ResponseEntity.status(400).body(message);
+	}
 	
 	public static ResponseEntity<String> thrown(String message, Exception err) {
 		logException(message, err);

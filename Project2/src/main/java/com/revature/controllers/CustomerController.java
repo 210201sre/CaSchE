@@ -18,6 +18,7 @@ import com.revature.models.BackorderProto;
 import com.revature.models.CartItem;
 import com.revature.models.CartItemProto;
 import com.revature.models.Credentials;
+import com.revature.models.Key;
 import com.revature.models.Transaction;
 import com.revature.models.User;
 import com.revature.services.ChkUsrSvc;
@@ -46,6 +47,9 @@ public class CustomerController {
 	@PostMapping("/logout")
 	public ResponseEntity<String> logout() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.logout(usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -57,6 +61,9 @@ public class CustomerController {
 	@GetMapping
 	public ResponseEntity<User> myInfo() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return custSvc.getMyInfo(usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -81,6 +88,9 @@ public class CustomerController {
 	@PatchMapping
 	public ResponseEntity<String> modUser(@RequestBody User u) {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.modUser(u, usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -92,6 +102,9 @@ public class CustomerController {
 	@PatchMapping("/resetlogin")
 	public ResponseEntity<String> resetUnPw(@RequestBody Credentials c) {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.resetUnPw(c.getUname(), c.getPswrd(), usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -103,6 +116,9 @@ public class CustomerController {
 	@DeleteMapping
 	public ResponseEntity<String> removeUser() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.delUser(usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -114,6 +130,9 @@ public class CustomerController {
 	@PostMapping("/cart")
 	public ResponseEntity<String> addToCart(@RequestBody CartItemProto cip) {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.addToMyCart(cip, usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -136,6 +155,9 @@ public class CustomerController {
 	@DeleteMapping("/cart")
 	public ResponseEntity<String> removeCartItem(@RequestBody CartItemProto cip) {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.delMyCartItem(cip, usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -147,6 +169,9 @@ public class CustomerController {
 	@DeleteMapping("/cart/all")
 	public ResponseEntity<String> emptyCart() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.emptyCart(usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -158,6 +183,9 @@ public class CustomerController {
 	@GetMapping("/cart")
 	public ResponseEntity<List<CartItem>> showCart() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return ResponseEntity.ok(custSvc.displayCart(usrSvc.logdin()));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -171,6 +199,9 @@ public class CustomerController {
 	@PutMapping("/checkout")
 	public ResponseEntity<String> checkout() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return InvalidException.thrown("User not logged in.");
+			}
 			return custSvc.checkout(usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -182,6 +213,9 @@ public class CustomerController {
 	@GetMapping("/transaction")
 	public ResponseEntity<List<Transaction>> showTransactions() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return ResponseEntity.ok(custSvc.displayTransactions(usrSvc.logdin()));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -195,6 +229,9 @@ public class CustomerController {
 	@GetMapping("/transaction/contents")
 	public ResponseEntity<List<CartItem>> showTransactionItems(@RequestBody Transaction t) {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return custSvc.displayTransactionItems(t, usrSvc.logdin());
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -208,6 +245,9 @@ public class CustomerController {
 	@GetMapping("/backorder")
 	public ResponseEntity<List<BackorderProto>> showBackorders() {
 		try {
+			if (usrSvc.logdin().equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return ResponseEntity.ok(custSvc.displayBackorders(usrSvc.logdin()));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);

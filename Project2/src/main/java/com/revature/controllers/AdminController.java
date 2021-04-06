@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.exceptions.InvalidException;
 import com.revature.models.Coupon;
+import com.revature.models.Key;
 import com.revature.models.Transaction;
 import com.revature.models.TuiProto;
 import com.revature.models.User;
@@ -54,6 +55,9 @@ public class AdminController {
 	@DeleteMapping("/user")
 	public ResponseEntity<String> removeUser(@RequestBody User u) {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return InvalidException.thrown("Permission Denied");
+			}
 			return aSvc.delCustomer(usrSvc.validateAdmin(usrSvc.logdin()), u);
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -65,6 +69,9 @@ public class AdminController {
 	@GetMapping("/user")
 	public ResponseEntity<List<User>> showAllUsers() {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return ResponseEntity.ok(aSvc.displayAllUsers(usrSvc.validateAdmin(usrSvc.logdin())));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -100,6 +107,9 @@ public class AdminController {
 	@DeleteMapping("/user/transaction")
 	public ResponseEntity<String> removeTransaction(@RequestBody Transaction t) {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return InvalidException.thrown("Permission Denied");
+			}
 			return aSvc.delUserTransaction(usrSvc.validateAdmin(usrSvc.logdin()), t);
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -111,6 +121,9 @@ public class AdminController {
 	@DeleteMapping("/user/transaction/item")
 	public ResponseEntity<String> removeUserTransactionItem(@RequestBody TuiProto tp) {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return InvalidException.thrown("Permission Denied");
+			}
 			return aSvc.delUserTransactionItem(usrSvc.validateAdmin(usrSvc.logdin()), tp);
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -122,6 +135,9 @@ public class AdminController {
 	@GetMapping("/coupon")
 	public ResponseEntity<List<Coupon>> showCoupons() {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return ResponseEntity.ok(aSvc.displayCoupons(usrSvc.validateAdmin(usrSvc.logdin())));
 		} catch (IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -135,6 +151,9 @@ public class AdminController {
 	@PostMapping("/coupon")
 	public ResponseEntity<String> createCoupon(@RequestBody Coupon c) {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return InvalidException.thrown("Permission Denied");
+			}
 			return aSvc.addCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c);
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -146,6 +165,9 @@ public class AdminController {
 	@PatchMapping("/coupon")
 	public ResponseEntity<String> modifyCoupon(@RequestBody Coupon c) {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return InvalidException.thrown("Permission Denied");
+			}
 			return aSvc.modCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c);
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -157,6 +179,9 @@ public class AdminController {
 	@DeleteMapping("/coupon")
 	public ResponseEntity<String> removeCoupon(@RequestBody Coupon c) {
 		try {
+			if(usrSvc.validateAdmin(usrSvc.logdin()).equals(new Key())) {
+				return InvalidException.thrown("Permission Denied");
+			}
 			return aSvc.delCoupon(usrSvc.validateAdmin(usrSvc.logdin()), c);
 		} catch (IllegalArgumentException e) {
 			return InvalidException.thrown("SQLException: Invalid data inputed.", e);

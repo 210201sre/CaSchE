@@ -5,14 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.revature.exceptions.InvalidException;
 import com.revature.models.CartItem;
+import com.revature.models.Key;
 import com.revature.models.Transaction;
-import com.revature.models.TuiProto;
 import com.revature.models.User;
 import com.revature.services.AdminService;
 import com.revature.services.ChkUsrSvc;
@@ -32,6 +32,9 @@ public class EmployeeController {
 	@GetMapping("/directory")
 	public ResponseEntity<List<User>> showStaffDirectory() {
 		try {
+			if (usrSvc.validateEmployee(usrSvc.logdin()).equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return ResponseEntity.ok(eSvc.displayInternalDirectory(usrSvc.validateEmployee(usrSvc.logdin())));
 		} catch(IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -40,12 +43,14 @@ public class EmployeeController {
 			InvalidException.thrown("Invalid data sent", e);
 			return ResponseEntity.status(400).body(null);
 		}
-		
 	}
 	
 	@GetMapping("/user/transaction")
 	public ResponseEntity<List<Transaction>> showUserTransactions(@RequestBody User u) {
 		try {
+			if (usrSvc.validateEmployee(usrSvc.logdin()).equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return aSvc.displayUserTransactions(usrSvc.validateEmployee(usrSvc.logdin()), u);
 		} catch(IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
@@ -60,6 +65,9 @@ public class EmployeeController {
 	@GetMapping("/user/transaction/item")
 	public ResponseEntity<List<CartItem>> showUserTransactionItems(@RequestBody Transaction t) {
 		try {
+			if (usrSvc.validateEmployee(usrSvc.logdin()).equals(new Key())) {
+				return ResponseEntity.status(400).body(null);
+			}
 			return aSvc.displayUserTransactionItems(usrSvc.validateEmployee(usrSvc.logdin()), t);
 		} catch(IllegalArgumentException e) {
 			InvalidException.thrown("SQLException: Invalid data inputed.", e);
